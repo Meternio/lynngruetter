@@ -1,0 +1,78 @@
+---
+import { storyblokEditable } from "@storyblok/astro";
+
+const { blok } = Astro.props;
+// Get the Vimeo ID from the URL
+const vimeoId = blok.vimeo?.vimeo_oembed?.response?.uri?.split("/").pop();
+// Check if the asset is a video
+const isVideo =
+  blok.asset?.id && blok.asset?.filename.match(/\.(mp4|mov|webm)$/i);
+// Optimze the image for the hero
+const optimzedImageUrl =
+  blok.asset?.filename + "/m/1920x0/smart/filters:format(webp):quality(80)";
+---
+
+<div
+  {...storyblokEditable(blok)}
+  class="hero h-svh w-swh relative overflow-hidden"
+>
+  {
+    blok.asset?.filename && !isVideo && (
+      <img
+        srcset={`
+            ${blok.asset?.filename+'/m/1920x0/smart/filters:format(webp):quality(80)'} 1200w,
+            ${blok.asset?.filename+'/m/992x0/smart/filters:format(webp):quality(80)'} 992w,
+            ${blok.asset?.filename+'/m/768x0/smart/filters:format(webp):quality(80)'} 768w,
+            ${blok.asset?.filename+'/m/576x0/smart/filters:format(webp):quality(80)'} 576w`}
+        src={blok.asset?.filename}
+        alt={blok.asset?.alt || "Hero Image"}
+        loading="lazy"
+        class="hero-image w-full h-full top-1/2 left-1/2 absolute -translate-x-1/2 -translate-y-1/2 object-cover"
+      />
+    )
+  }
+  {
+    isVideo && (
+      <video
+        data-hero-video
+        src={blok.asset.filename}
+        muted
+        loop
+        controls
+        playsinline
+        preload="none"
+        class="hero-video w-full h-full top-1/2 left-1/2 absolute -translate-x-1/2 -translate-y-1/2 object-cover"
+      >
+        Sorry, dein Browser unterstüzt keine Videos.
+      </video>
+    )
+  }
+  {
+    blok.vimeo?.vimeo_oembed?.response && !blok.asset.id && (
+      <iframe
+        src={`https://player.vimeo.com/video/${vimeoId}?autoplay=1&background=1`}
+        width={blok.vimeo.vimeo_oembed.response.width}
+        height={blok.vimeo.vimeo_oembed.response.height}
+        class="hero-iframe w-full h-full top-1/2 left-1/2 absolute -translate-x-1/2 -translate-y-1/2"
+        allow="autoplay; fullscreen; picture-in-picture"
+        title={blok.vimeo.vimeo_oembed.response.title}
+        loading="lazy"
+      />
+    )
+  }
+</div>
+
+<style>
+  @media (min-aspect-ratio: 16/9) {
+    .hero-iframe {
+      /* height = 100 * (9 / 16) = 56.25 */
+      height: 56.25vw;
+    }
+  }
+  @media (max-aspect-ratio: 16/9) {
+    .hero-iframe {
+      /* width = 100 / (9 / 16) = 177.777777 */
+      width: 177.78vh;
+    }
+  }
+</style>

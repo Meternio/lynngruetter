@@ -1,5 +1,7 @@
 ---
-import { useStoryblokApi } from '@storyblok/astro'
+import { useStoryblokApi } from '@storyblok/astro';
+import Header from '../components/Header.astro';
+import HeroAnimation from '../components/HeroAnimation.astro';
 
 const storyblokApi = useStoryblokApi();
 const { data } = await storyblokApi.get('cdn/stories/home', {
@@ -16,7 +18,17 @@ const content = data.story.content;
     <title>{content?.meta?.title || 'Lynn Grütter'}</title>
     <meta name='description' content={content?.meta?.description || 'Ich moderiere: Vor der Fernsehkamera, online oder live an Ihrem Anlass.'} />
   </head>
-  <body class='container mx-auto'>
-    <slot />
+  <body>
+    <Header />
+    <HeroAnimation />
+    <main class="opacity-0" data-main>
+      <slot />
+    </main>
   </body>
 </html>
+
+<style>
+  main {
+    transition: opacity 1s ease-in-out;
+  }
+</style>
