@@ -1,0 +1,22 @@
+---
+import { useStoryblokApi } from '@storyblok/astro'
+
+const storyblokApi = useStoryblokApi();
+const { data } = await storyblokApi.get('cdn/stories/home', {
+  version: import.meta.env.DEV ? "draft" : "published",
+});
+const content = data.story.content;
+---
+
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width' />
+    <link rel='icon' type='image/x-icon' href='/favicon.ico' />
+    <title>{content?.meta?.title || 'Lynn Grütter'}</title>
+    <meta name='description' content={content?.meta?.description || 'Ich moderiere: Vor der Fernsehkamera, online oder live an Ihrem Anlass.'} />
+  </head>
+  <body class='container mx-auto'>
+    <slot />
+  </body>
+</html>
