@@ -2,33 +2,35 @@
 
 <script>
   setTimeout(function () {
-    document.querySelector("[data-hero-animation]").classList.add("opacity-0");
     document.querySelector("[data-main]").classList.remove("opacity-0");
     if (document.querySelector("[data-hero-video]")) {
       document.querySelector("[data-hero-video]").play();
     }
   }, 3500);
+  setTimeout(function () {
+    document.querySelector("[data-hero-animation]").classList.add("hidden");
+  }, 4500);
 </script>
 
 <style>
 .hero-animation {
     animation: 3s linear colorChangeBackground forwards;
-    background-color: #C7A6D9;
+    @apply bg-violet;
     transition: opacity 1s ease-in-out;
 }
 
 @keyframes colorChangeBackground {
   0% {
-    background-color: #C7A6D9;
+    @apply bg-violet;
   }
   33% {
-    background-color: #C7A6D9;
+    @apply bg-violet;
   }
   66% {
-    background-color: #1EC132;
+    @apply bg-green;
   }
   100% {
-    background-color: #578CC1;
+    @apply bg-blue;
   }
 }
 </style>
