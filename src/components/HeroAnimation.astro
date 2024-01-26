@@ -19,34 +19,31 @@
 </div>
 
 <script>
+  const heroAnimationText = document.querySelector(
+    "[data-hero-animation-text]"
+  );
+  const heroAnimationTextMixBlendMode = document.querySelector(
+    "[data-hero-animation-text-mix-blend-mode]"
+  );
+  const heroAnimationBackground = document.querySelector(
+    "[data-hero-animation-background]"
+  );
+  const heroVideo = document.querySelector(
+    "[data-storyblok] > [data-hero]:first-child [data-hero-video]"
+  );
+
   setTimeout(function () {
     document.querySelector("[data-body]").classList.remove("overflow-hidden");
     document.querySelector("[data-main]").classList.remove("opacity-0");
-    document
-      .querySelector("[data-hero-animation-background]")
-      .classList.add("opacity-0");
-    document
-      .querySelector("[data-hero-animation-text]")
-      .classList.add("opacity-0");
-    document
-      .querySelector("[data-hero-animation-text-mix-blend-mode]")
-      .classList.remove("opacity-0");
-    if (
-      document.querySelector(
-        "[data-storyblok] > [data-hero]:first-child [data-hero-video]"
-      )
-    ) {
-      document
-        .querySelector(
-          "[data-storyblok] > [data-hero]:first-child [data-hero-video]"
-        )
-        .play();
+    heroAnimationBackground.classList.add("opacity-0");
+    heroAnimationText.classList.add("opacity-0");
+    heroAnimationTextMixBlendMode.classList.remove("opacity-0");
+    if (heroVideo) {
+      heroVideo.play();
     }
   }, 3500);
   setTimeout(function () {
-    document
-      .querySelector("[data-hero-animation-text-mix-blend-mode]")
-      .classList.add("opacity-0");
+    heroAnimationTextMixBlendMode.classList.add("opacity-0");
   }, 4500);
   setTimeout(function () {
     document
