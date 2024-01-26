@@ -1,15 +1,21 @@
 <header
-  class="header fixed w-full z-50 h-20 p-4"
+  class="header fixed w-full z-50 h-20 p-4 text-white"
   data-header
 >
   <nav class="header-nav h-full flex items-center justify-between">
-    <a class="uppercase">Lynn</a>
-    <div class="flex-grow flex gap-4 px-4 header-nav-content-menu" data-header-nav-content-menu>
-      <a>Moderation</a>
-      <a>Content Production</a>
-      <a>About</a>
-      <a class="flex-grow text-center">Contact</a>
+    <a href="/" class="uppercase">Lynn</a>
+    <div class="flex-grow flex gap-16 px-16 header-nav-content-menu" data-header-nav-content-menu>
+      <a href="#moderation">Moderation</a>
+      <a href="#content-production">Content Production</a>
+      <a href="#about">About</a>
+      <a href="#contact" class="flex-grow text-center">Contact</a>
     </div>
-    <a class="uppercase">Grütter</a>
+    <a href="/" class="uppercase">Grütter</a>
   </nav>
 </header>
+
+<style>
+  .header-nav-content-menu > a {
+    transition: color 0.75s ease-in-out;
+  }
+</style>

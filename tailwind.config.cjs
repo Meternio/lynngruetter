@@ -11,6 +11,11 @@ module.exports = {
         brown: "#A47545",
         blue: "#578CC1",
         white: "#FFFFFF",
+        accent: "#0397F5",
+      },
+      fontFamily: {
+        montrealRegular: ["NeueMontreal-Regular"],
+        montrealMedium: ["NeueMontreal-Medium"],
       },
     },
   },

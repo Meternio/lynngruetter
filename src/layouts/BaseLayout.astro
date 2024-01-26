@@ -18,7 +18,7 @@ const content = data.story.content;
     <title>{content?.meta?.title || 'Lynn Grütter'}</title>
     <meta name='description' content={content?.meta?.description || 'Ich moderiere: Vor der Fernsehkamera, online oder live an Ihrem Anlass.'} />
   </head>
-  <body data-body class="overflow-hidden">
+  <body data-body class="overflow-hidden font-montrealRegular">
     <Header />
     <HeroAnimation />
     <main class="opacity-0 relative" data-main>
@@ -26,3 +26,25 @@ const content = data.story.content;
     </main>
   </body>
 </html>
+
+<style is:global>
+  html {
+    scroll-behavior: smooth;
+  }
+
+  @font-face {
+    font-family: 'NeueMontreal-Regular';
+    src: url('/fonts/PPNeueMontreal-Regular.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'NeueMontreal-Medium';
+    src: url('/fonts/PPNeueMontreal-Medium.woff2') format('woff2');
+    font-weight: medium;
+    font-style: normal;
+    font-display: swap;
+  }
+</style>

@@ -5,14 +5,14 @@
 </div>
 
 <h1
-  class="hero-animation-text uppercase text-[40.5svw] max-h-svh max-w-svw fixed z-30 top-24 line-h leading-[0.58]"
+  class="hero-animation-text uppercase text-[42svw] max-h-svh max-w-svw fixed z-30 top-24 -left-6 line-h leading-[0.72]"
   data-hero-animation-text
 >
   Lynn
 </h1>
 
 <div
-  class="hero-animation-text uppercase text-[40.5svw] max-h-svh max-w-svw fixed z-30 top-24 line-h leading-[0.58] mix-blend-difference opacity-0"
+  class="hero-animation-text uppercase text-[42svw] max-h-svh max-w-svw fixed z-30 top-24 -left-6 left line-h leading-[0.72] mix-blend-difference opacity-0"
   data-hero-animation-text-mix-blend-mode
 >
   Lynn
@@ -29,22 +29,27 @@
     "[data-hero-animation-background]"
   );
   const heroVideo = document.querySelector(
-    "[data-storyblok] > [data-hero]:first-child [data-hero-video]"
+    "[data-storyblok] > [data-hero]:first-child [data-hero-video], [data-storyblok] > [data-scroll-section]:first-child [data-hero] [data-hero-video]"
   );
   const headerNavContentMenu = document.querySelector(
     "[data-header-nav-content-menu]"
   );
+  const headerNavContentMenuItems = document.querySelectorAll(
+    "[data-header-nav-content-menu] > a"
+  );
 
   let bottomPosition = heroAnimationText.getBoundingClientRect();
-  headerNavContentMenu.style.transform = `translateY(calc(${
+  headerNavContentMenu.style.transform = `translateY(${
     bottomPosition.bottom
-  }px + 5vw))`;
+  }px)`;
 
   setTimeout(function () {
+    window.scrollTo(0, 0);
     document.querySelector("[data-body]").classList.remove("overflow-hidden");
     document.querySelector("[data-main]").classList.remove("opacity-0");
     heroAnimationBackground.classList.add("opacity-0");
-    heroAnimationText.classList.add("opacity-0");
+    heroAnimationText.classList.add("opacity-0", '!text-[41.4svw]');
+    heroAnimationTextMixBlendMode.classList.add('!text-[41.4svw]');
     heroAnimationTextMixBlendMode.classList.remove("opacity-0");
     if (heroVideo) {
       heroVideo.play();
@@ -55,6 +60,12 @@
     headerNavContentMenu.classList.add("header-nav-content-menu-animation");
   }, 4500);
   setTimeout(function () {
+    /*heroAnimationTextMixBlendMode.remove();
+    heroAnimationText.remove();
+    heroAnimationBackground.remove();*/
+    headerNavContentMenuItems.forEach((item) => {
+      item.classList.add("!animate-none");
+    });
   }, 5250);
 </script>
 
@@ -63,7 +74,7 @@
     transition: opacity 0.75s ease-in-out;
   }
 
-  :global(.header) {
+  :global(.header a) {
     animation: 3s linear colorChangeText forwards, 1.7s 3.875s ease-in-out colorChangeTextHeader forwards;
   }
 
@@ -99,6 +110,7 @@
       @apply bg-blue;
     }
   }
+
   @keyframes colorChangeText {
     0%, 25% {
       @apply text-darkGreen;

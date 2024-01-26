@@ -1,0 +1,21 @@
+---
+import { storyblokEditable } from "@storyblok/astro";
+import StoryblokComponent from '@storyblok/astro/StoryblokComponent.astro'
+
+const { blok } = Astro.props;
+---
+
+<div class="text-section text-center container py-32 mx-auto" {...storyblokEditable(blok)}>
+  <h2 class="text-section-title text-2xl">{blok.title}</h2>
+  {
+    blok.content.map((contentBlok) => (
+        <StoryblokComponent blok={contentBlok} />
+    ))
+  }
+</div>
+
+<style>
+    .text-section-title + :global(.text-section-content){
+        @apply mt-16;
+    }
+</style>

@@ -19,7 +19,10 @@ export default defineConfig({
     },
     components: {
       page: 'storyblok/Page',
+      scrollSection: 'storyblok/ScrollSection',
       hero: 'storyblok/Hero',
+      textBlock: 'storyblok/TextBlock',
+      text: 'storyblok/Text',
     }
   }), tailwind()],
   vite: {
