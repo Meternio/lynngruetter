@@ -1,5 +1,5 @@
 <div
-  class="hero-animation-background h-svh w-svw fixed hero-animation"
+  class="hero-animation-background h-svh w-svw fixed hero-animation z-10"
   data-hero-animation-background
 >
 </div>
@@ -55,11 +55,6 @@
     headerNavContentMenu.classList.add("header-nav-content-menu-animation");
   }, 4500);
   setTimeout(function () {
-    document
-      .querySelectorAll(
-        "[data-hero-animation-text], [data-hero-animation-text-mix-blend-mode], [data-hero-animation-background]"
-      )
-      .forEach((element) => element.remove());
   }, 5250);
 </script>
 
