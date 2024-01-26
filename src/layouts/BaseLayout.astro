@@ -10,7 +10,7 @@ const { data } = await storyblokApi.get('cdn/stories/home', {
 const content = data.story.content;
 ---
 
-<html lang='en'>
+<html lang='de'>
   <head>
     <meta charset='UTF-8' />
     <meta name='viewport' content='width=device-width' />
@@ -18,10 +18,10 @@ const content = data.story.content;
     <title>{content?.meta?.title || 'Lynn Grütter'}</title>
     <meta name='description' content={content?.meta?.description || 'Ich moderiere: Vor der Fernsehkamera, online oder live an Ihrem Anlass.'} />
   </head>
-  <body>
+  <body data-body class="overflow-hidden">
     <Header />
     <HeroAnimation />
-    <main class="opacity-0" data-main>
+    <main class="opacity-0 relative z-20" data-main>
       <slot />
     </main>
   </body>

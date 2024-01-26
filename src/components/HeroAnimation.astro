@@ -1,36 +1,106 @@
-<div class="h-svh w-svw fixed hero-animation" data-hero-animation></div>
+<div
+  class="hero-animation-background h-svh w-svw fixed hero-animation"
+  data-hero-animation-background
+>
+</div>
+
+<h1
+  class="hero-animation-text uppercase text-[40.5svw] max-h-svh max-w-svw fixed z-30 top-24 line-h leading-[0.58]"
+  data-hero-animation-text
+>
+  Lynn
+</h1>
+
+<div
+  class="hero-animation-text uppercase text-[40.5svw] max-h-svh max-w-svw fixed z-30 top-24 line-h leading-[0.58] mix-blend-difference opacity-0"
+  data-hero-animation-text-mix-blend-mode
+>
+  Lynn
+</div>
 
 <script>
   setTimeout(function () {
+    document.querySelector("[data-body]").classList.remove("overflow-hidden");
     document.querySelector("[data-main]").classList.remove("opacity-0");
-    if (document.querySelector("[data-hero-video]")) {
-      document.querySelector("[data-hero-video]").play();
+    document
+      .querySelector("[data-hero-animation-background]")
+      .classList.add("opacity-0");
+    document
+      .querySelector("[data-hero-animation-text]")
+      .classList.add("opacity-0");
+    document
+      .querySelector("[data-hero-animation-text-mix-blend-mode]")
+      .classList.remove("opacity-0");
+    if (
+      document.querySelector(
+        "[data-storyblok] > [data-hero]:first-child [data-hero-video]"
+      )
+    ) {
+      document
+        .querySelector(
+          "[data-storyblok] > [data-hero]:first-child [data-hero-video]"
+        )
+        .play();
     }
   }, 3500);
   setTimeout(function () {
-    document.querySelector("[data-hero-animation]").classList.add("hidden");
+    document
+      .querySelector("[data-hero-animation-text-mix-blend-mode]")
+      .classList.add("opacity-0");
   }, 4500);
+  setTimeout(function () {
+    document
+      .querySelectorAll(
+        "[data-hero-animation-text], [data-hero-animation-text-mix-blend-mode], [data-hero-animation-background]"
+      )
+      .forEach((element) => element.remove());
+  }, 5500);
 </script>
 
 <style>
-.hero-animation {
+  .hero-animation-background {
     animation: 3s linear colorChangeBackground forwards;
     @apply bg-violet;
     transition: opacity 1s ease-in-out;
-}
+  }
 
-@keyframes colorChangeBackground {
-  0% {
-    @apply bg-violet;
+  .hero-animation-text {
+    animation: 3s linear colorChangeText forwards;
+    @apply text-darkGreen;
+    transition: opacity 1s ease-in-out;
   }
-  33% {
-    @apply bg-violet;
+
+  .hero-animation-text-mix-blend-mode {
+    transition: opacity 1s ease-in-out;
   }
-  66% {
-    @apply bg-green;
+
+  @keyframes colorChangeBackground {
+    0% {
+      @apply bg-violet;
+    }
+    33% {
+      @apply bg-violet;
+    }
+    66% {
+      @apply bg-green;
+    }
+    100% {
+      @apply bg-blue;
+    }
   }
-  100% {
-    @apply bg-blue;
+
+  @keyframes colorChangeText {
+    0% {
+      @apply text-darkGreen;
+    }
+    33% {
+      @apply text-darkGreen;
+    }
+    66% {
+      @apply text-pink;
+    }
+    100% {
+      @apply text-brown;
+    }
   }
-}
 </style>
