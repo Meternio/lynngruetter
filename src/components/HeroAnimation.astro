@@ -31,6 +31,14 @@
   const heroVideo = document.querySelector(
     "[data-storyblok] > [data-hero]:first-child [data-hero-video]"
   );
+  const headerNavContentMenu = document.querySelector(
+    "[data-header-nav-content-menu]"
+  );
+
+  let bottomPosition = heroAnimationText.getBoundingClientRect();
+  headerNavContentMenu.style.transform = `translateY(calc(${
+    bottomPosition.bottom
+  }px + 5vw))`;
 
   setTimeout(function () {
     document.querySelector("[data-body]").classList.remove("overflow-hidden");
@@ -41,9 +49,10 @@
     if (heroVideo) {
       heroVideo.play();
     }
-  }, 3500);
+  }, 3750);
   setTimeout(function () {
     heroAnimationTextMixBlendMode.classList.add("opacity-0");
+    headerNavContentMenu.classList.add("header-nav-content-menu-animation");
   }, 4500);
   setTimeout(function () {
     document
@@ -51,53 +60,72 @@
         "[data-hero-animation-text], [data-hero-animation-text-mix-blend-mode], [data-hero-animation-background]"
       )
       .forEach((element) => element.remove());
-  }, 5500);
+  }, 5250);
 </script>
 
 <style>
+  :global(main) {
+    transition: opacity 0.75s ease-in-out;
+  }
+
+  :global(.header) {
+    animation: 3s linear colorChangeText forwards, 1.7s 3.875s ease-in-out colorChangeTextHeader forwards;
+  }
+
+  :global(.header-nav-content-menu-animation) {
+    transition: transform 0.75s ease-in-out;
+    transform: none !important;
+  }
+
   .hero-animation-background {
     animation: 3s linear colorChangeBackground forwards;
     @apply bg-violet;
-    transition: opacity 1s ease-in-out;
+    transition: opacity 0.75s ease-in-out;
   }
 
   .hero-animation-text {
     animation: 3s linear colorChangeText forwards;
     @apply text-darkGreen;
-    transition: opacity 1s ease-in-out;
+    transition: opacity 0.75s ease-in-out;
   }
 
   .hero-animation-text-mix-blend-mode {
-    transition: opacity 1s ease-in-out;
+    transition: opacity 0.75s ease-in-out;
   }
 
   @keyframes colorChangeBackground {
-    0% {
+    0%, 25% {
       @apply bg-violet;
     }
-    33% {
-      @apply bg-violet;
-    }
-    66% {
+    50%, 75% {
       @apply bg-green;
     }
     100% {
       @apply bg-blue;
     }
   }
-
   @keyframes colorChangeText {
-    0% {
+    0%, 25% {
       @apply text-darkGreen;
     }
-    33% {
-      @apply text-darkGreen;
-    }
-    66% {
+    50%, 75% {
       @apply text-pink;
     }
     100% {
       @apply text-brown;
+    }
+  }
+
+  @keyframes colorChangeTextHeader {
+    0% {
+      @apply text-brown;
+    }
+    25% {
+      mix-blend-mode: difference;
+    }
+    100% {
+      @apply text-white;
+      mix-blend-mode: none;
     }
   }
 </style>

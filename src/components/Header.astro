@@ -1,27 +1,15 @@
-<header class="header fixed w-full z-50" data-header>
-  <a>Lynn Grütter</a>
+<header
+  class="header fixed w-full z-50 h-20 p-4"
+  data-header
+>
+  <nav class="header-nav h-full flex items-center justify-between">
+    <a class="uppercase">Lynn</a>
+    <div class="flex-grow flex gap-4 px-4 header-nav-content-menu" data-header-nav-content-menu>
+      <a>Moderation</a>
+      <a>Content Production</a>
+      <a>About</a>
+      <a class="flex-grow text-center">Contact</a>
+    </div>
+    <a class="uppercase">Grütter</a>
+  </nav>
 </header>
-
-<style>
-  .header {
-    animation: 6s linear colorChangeTextHeader forwards;
-  }
-
-  @keyframes colorChangeTextHeader {
-    0% {
-      @apply text-darkGreen;
-    }
-    16.666% {
-      @apply text-darkGreen;
-    }
-    33.2222% {
-      @apply text-pink;
-    }
-    66% {
-      @apply text-brown;
-    }
-    100% {
-      @apply text-white;
-    }
-  }
-</style>
