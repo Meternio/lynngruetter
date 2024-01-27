@@ -1,22 +1,40 @@
 ---
-import { useStoryblokApi } from '@storyblok/astro';
-import Header from '../components/Header.astro';
-import HeroAnimation from '../components/HeroAnimation.astro';
+import { useStoryblokApi } from "@storyblok/astro";
+import Header from "../components/Header.astro";
+import HeroAnimation from "../components/HeroAnimation.astro";
 
 const storyblokApi = useStoryblokApi();
-const { data } = await storyblokApi.get('cdn/stories/home', {
+const { data } = await storyblokApi.get("cdn/stories/home", {
   version: import.meta.env.DEV ? "draft" : "published",
 });
 const content = data.story.content;
 ---
 
-<html lang='de'>
+<html lang="de">
   <head>
-    <meta charset='UTF-8' />
-    <meta name='viewport' content='width=device-width' />
-    <link rel='icon' type='image/x-icon' href='/favicon.ico' />
-    <title>{content?.meta?.title || 'Lynn Grütter'}</title>
-    <meta name='description' content={content?.meta?.description || 'Ich moderiere: Vor der Fernsehkamera, online oder live an Ihrem Anlass.'} />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link
+      rel="preload"
+      href="/fonts/PPNeueMontreal-Regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/PPNeueMontreal-Medium.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <title>{content?.meta?.title || "Lynn Grütter"}</title>
+    <meta
+      name="description"
+      content={content?.meta?.description ||
+        "Ich moderiere: Vor der Fernsehkamera, online oder live an Ihrem Anlass."}
+    />
   </head>
   <body data-body class="overflow-hidden font-montrealRegular">
     <Header />
@@ -33,16 +51,16 @@ const content = data.story.content;
   }
 
   @font-face {
-    font-family: 'NeueMontreal-Regular';
-    src: url('/fonts/PPNeueMontreal-Regular.woff2') format('woff2');
+    font-family: "NeueMontreal-Regular";
+    src: url("/fonts/PPNeueMontreal-Regular.woff2") format("woff2");
     font-weight: normal;
     font-style: normal;
     font-display: swap;
   }
 
   @font-face {
-    font-family: 'NeueMontreal-Medium';
-    src: url('/fonts/PPNeueMontreal-Medium.woff2') format('woff2');
+    font-family: "NeueMontreal-Medium";
+    src: url("/fonts/PPNeueMontreal-Medium.woff2") format("woff2");
     font-weight: medium;
     font-style: normal;
     font-display: swap;

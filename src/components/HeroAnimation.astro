@@ -5,14 +5,14 @@
 </div>
 
 <h1
-  class="hero-animation-text uppercase text-[42svw] max-h-svh max-w-svw fixed z-30 top-24 -left-6 line-h leading-[0.72]"
+  class="hero-animation-text uppercase fixed z-30 top-24 line-h leading-[0.72]"
   data-hero-animation-text
 >
   Lynn
 </h1>
 
 <div
-  class="hero-animation-text uppercase text-[42svw] max-h-svh max-w-svw fixed z-30 top-24 -left-6 left line-h leading-[0.72] mix-blend-difference opacity-0"
+  class="hero-animation-text uppercase fixed z-30 top-24 line-h leading-[0.72] mix-blend-difference opacity-0"
   data-hero-animation-text-mix-blend-mode
 >
   Lynn
@@ -48,8 +48,7 @@
     document.querySelector("[data-body]").classList.remove("overflow-hidden");
     document.querySelector("[data-main]").classList.remove("opacity-0");
     heroAnimationBackground.classList.add("opacity-0");
-    heroAnimationText.classList.add("opacity-0", '!text-[41.4svw]');
-    heroAnimationTextMixBlendMode.classList.add('!text-[41.4svw]');
+    heroAnimationText.classList.add("opacity-0");
     heroAnimationTextMixBlendMode.classList.remove("opacity-0");
     if (heroVideo) {
       heroVideo.play();
@@ -75,7 +74,9 @@
   }
 
   :global(.header a) {
-    animation: 3s linear colorChangeText forwards, 1.7s 3.875s ease-in-out colorChangeTextHeader forwards;
+    animation:
+      3s linear colorChangeText forwards,
+      1.7s 3.875s ease-in-out colorChangeTextHeader forwards;
   }
 
   :global(.header-nav-content-menu-animation) {
@@ -93,6 +94,8 @@
     animation: 3s linear colorChangeText forwards;
     @apply text-darkGreen;
     transition: opacity 0.75s ease-in-out;
+    left: -28px;
+    font-size: 605px;
   }
 
   .hero-animation-text-mix-blend-mode {
@@ -100,10 +103,12 @@
   }
 
   @keyframes colorChangeBackground {
-    0%, 25% {
+    0%,
+    25% {
       @apply bg-violet;
     }
-    50%, 75% {
+    50%,
+    75% {
       @apply bg-green;
     }
     100% {
@@ -112,10 +117,12 @@
   }
 
   @keyframes colorChangeText {
-    0%, 25% {
+    0%,
+    25% {
       @apply text-darkGreen;
     }
-    50%, 75% {
+    50%,
+    75% {
       @apply text-pink;
     }
     100% {

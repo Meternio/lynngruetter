@@ -1,16 +1,29 @@
+---
+import { useStoryblokApi } from '@storyblok/astro';
+
+const storyblokApi = useStoryblokApi();
+
+const { data } = await storyblokApi.get("cdn/stories/home", {
+  version: "draft",
+});
+
+const content = data.story.content;
+---
+
 <header
   class="header fixed w-full z-50 h-20 p-4 text-white"
   data-header
 >
-  <nav class="header-nav h-full flex items-center justify-between">
-    <a href="/" class="uppercase">Lynn</a>
-    <div class="flex-grow flex gap-16 px-16 header-nav-content-menu" data-header-nav-content-menu>
-      <a href="#moderation">Moderation</a>
-      <a href="#content-production">Content Production</a>
-      <a href="#about">About</a>
-      <a href="#contact" class="flex-grow text-center">Contact</a>
+  <nav class="header-nav h-full flex items-center lg:justify-between uppercase lg:normal-case">
+    <a href="/" class="uppercase order-1">Lynn</a>
+    <div class="header-nav-content-menu order-2 flex flex-col relative top-1/4 self-start px-4 lg:self-auto lg:top-0 lg:flex-row lg:gap-16 lg:px-16 lg:flex-grow lg:order-1" data-header-nav-content-menu>
+      {content.body.map
+        ((item, index) => (
+          <a href={`#${item.id}`} class={`${index === (content.body.length - 1)  && 'flex-grow'} lg:text-center`}>{item.name}</a>
+        ))
+      }
     </div>
-    <a href="/" class="uppercase">Grütter</a>
+    <a href="/" class="uppercase order-1 pl-1 lg:pl-0">Grütter</a>
   </nav>
 </header>
 
