@@ -23,6 +23,10 @@ export default defineConfig({
       hero: 'storyblok/Hero',
       textBlock: 'storyblok/TextBlock',
       text: 'storyblok/Text',
+      grid: 'storyblok/Grid',
+      gridCategory: 'storyblok/GridCategory',
+      gridItem: 'storyblok/GridItem',
+      gridGallery: 'storyblok/GridGallery',
     }
   }), tailwind()],
   vite: {

@@ -35,7 +35,7 @@
     "[data-header-nav-content-menu]"
   );
   const headerNavContentMenuItems = document.querySelectorAll(
-    "[data-header-nav-content-menu] > a"
+    "[data-header] a"
   );
 
   let bottomPosition = heroAnimationText.getBoundingClientRect();
@@ -59,9 +59,9 @@
     headerNavContentMenu.classList.add("header-nav-content-menu-animation");
   }, 4500);
   setTimeout(function () {
-    /*heroAnimationTextMixBlendMode.remove();
+    heroAnimationTextMixBlendMode.remove();
     heroAnimationText.remove();
-    heroAnimationBackground.remove();*/
+    heroAnimationBackground.remove();
     headerNavContentMenuItems.forEach((item) => {
       item.classList.add("!animate-none");
     });

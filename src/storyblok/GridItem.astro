@@ -1,0 +1,45 @@
+---
+import { storyblokEditable } from "@storyblok/astro";
+import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
+
+const { blok } = Astro.props;
+---
+
+<div
+  {...storyblokEditable(blok)}
+  class={`grid-category-item w-[calc(25%-12px)] mb-4 ${blok.doubleWidth && "w-[calc(50%-12px)] "}`}
+  data-grid-category-item
+>
+  <img
+    srcset={`
+            ${
+              blok.thumbnail?.filename +
+              "/m/1920x0/smart/filters:format(webp):quality(80)"
+            } 1200w,
+            ${
+              blok.thumbnail?.filename +
+              "/m/992x0/smart/filters:format(webp):quality(80)"
+            } 992w,
+            ${
+              blok.thumbnail?.filename +
+              "/m/768x0/smart/filters:format(webp):quality(80)"
+            } 768w,
+            ${
+              blok.thumbnail?.filename +
+              "/m/576x0/smart/filters:format(webp):quality(80)"
+            } 576w`}
+    src={blok.thumbnail?.filename}
+    alt={blok.thumbnail?.alt || "Grid Item"}
+    loading="lazy"
+    class=""
+    data-grid-category-item-thumbnail
+  />
+  <h2>{blok.title}</h2>
+  <div class="grid-gallery-modal hidden">
+    {
+      blok.gallery?.map((blok) => {
+        return <StoryblokComponent blok={blok} />;
+      })
+    }
+  </div>
+</div>

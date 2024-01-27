@@ -1,0 +1,18 @@
+---
+import { storyblokEditable } from "@storyblok/astro";
+import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
+
+const { blok, index } = Astro.props;
+---
+
+<div
+  {...storyblokEditable(blok)}
+  aria-expanded={index === 0 ? "true" : "false"}
+  class={`-mb-4 ${index !== 0 && "hidden"}`} data-grid-category-content={index}
+>
+  {
+    blok.items?.map((blok) => {
+      return <StoryblokComponent blok={blok} />;
+    })
+  }
+</div>

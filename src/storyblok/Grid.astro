@@ -1,0 +1,108 @@
+---
+import { storyblokEditable } from "@storyblok/astro";
+import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
+
+const { blok } = Astro.props;
+---
+
+<div
+  {...storyblokEditable(blok)}
+  class="grid-container py-32 container mx-auto"
+  data-grid
+>
+  <div
+    class="grid-categories-title flex items-center justify-center gap-4"
+    data-grid-category
+  >
+    {
+      blok.categories.map((category, index) => {
+        return (
+          <h4
+            class={`uppercase text-black/40 cursor-pointer hover:text-black ${
+              index === 0 && "grid-category-title-active"
+            }`}
+            tabindex="0"
+            data-grid-category-title={index}
+          >
+            {category.title}
+          </h4>
+        );
+      })
+    }
+  </div>
+  <div class="grid-categories-content mt-5" data-grid-categories-content>
+    {
+      blok.categories?.map((category, index) => {
+        return <StoryblokComponent blok={category} index={index} />;
+      })
+    }
+  </div>
+</div>
+
+<script>
+  import Masonry from "masonry-layout";
+  import imagesLoaded from "imagesloaded";
+
+  var grid = document.querySelector('[data-grid-category-content="0"]');
+
+  var thumbnails = document.querySelectorAll(
+    '[data-grid-category-content="0"] [data-grid-category-item-thumbnail]'
+  );
+
+  imagesLoaded(thumbnails, function () {
+    new Masonry(grid, {
+      itemSelector:
+        '[data-grid-category-content="0"] [data-grid-category-item]',
+      gutter: 16,
+      percentPosition: true,
+      horizontalOrder: true,
+    });
+  });
+
+  // add on click event to category title to show the content
+  var categoryTitles = document.querySelectorAll("[data-grid-category-title]");
+  categoryTitles.forEach((categoryTitle, index) => {
+    categoryTitle.addEventListener("click", function () {
+      // hide all category contents
+      var categoryContents = document.querySelectorAll(
+        "[data-grid-category-content]"
+      );
+      categoryContents.forEach((categoryContent) => {
+        categoryContent.classList.add("hidden");
+        categoryContents[index].setAttribute("aria-expanded", "false");
+      });
+
+      // show the selected category content
+      categoryContents[index].classList.remove("hidden");
+      categoryContents[index].setAttribute("aria-expanded", "true");
+
+      // init masonry
+      var thumbnails = document.querySelectorAll(
+        `[data-grid-category-content="${index}"] [data-grid-category-item-thumbnail]`
+      );
+      imagesLoaded(thumbnails, function () {
+        new Masonry(categoryContents[index], {
+          itemSelector: `[data-grid-category-content="${index}"] [data-grid-category-item]`,
+          gutter: 16,
+          percentPosition: true,
+          horizontalOrder: true,
+        });
+      });
+
+      // remove active class from all category titles
+      var categoryTitles = document.querySelectorAll(
+        "[data-grid-category-title]"
+      );
+      categoryTitles.forEach((categoryTitle) => {
+        categoryTitle.classList.remove("grid-category-title-active");
+      });
+      categoryTitles[index].classList.add("grid-category-title-active");
+    });
+  });
+</script>
+
+<style>
+  .grid-category-title-active {
+    @apply text-black;
+  }
+</style>
