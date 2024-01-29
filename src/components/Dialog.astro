@@ -1,0 +1,60 @@
+---
+const { classes, attrs } = Astro.props;
+---
+
+<dialog
+  data-dialog
+  class={`dialog max-w-none max-h-none w-full h-full overflow-hidden opacity-0 ${classes}`}
+  {...attrs}
+>
+  <div
+    class="dialog-close absolute right-4 top-4 h-4 w-4 p-4 cursor-pointer z-50"
+    tabindex="0"
+    data-dialog-close
+  >
+  </div>
+  <slot />
+</dialog>
+
+<script>
+  const dialogs = document.querySelectorAll("[data-dialog]");
+  const closeButton = document.querySelectorAll("[data-dialog-close]");
+
+  closeButton.forEach((button) => {
+    button.addEventListener("click", () => {
+      dialogs.forEach((dialog) => {
+        if (dialog.open) {
+          dialog.classList.add("opacity-0");
+          window.setTimeout(() => {
+            document.querySelector("body").classList.remove("overflow-hidden");
+            dialog.close();
+          }, 750);
+
+          return;
+        }
+      });
+    });
+  });
+</script>
+
+<style>
+  .dialog {
+    transition: opacity 0.75s ease-in-out;
+  }
+
+  .dialog-close:after {
+    content: "";
+    height: 16px;
+    border-left: 2px solid #000;
+    position: absolute;
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  .dialog-close:before {
+    content: "";
+    height: 16px;
+    border-left: 2px solid #000;
+    position: absolute;
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
+</style>

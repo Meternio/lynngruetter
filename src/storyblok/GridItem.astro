@@ -1,17 +1,22 @@
 ---
 import { storyblokEditable } from "@storyblok/astro";
 import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
+import Dialog from "../components/Dialog.astro";
+import Carousel from "./Carousel.astro";
 
 const { blok } = Astro.props;
 ---
 
 <div
   {...storyblokEditable(blok)}
-  class={`grid-category-item w-[calc(25%-12px)] mb-4 ${blok.doubleWidth && "w-[calc(50%-12px)] "}`}
+  class={`grid-category-item w-[calc(25%-12px)] mb-4 ${
+    blok.doubleWidth && "w-[calc(50%-12px)] "
+  }`}
   data-grid-category-item
 >
-  <img
-    srcset={`
+  <div data-grid-category-item-content class="cursor-pointer">
+    <img
+      srcset={`
             ${
               blok.thumbnail?.filename +
               "/m/1920x0/smart/filters:format(webp):quality(80)"
@@ -28,18 +33,42 @@ const { blok } = Astro.props;
               blok.thumbnail?.filename +
               "/m/576x0/smart/filters:format(webp):quality(80)"
             } 576w`}
-    src={blok.thumbnail?.filename+'/m/1920x0/smart/filters:format(webp):quality(80)'}
-    alt={blok.thumbnail?.alt || "Grid Item"}
-    loading="lazy"
-    class="grid-category-item-thumbnail"
-    data-grid-category-item-thumbnail
-  />
-  <h2>{blok.title}</h2>
-  <div class="grid-gallery-modal hidden">
-    {
-      blok.gallery?.map((blok) => {
-        return <StoryblokComponent blok={blok} />;
-      })
-    }
+      src={blok.thumbnail?.filename +
+        "/m/1920x0/smart/filters:format(webp):quality(80)"}
+      alt={blok.thumbnail?.alt || "Grid Item"}
+      loading="lazy"
+      class="grid-category-item-thumbnail"
+      data-grid-category-item-thumbnail
+    />
+    <h2>{blok.title}</h2>
   </div>
+  <Dialog
+    classes="grid-gallery-dialog"
+    attrs={{ "data-grid-gallery-dialog": true }}
+  >
+    <Carousel>
+      {
+        blok.gallery?.map((blok) => {
+          return <div class="embla__slide"><StoryblokComponent blok={blok} /></div>;
+        })
+      }
+    </Carousel>
+  </Dialog>
 </div>
+
+<script>
+  const gridItems = document.querySelectorAll(
+    "[data-grid-category-item-content]"
+  );
+  gridItems.forEach((item) => {
+    item.addEventListener("click", function (e) {
+      e.preventDefault();
+      const dialog = item.nextElementSibling;
+      if (dialog && dialog.matches("[data-grid-gallery-dialog]")) {
+        dialog.showModal();
+        document.querySelector("body").classList.add("overflow-hidden");
+        dialog.classList.remove("opacity-0");
+      }
+    });
+  });
+</script>
