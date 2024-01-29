@@ -8,7 +8,8 @@ const { blok, index } = Astro.props;
 <div
   {...storyblokEditable(blok)}
   aria-expanded={index === 0 ? "true" : "false"}
-  class={`-mb-4 ${index !== 0 && "hidden"}`} data-grid-category-content={index}
+  aria-hidden={index === 0 ? "false" : "true"}
+  class={`-mb-4 grid-category-content relativ block ${index !== 0 && "opacity-0 !h-0"}`} data-grid-category-content={index}
 >
   {
     blok.items?.map((blok) => {
@@ -16,3 +17,13 @@ const { blok, index } = Astro.props;
     })
   }
 </div>
+
+<style>
+  .grid-category-content {
+    transition: opacity 0.75s ease-in-out;
+  }
+
+  .grid-category-content.opacity-0 > :global(*) {
+    display: none;
+  }
+</style>
