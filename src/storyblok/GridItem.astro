@@ -28,7 +28,7 @@ const { blok } = Astro.props;
               blok.thumbnail?.filename +
               "/m/576x0/smart/filters:format(webp):quality(80)"
             } 576w`}
-    src={blok.thumbnail?.filename}
+    src={blok.thumbnail?.filename+'/m/1920x0/smart/filters:format(webp):quality(80)'}
     alt={blok.thumbnail?.alt || "Grid Item"}
     loading="lazy"
     class="grid-category-item-thumbnail"

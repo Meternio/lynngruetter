@@ -6,6 +6,6 @@ const { blok } = Astro.props;
 ---
 
 <div class="text-section-content mt-8" {...storyblokEditable(blok)}>
-  <h4 class="uppercase text-lg">{blok.title}</h4>
+  <h3 class="uppercase text-lg">{blok.title}</h3>
   <RichTextRenderer richTextData={blok.content} />
 </div>
