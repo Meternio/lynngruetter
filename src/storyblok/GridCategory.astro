@@ -2,13 +2,16 @@
 import { storyblokEditable } from "@storyblok/astro";
 import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
 
-const { blok, index } = Astro.props;
+const { blok, index, uid } = Astro.props;
 ---
 
 <div
   {...storyblokEditable(blok)}
-  aria-expanded={index === 0 ? "true" : "false"}
-  aria-hidden={index === 0 ? "false" : "true"}
+  id={`panel-${uid}-${index}`}
+  role="tabpanel"
+  tabindex="0"
+  aria-labelledby={`tab-${uid}-${index}`}
+  {...{ "hidden": index === 0 ? false : true}}
   class={`-mb-4 grid-category-content relativ block ${index !== 0 && "opacity-0 !h-0"}`} data-grid-category-content={index}
 >
   {

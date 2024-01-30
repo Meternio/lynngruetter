@@ -13,27 +13,37 @@ const { blok } = Astro.props;
   <div
     class="grid-categories-title flex flex-col lg:flex-row items-center justify-center gap-4"
     data-grid-category
+    role="tablist"
+    aria-label="Tabbed Grid Categories"
   >
     {
       blok.categories.map((category, index) => {
         return (
-          <h4
+          <button
             class={`grid-category-title uppercase text-black/40 cursor-pointer hover:text-black ${
               index === 0 ? "grid-category-title-active" : ""
             }`}
-            tabindex="0"
+            role="tab"
+            aria-controls={`panel-${blok._uid}-${index}`}
+            aria-selected={index === 0 ? "true" : "false"}
+            tabindex={index === 0 ? "0" : "-1"}
             data-grid-category-title={index}
           >
             {category.title}
-          </h4>
+          </button>
         );
       })
     }
   </div>
-  <div class="grid-categories-content overflow-hidden mt-5" data-grid-categories-content>
+  <div
+    class="grid-categories-content overflow-hidden mt-5"
+    data-grid-categories-content
+  >
     {
       blok.categories?.map((category, index) => {
-        return <StoryblokComponent blok={category} index={index} />;
+        return (
+          <StoryblokComponent blok={category} index={index} uid={blok._uid} />
+        );
       })
     }
   </div>
@@ -59,6 +69,34 @@ const { blok } = Astro.props;
     });
   });
 
+  const tabLists = document.querySelectorAll('[role="tablist"]');
+  let tabFocus = 0;
+  tabLists.forEach((tabList) => {
+    tabList.addEventListener("keydown", (e) => {
+      const tabs = tabList.querySelectorAll('[role="tab"]');
+      if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+        tabs[tabFocus].setAttribute("tabindex", -1);
+        if (e.key === "ArrowRight") {
+          tabFocus++;
+          // If we're at the end, go to the start
+          if (tabFocus >= tabs.length) {
+            tabFocus = 0;
+          }
+          // Move left
+        } else if (e.key === "ArrowLeft") {
+          tabFocus--;
+          // If we're at the start, move to the end
+          if (tabFocus < 0) {
+            tabFocus = tabs.length - 1;
+          }
+        }
+
+        tabs[tabFocus].setAttribute("tabindex", 0);
+        tabs[tabFocus].focus();
+      }
+    });
+  });
+
   // add on click event to category title to show the content
   var categoryTitles = document.querySelectorAll("[data-grid-category-title]");
   categoryTitles.forEach((categoryTitle, index) => {
@@ -67,16 +105,23 @@ const { blok } = Astro.props;
       var categoryContents = document.querySelectorAll(
         "[data-grid-category-content]"
       );
+      var categoryTitles = document.querySelectorAll(
+        "[data-grid-category-title]"
+      );
       categoryContents.forEach((categoryContent) => {
         categoryContent.classList.add("opacity-0", "!h-0");
-        categoryContent.setAttribute("aria-expanded", "false");
-        categoryContent.setAttribute("aria-hidden", "true");
+        categoryContent.setAttribute("hidden", "");
+      });
+      categoryTitles.forEach((categoryTitle) => {
+        categoryTitle.setAttribute("aria-selected", "false");
+        categoryTitle.setAttribute("tabindex", "-1");
       });
 
       // show the selected category content
       categoryContents[index].classList.remove("opacity-0", "!h-0");
-      categoryContents[index].setAttribute("aria-expanded", "true");
-      categoryContents[index].setAttribute("aria-hidden", "false");
+      categoryContents[index].removeAttribute("hidden");
+      categoryTitle.setAttribute("aria-selected", "true");
+      categoryTitle.setAttribute("tabindex", "0");
 
       // init masonry
       var thumbnails = document.querySelectorAll(
@@ -113,7 +158,8 @@ const { blok } = Astro.props;
   }
 
   @media (min-width: 1024px) {
-    .grid-category-title:after {
+    .grid-category-title:after,
+    .grid-category-title.grid-category-title-active:after {
       content: "";
     }
   }
