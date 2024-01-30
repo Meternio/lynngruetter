@@ -1,22 +1,85 @@
 ---
-import { storyblokEditable } from '@storyblok/astro';
+import { storyblokEditable } from "@storyblok/astro";
 import RichTextRenderer from "@storyblok/astro/RichTextRenderer.astro";
 
-const { blok } = Astro.props
+const { blok, current, max } = Astro.props;
+
+const regex = /\/([^\/]+)(?=\.\w+$)/;
+const filename = blok.image?.filename.match(regex);
 ---
 
-<div {...storyblokEditable(blok)} class="grid-category-item-gallery" data-grid-category-item-gallery>
-  <h2>{blok.title}</h2>
-  <RichTextRenderer richTextData={blok.description} />
+<div
+  {...storyblokEditable(blok)}
+  class="grid-category-item-gallery h-full flex flex-col flex-nowrap"
+  data-grid-category-item-gallery
+>
   <img
-        srcset={`
-            ${blok.image?.filename+'/m/1920x0/smart/filters:format(webp):quality(80)'} 1200w,
-            ${blok.image?.filename+'/m/992x0/smart/filters:format(webp):quality(80)'} 992w,
-            ${blok.image?.filename+'/m/768x0/smart/filters:format(webp):quality(80)'} 768w,
-            ${blok.image?.filename+'/m/576x0/smart/filters:format(webp):quality(80)'} 576w`}
-        src={blok.image?.filename+'/m/1920x0/smart/filters:format(webp):quality(80)'}
-        alt={blok.image?.alt || "Grid Item Gallery"}
-        loading="lazy"
-        class=""
-      />
+    srcset={`
+            ${
+              blok.image?.filename +
+              "/m/1920x0/smart/filters:format(webp):quality(80)"
+            } 1200w,
+            ${
+              blok.image?.filename +
+              "/m/992x0/smart/filters:format(webp):quality(80)"
+            } 992w,
+            ${
+              blok.image?.filename +
+              "/m/768x0/smart/filters:format(webp):quality(80)"
+            } 768w,
+            ${
+              blok.image?.filename +
+              "/m/576x0/smart/filters:format(webp):quality(80)"
+            } 576w`}
+    src={blok.image?.filename +
+      "/m/1920x0/smart/filters:format(webp):quality(80)"}
+    alt={blok.image?.alt || "Grid Item Gallery"}
+    loading="lazy"
+    class="grid-category-item-gallery-image max-h-[calc(100%-60px)] mx-auto"
+    data-grid-category-item-gallery-image
+  />
+  <div
+    class="grid-category-item-gallery-footer flex justify-between items-center h-full relative text-sm"
+  >
+    <div class="absolute left-0 top-1/2 -translate-y-1/2">
+      {current && max ? `${current}/${max}` : ""}
+      {filename && filename[1]}
+    </div>
+    <div class="flex-grow text-center">
+      <div class="inline-block relative">
+        <button
+          class="grid-category-item-gallery-footer-trigger"
+          data-grid-category-item-gallery-footer-trigger>Information</button
+        >
+        <div
+          class="grid-category-item-gallery-footer-description opacity-0 absolute bottom-5 left-0 w-80 text-left z-30"
+        >
+          <RichTextRenderer richTextData={blok.description} />
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+<style>
+  .grid-category-item-gallery-footer-description,
+  .grid-category-item-gallery-image {
+    transition: opacity 0.75s ease-in-out;
+  }
+</style>
+
+<script>
+  const triggers = document.querySelectorAll(
+    "[data-grid-category-item-gallery-footer-trigger]"
+  );
+
+  triggers.forEach((trigger) => {
+    trigger.addEventListener("click", () => {
+      trigger.nextElementSibling.classList.toggle("opacity-0");
+      const parent = trigger.closest("[data-grid-category-item-gallery]");
+      parent
+        .querySelector("[data-grid-category-item-gallery-image]")
+        .classList.toggle("opacity-30");
+    });
+  });
+</script>

@@ -46,13 +46,20 @@ const { blok } = Astro.props;
     classes="grid-gallery-dialog"
     attrs={{ "data-grid-gallery-dialog": true }}
   >
-    <Carousel>
-      {
-        blok.gallery?.map((blok) => {
-          return <div class="embla__slide"><StoryblokComponent blok={blok} /></div>;
-        })
-      }
-    </Carousel>
+    <div class="container mx-auto h-full">
+      <h2 class="text-xl text-center p-4">{blok.title}</h2>
+      <Carousel classes="h-[calc(100%-60px)]">
+        {
+          blok.gallery?.map((gallery, index) => {
+            return (
+              <div class="carousel-slide">
+                <StoryblokComponent blok={gallery} current={index + 1} max={blok.gallery?.length}/>
+              </div>
+            );
+          })
+        }
+      </Carousel>
+    </div>
   </Dialog>
 </div>
 
