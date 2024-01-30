@@ -5,6 +5,12 @@ import Dialog from "../components/Dialog.astro";
 import Carousel from "./Carousel.astro";
 
 const { blok } = Astro.props;
+
+const thumbnailUrl = blok.thumbnail?.filename;
+let dimensions = {
+  width: thumbnailUrl.split('/')[5].split('x')[0],
+  height: thumbnailUrl.split('/')[5].split('x')[1]
+}
 ---
 
 <div
@@ -18,28 +24,28 @@ const { blok } = Astro.props;
     <img
       srcset={`
             ${
-              blok.thumbnail?.filename +
+              thumbnailUrl +
               "/m/1920x0/smart/filters:format(webp):quality(80)"
             } 1200w,
             ${
-              blok.thumbnail?.filename +
+              thumbnailUrl +
               "/m/992x0/smart/filters:format(webp):quality(80)"
             } 992w,
             ${
-              blok.thumbnail?.filename +
+              thumbnailUrl +
               "/m/768x0/smart/filters:format(webp):quality(80)"
             } 768w,
             ${
-              blok.thumbnail?.filename +
+              thumbnailUrl +
               "/m/576x0/smart/filters:format(webp):quality(80)"
             } 576w`}
-      src={blok.thumbnail?.filename +
+      src={thumbnailUrl +
         "/m/1920x0/smart/filters:format(webp):quality(80)"}
       alt={blok.thumbnail?.alt || "Grid Item"}
       loading="lazy"
       class="grid-category-item-thumbnail"
-      height="384"
-      width="576"
+      height={dimensions?.height}
+      width={dimensions?.width}
       data-grid-category-item-thumbnail
     />
     <h2 class="text-center">{blok.title}</h2>
