@@ -9,8 +9,8 @@ const { blok } = Astro.props;
 
 <div
   {...storyblokEditable(blok)}
-  class={`grid-category-item w-[calc(25%-12px)] mb-4 ${
-    blok.doubleWidth && "w-[calc(50%-12px)] "
+  class={`grid-category-item mb-4 ${
+    blok.doubleWidth ? "w-full lg:w-[calc(50%-8px)]" : "w-[calc(50%-8px)] lg:w-[calc(25%-12px)]"
   }`}
   data-grid-category-item
 >
@@ -40,7 +40,7 @@ const { blok } = Astro.props;
       class="grid-category-item-thumbnail"
       data-grid-category-item-thumbnail
     />
-    <h2>{blok.title}</h2>
+    <h2 class="text-center">{blok.title}</h2>
   </div>
   <Dialog
     classes="grid-gallery-dialog"

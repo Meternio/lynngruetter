@@ -11,15 +11,15 @@ const { blok } = Astro.props;
   data-grid
 >
   <div
-    class="grid-categories-title flex items-center justify-center gap-4"
+    class="grid-categories-title flex flex-col lg:flex-row items-center justify-center gap-4"
     data-grid-category
   >
     {
       blok.categories.map((category, index) => {
         return (
           <h4
-            class={`uppercase text-black/40 cursor-pointer hover:text-black ${
-              index === 0 && "grid-category-title-active"
+            class={`grid-category-title uppercase text-black/40 cursor-pointer hover:text-black ${
+              index === 0 ? "grid-category-title-active" : ""
             }`}
             tabindex="0"
             data-grid-category-title={index}
@@ -104,6 +104,20 @@ const { blok } = Astro.props;
 </script>
 
 <style>
+  .grid-category-title:after {
+    content: "+";
+  }
+
+  .grid-category-title.grid-category-title-active:after {
+    content: "-";
+  }
+
+  @media (min-width: 1024px) {
+    .grid-category-title:after {
+      content: "";
+    }
+  }
+
   .grid-category-title-active {
     @apply text-black;
   }

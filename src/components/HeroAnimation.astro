@@ -34,14 +34,14 @@
   const headerNavContentMenu = document.querySelector(
     "[data-header-nav-content-menu]"
   );
-  const headerNavContentMenuItems = document.querySelectorAll(
-    "[data-header] a"
+  const headerNavContentMenuItems =
+    document.querySelectorAll("[data-header] a");
+  const headerNavContentMenuButton = document.querySelectorAll(
+    "[data-header-nav-content-menu-button] .bar"
   );
 
   let bottomPosition = heroAnimationText.getBoundingClientRect();
-  headerNavContentMenu.style.transform = `translateY(${
-    bottomPosition.bottom
-  }px)`;
+  headerNavContentMenu.style.transform = `translateY(${bottomPosition.bottom}px)`;
 
   setTimeout(function () {
     window.scrollTo(0, 0);
@@ -65,6 +65,9 @@
     headerNavContentMenuItems.forEach((item) => {
       item.classList.add("!animate-none");
     });
+    headerNavContentMenuButton.forEach((item) => {
+      item.classList.add("!animate-none");
+    });
   }, 5250);
 </script>
 
@@ -77,6 +80,12 @@
     animation:
       3s linear colorChangeText forwards,
       1.7s 3.875s ease-in-out colorChangeTextHeader forwards;
+  }
+
+  :global(.header button .bar) {
+    animation:
+      3s linear colorChangeBackgroundBar forwards,
+      1.7s 3.875s ease-in-out colorChangeBackgroundHeaderBar forwards;
   }
 
   :global(.header-nav-content-menu-animation) {
@@ -139,6 +148,33 @@
     }
     100% {
       @apply text-white;
+      mix-blend-mode: none;
+    }
+  }
+
+  @keyframes colorChangeBackgroundBar {
+    0%,
+    25% {
+      @apply bg-darkGreen;
+    }
+    50%,
+    75% {
+      @apply bg-pink;
+    }
+    100% {
+      @apply bg-brown;
+    }
+  }
+
+  @keyframes colorChangeBackgroundHeaderBar {
+    0% {
+      @apply bg-brown;
+    }
+    25% {
+      mix-blend-mode: difference;
+    }
+    100% {
+      @apply bg-white;
       mix-blend-mode: none;
     }
   }

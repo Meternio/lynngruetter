@@ -1,5 +1,5 @@
 ---
-import { useStoryblokApi } from '@storyblok/astro';
+import { useStoryblokApi } from "@storyblok/astro";
 
 const storyblokApi = useStoryblokApi();
 
@@ -10,19 +10,98 @@ const { data } = await storyblokApi.get("cdn/stories/home", {
 const content = data.story.content;
 ---
 
-<header
-  class="header fixed w-full z-50 h-20 p-4 text-white"
-  data-header
->
-  <nav class="header-nav h-full flex items-center lg:justify-between uppercase lg:normal-case">
+<header class="header fixed w-full z-50 h-20 p-4 text-white" data-header>
+  <nav
+    class="header-nav h-full flex items-center lg:justify-between uppercase lg:normal-case"
+  >
     <a href="/" class="uppercase order-1 hover:text-blue">Lynn</a>
-    <div class="header-nav-content-menu order-2 flex flex-col relative top-1/4 self-start px-4 lg:self-auto lg:top-0 lg:flex-row lg:gap-16 lg:px-16 lg:flex-grow lg:order-1" data-header-nav-content-menu>
-      {content.body.map
-        ((item, index) => (
-          <a href={`#${item.id}`} class={`${index === (content.body.length - 1)  && 'flex-grow'} lg:text-center hover:text-blue`}>{item.name}</a>
+    <div
+      class="header-nav-content-menu w-full invisible opacity-0 lg:visible lg:opacity-100 order-2 flex flex-col relative top-1/4 self-start px-4 lg:self-auto lg:top-0 lg:flex-row lg:gap-16 lg:px-16 lg:flex-grow lg:order-1"
+      data-header-nav-content-menu
+    >
+      {
+        content.body.map((item, index) => (
+          <a
+            href={`#${item.id}`}
+            class={`${
+              index === content.body.length - 1 && "flex-grow"
+            } lg:text-center hover:text-blue`}
+          >
+            {item.name}
+          </a>
         ))
       }
     </div>
-    <a href="/" class="uppercase order-1 pl-1 lg:pl-0 hover:text-blue">Grütter</a>
+    <a href="/" class="uppercase order-1 pl-1 lg:pl-0 hover:text-blue"
+      >Grütter</a
+    >
+    <button
+      class="header-nav-content-menu-button order-2 lg:hidden"
+      data-header-nav-content-menu-button
+    >
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
   </nav>
+
+  <script>
+    const headerNavContentMenu = document.querySelector(
+      "[data-header-nav-content-menu]"
+    );
+    const headerNavContentMenuButton = document.querySelector(
+      "[data-header-nav-content-menu-button]"
+    );
+
+    headerNavContentMenuButton.addEventListener("click", (e) => {
+      e.currentTarget.classList.toggle("active");
+      headerNavContentMenu.classList.toggle("invisible");
+      headerNavContentMenu.classList.toggle("opacity-0");
+    });
+  </script>
+
+  <style>
+    .header-nav-content-menu-button {
+      position: relative;
+      height: 30px;
+      width: 30px;
+    }
+
+    .header-nav-content-menu-button .bar {
+      width: 30px;
+      height: 2px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .header-nav-content-menu-button.active .bar:nth-of-type(1) {
+      display: none;
+    }
+
+    .header-nav-content-menu-button.active .bar:nth-of-type(2) {
+      top: 50%;
+      transform: translate(-50%, 0%) rotate(45deg);
+    }
+
+    .header-nav-content-menu-button.active .bar:nth-of-type(3) {
+      top: 50%;
+      transform: translate(-50%, 0%) rotate(-45deg);
+    }
+
+    .header-nav-content-menu-button .bar:nth-of-type(2) {
+      top: calc(50% - 9px);
+    }
+
+    .header-nav-content-menu-button .bar:nth-of-type(3) {
+      top: calc(50% + 9px);
+    }
+
+    .header-nav-content-menu {
+      transition: all 0.75s ease-in-out;
+    }
+  </style>
 </header>
