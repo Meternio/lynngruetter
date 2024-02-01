@@ -13,46 +13,48 @@ const filename = blok.image?.filename.match(regex);
   class="grid-category-item-gallery h-full flex flex-col flex-nowrap"
   data-grid-category-item-gallery
 >
-  <img
-    srcset={`
-            ${
-              blok.image?.filename +
-              "/m/1920x0/smart/filters:format(webp):quality(80)"
-            } 1200w,
-            ${
-              blok.image?.filename +
-              "/m/992x0/smart/filters:format(webp):quality(80)"
-            } 992w,
-            ${
-              blok.image?.filename +
-              "/m/768x0/smart/filters:format(webp):quality(80)"
-            } 768w,
-            ${
-              blok.image?.filename +
-              "/m/576x0/smart/filters:format(webp):quality(80)"
-            } 576w`}
-    src={blok.image?.filename +
-      "/m/1920x0/smart/filters:format(webp):quality(80)"}
-    alt={blok.image?.alt || "Grid Item Gallery"}
-    loading="lazy"
-    class="grid-category-item-gallery-image max-h-[calc(100%-60px)] mx-auto"
-    data-grid-category-item-gallery-image
-  />
+  <div class="h-[calc(100%-60px)]">
+    <img
+      srcset={`
+              ${
+                blok.image?.filename +
+                "/m/1920x0/smart/filters:format(webp):quality(80)"
+              } 1200w,
+              ${
+                blok.image?.filename +
+                "/m/992x0/smart/filters:format(webp):quality(80)"
+              } 992w,
+              ${
+                blok.image?.filename +
+                "/m/768x0/smart/filters:format(webp):quality(80)"
+              } 768w,
+              ${
+                blok.image?.filename +
+                "/m/576x0/smart/filters:format(webp):quality(80)"
+              } 576w`}
+      src={blok.image?.filename +
+        "/m/1920x0/smart/filters:format(webp):quality(80)"}
+      alt={blok.image?.alt || "Grid Item Gallery"}
+      loading="lazy"
+      class="grid-category-item-gallery-image relative top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-h-full"
+      data-grid-category-item-gallery-image
+    />
+  </div>
   <div
-    class="grid-category-item-gallery-footer flex justify-between items-center h-full relative text-sm"
+    class="grid-category-item-gallery-footer flex justify-between items-center flex-grow relative text-sm"
   >
     <div class="absolute left-0 top-1/2 -translate-y-1/2">
       {current && max ? `${current}/${max}` : ""}
       {filename && filename[1]}
     </div>
     <div class="flex-grow text-center">
-      <div class="inline-block relative">
+      <div class="inline-block static sm:relative">
         <button
           class="grid-category-item-gallery-footer-trigger"
           data-grid-category-item-gallery-footer-trigger>Information</button
         >
         <div
-          class="grid-category-item-gallery-footer-description opacity-0 absolute bottom-5 left-0 w-80 text-left z-30"
+          class="grid-category-item-gallery-footer-description opacity-0 absolute bottom-10 sm:bottom-5 left-0 w-full sm:w-80 text-left z-30"
         >
           <RichTextRenderer richTextData={blok.description} />
         </div>
