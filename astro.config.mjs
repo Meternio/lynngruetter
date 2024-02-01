@@ -28,6 +28,7 @@ export default defineConfig({
       gridItem: 'storyblok/GridItem',
       gridGallery: 'storyblok/GridGallery',
       carousel: 'storyblok/Carousel',
+      row: 'storyblok/Row',
     }
   }), tailwind()],
   vite: {

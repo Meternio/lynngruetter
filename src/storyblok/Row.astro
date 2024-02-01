@@ -1,0 +1,28 @@
+---
+import { storyblokEditable } from "@storyblok/astro";
+import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
+
+const { blok } = Astro.props;
+---
+
+<div
+  class="py-32"
+  style={`background-color: ${blok.background?.color || "transparent"}`}
+>
+  <div
+    {...storyblokEditable(blok)}
+    class="row-container gap-4 grid grid-flow-row lg:grid-flow-col grid-cols-1 lg:grid-cols-2 container mx-auto"
+  >
+    {
+      blok.content?.map((blok) => {
+        return <StoryblokComponent blok={blok} />;
+      })
+    }
+  </div>
+</div>
+
+<style>
+  .row-container :global(.text-section-content) {
+    margin-top: 0;
+  }
+</style>

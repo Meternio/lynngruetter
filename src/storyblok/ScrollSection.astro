@@ -1,33 +1,60 @@
 ---
 import { storyblokEditable } from "@storyblok/astro";
-import StoryblokComponent from '@storyblok/astro/StoryblokComponent.astro'
+import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
 
 const { blok } = Astro.props;
 ---
 
-<section class="scroll-section" {...storyblokEditable(blok)} id={blok.id} data-scroll-section>
-    {
-        blok.content?.map((blok) => {
-          return <StoryblokComponent blok={blok} />
-        })
-      }
+<section
+  class="scroll-section"
+  {...storyblokEditable(blok)}
+  id={blok.id}
+  data-scroll-section
+>
+  {
+    blok.content?.map((blok) => {
+      return <StoryblokComponent blok={blok} />;
+    })
+  }
+  {
+    blok.signature && (
+      <div class="scroll-section-signature p-4">
+        <div class="uppercase line-h text-[41svw] md:text-[305px] leading-[0.72] -left-5 relative">
+          LYNN
+        </div>
+        <div class="scroll-section-signature-footer pt-4 flex items-center justify-between">
+          <span class="">{blok.name}</span>
+          <a target="_blank" href="https://www.instagram.com/lynngruetter">
+            @lynngruetter
+          </a>
+        </div>
+      </div>
+    )
+  }
 </section>
 
 <script>
   // observe all scroll sections and if they are in view, add the active class
-  const scrollSections = document.querySelectorAll('[data-scroll-section]')
-  const scrollSectionsObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        if (document.querySelector('.active-scroll-section-link')) {
-          document.querySelector('.active-scroll-section-link').classList.remove('text-accent', 'active-scroll-section-link');
+  const scrollSections = document.querySelectorAll("[data-scroll-section]");
+  const scrollSectionsObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          if (document.querySelector(".active-scroll-section-link")) {
+            document
+              .querySelector(".active-scroll-section-link")
+              .classList.remove("text-accent", "active-scroll-section-link");
+          }
+          document
+            .querySelector(`a[href="#${entry.target.id}"]`)
+            .classList.add("active-scroll-section-link", "text-accent");
         }
-        document.querySelector(`a[href="#${entry.target.id}"]`).classList.add('active-scroll-section-link','text-accent');
-      }
-    })
-  }, { threshold: 0.2 })
+      });
+    },
+    { threshold: 0.2 }
+  );
 
   scrollSections.forEach((section) => {
     scrollSectionsObserver.observe(section);
-  })
+  });
 </script>
