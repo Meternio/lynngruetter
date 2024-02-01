@@ -19,6 +19,9 @@
 </div>
 
 <script>
+  const header = document.querySelector(
+    "[data-header]"
+  );
   const heroAnimationText = document.querySelector(
     "[data-hero-animation-text]"
   );
@@ -55,6 +58,7 @@
     }
   }, 3750);
   setTimeout(function () {
+    header.classList.add("mix-blend-difference");
     heroAnimationTextMixBlendMode.classList.add("opacity-0");
     headerNavContentMenu.style.transition = `all 0.75s ease-in-out`;
     headerNavContentMenu.classList.add("header-nav-content-menu-animation");
@@ -144,12 +148,8 @@
     0% {
       @apply text-brown;
     }
-    25% {
-      mix-blend-mode: difference;
-    }
     100% {
-      @apply text-white;
-      mix-blend-mode: none;
+      @apply text-black;
     }
   }
 
@@ -171,12 +171,8 @@
     0% {
       @apply bg-brown;
     }
-    25% {
-      mix-blend-mode: difference;
-    }
     100% {
-      @apply bg-white;
-      mix-blend-mode: none;
+      @apply bg-black;
     }
   }
 </style>

@@ -59,14 +59,16 @@ const { blok } = Astro.props;
     '[data-grid-category-content="0"] [data-grid-category-item-thumbnail]'
   );
 
+  let msnry = [];
+
   imagesLoaded(thumbnails, function () {
-    new Masonry(grid, {
+    msnry.push(new Masonry(grid, {
       itemSelector:
         '[data-grid-category-content="0"] [data-grid-category-item]',
       gutter: 16,
       percentPosition: true,
       horizontalOrder: true,
-    });
+    }));
   });
 
   const tabLists = document.querySelectorAll('[role="tablist"]');
@@ -128,12 +130,16 @@ const { blok } = Astro.props;
         `[data-grid-category-content="${index}"] [data-grid-category-item-thumbnail]`
       );
       imagesLoaded(thumbnails, function () {
-        new Masonry(categoryContents[index], {
-          itemSelector: `[data-grid-category-content="${index}"] [data-grid-category-item]`,
-          gutter: 16,
-          percentPosition: true,
-          horizontalOrder: true,
-        });
+        if(msnry[index]) {
+          msnry[index].layout();
+        } else {
+          msnry.push(new Masonry(categoryContents[index], {
+            itemSelector: `[data-grid-category-content="${index}"] [data-grid-category-item]`,
+            gutter: 16,
+            percentPosition: true,
+            horizontalOrder: true,
+          }));
+        }
       });
 
       // remove active class from all category titles
