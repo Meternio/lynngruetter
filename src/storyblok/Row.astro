@@ -6,23 +6,29 @@ const { blok } = Astro.props;
 ---
 
 <div
-  class="py-32"
-  style={`background-color: ${blok.background?.color || "transparent"}`}
+  {...storyblokEditable(blok)}
+  class=`row-container gap-12 grid grid-flow-col ${!blok.fullWidth ? 'container mx-auto' : ''}`
+  style=`grid-template-columns: repeat(${blok.columns}, minmax(0, 1fr));`
 >
-  <div
-    {...storyblokEditable(blok)}
-    class="row-container gap-4 grid grid-flow-row lg:grid-flow-col grid-cols-1 lg:grid-cols-2 container mx-auto"
-  >
-    {
-      blok.content?.map((blok) => {
-        return <StoryblokComponent blok={blok} />;
-      })
-    }
-  </div>
+  {
+    blok.content?.map((blok) => {
+      return <StoryblokComponent blok={blok} />;
+    })
+  }
 </div>
 
 <style>
+  @media screen and (max-width: 1023px) {
+    .row-container {
+      grid-template-columns: 1fr !important;
+      grid-auto-flow: row;
+    }
+  }
   .row-container :global(.text-section-content) {
     margin-top: 0;
+  }
+
+  .row-container + .row-container {
+    margin-top: 3rem;
   }
 </style>

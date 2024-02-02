@@ -1,0 +1,18 @@
+---
+import { storyblokEditable } from "@storyblok/astro";
+import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
+
+const { blok } = Astro.props;
+---
+
+<div
+  {...storyblokEditable(blok)}
+  class="py-32"
+  style={`background-color: ${blok.background?.color || "transparent"}; color: ${blok.color?.color || "inherit"};`}
+>
+  {
+    blok.rows?.map((blok) => {
+      return <StoryblokComponent blok={blok} />;
+    })
+  }
+</div>

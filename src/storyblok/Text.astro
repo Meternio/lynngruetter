@@ -7,13 +7,13 @@ const { blok } = Astro.props;
 
 <div class="text-section-content mt-8" {...storyblokEditable(blok)}>
   <h3 class="uppercase text-lg">{blok.title}</h3>
-  <div class="grid grid-flow-col auto-cols-fr">
+  <div class="grid grid-flow-col auto-cols-fr gap-2">
     <div><RichTextRenderer richTextData={blok.content} /></div>
-    {blok.content2 && blok.content2?.content.length > 0 && blok.content2?.content[0]?.content &&
-      <div><RichTextRenderer richTextData={blok.content2} /></div>
+    {blok.content2 && blok.content2?.content?.length > 0 && (blok.content2?.content[0]?.content || blok.content2?.content[0]?.attrs) &&
+      <div class="justify-self-center"><RichTextRenderer richTextData={blok.content2} /></div>
     }
-    {blok.content3 && blok.content3?.content.length > 0 && blok.content3?.content[0]?.content &&
-      <div><RichTextRenderer richTextData={blok.content3} /></div>
+    {blok.content3 && blok.content3?.content?.length > 0 && (blok.content3?.content[0]?.content || blok.content3?.content[0]?.attrs) &&
+      <div class="justify-self-end"><RichTextRenderer richTextData={blok.content3} /></div>
     }
   </div>
 </div>
