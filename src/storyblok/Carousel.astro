@@ -10,12 +10,25 @@ const { classes, blok, color } = Astro.props;
   data-carousel
   {...storyblokEditable(blok)}
 >
-  <div class="carousel-viewport h-full max-w-[calc(100%-100px)] m-auto overflow-hidden" data-carousel-viewport>
-    <div class="carousel-container h-full flex">
+  <div
+    class=`carousel-viewport h-full m-auto ${blok?.items ? 'max-w-[calc(100%-100px)] overflow-hidden' : ''}`
+    data-carousel-viewport
+    {...{
+      "data-auto-height": blok?.autoHeight ? true : false,
+      "data-auto-scroll": blok?.autoScroll ? true : false,
+    }}
+  >
+    <div
+      class=`carousel-container h-full flex ${blok?.items ? 'items-start' : ''}`
+    >
       {
         blok?.items ? (
           blok.items.map((blok) => {
-            return <div class="carousel-slide text-center"><StoryblokComponent blok={blok} /></div>;
+            return (
+              <div class="carousel-slide text-center" data-carousel-slide>
+                <StoryblokComponent blok={blok} />
+              </div>
+            );
           })
         ) : (
           <slot />
@@ -23,31 +36,96 @@ const { classes, blok, color } = Astro.props;
       }
     </div>
   </div>
-  <button
-    class=`carousel-prev absolute left-0 ${blok?.items ? 'top-[calc(50%-18px)] ' : 'top-[calc(50%-30px)] '} -translate-y-1/2 z-30`
-    data-carousel-prev></button>
-  <button
-    class=`carousel-next absolute right-0 ${blok?.items ? 'top-[calc(50%-18px)] ' : 'top-[calc(50%-30px)] '} -translate-y-1/2 z-30`
-    data-carousel-next></button>
+  {
+    !blok?.autoScroll && (
+      <>
+        <button
+          class={`carousel-prev absolute left-0 ${
+            blok?.items ? "top-[calc(50%-18px)] " : "top-[calc(50%-30px)] "
+          } -translate-y-1/2 z-30`}
+          data-carousel-prev
+        />
+        <button
+          class={`carousel-next absolute right-0 ${
+            blok?.items ? "top-[calc(50%-18px)] " : "top-[calc(50%-30px)] "
+          } -translate-y-1/2 z-30`}
+          data-carousel-next
+        />
+      </>
+    )
+  }
 </div>
 
 <script>
   import EmblaCarousel from "embla-carousel";
+  import AutoHeight from "embla-carousel-auto-height";
+  import AutoScroll from "embla-carousel-auto-scroll";
 
   const emblaNodes = document.querySelectorAll("[data-carousel-viewport]");
   const options = { loop: true };
 
+  const emblaInstances = [];
+  let emblaNodeIndex = -1;
+
   emblaNodes.forEach((node) => {
+    // check if slide is a child of carousel
+    if (node.querySelectorAll("[data-carousel-slide]").length === 0) {
+      return true;
+    }
+
+    emblaNodeIndex += 1;
+
     const prevButtonNode = node.parentNode.querySelector(
       "[data-carousel-prev]"
     );
     const nextButtonNode = node.parentNode.querySelector(
       "[data-carousel-next]"
     );
-    const embla = EmblaCarousel(node, options);
 
-    prevButtonNode.addEventListener("click", () => embla.scrollPrev(), false);
-    nextButtonNode.addEventListener("click", () => embla.scrollNext(), false);
+    const emblaPlugins = [];
+
+    if (typeof node.getAttribute("data-auto-height") === "string") {
+      emblaPlugins.push(AutoHeight());
+    }
+
+    if (typeof node.getAttribute("data-auto-scroll") === "string") {
+      emblaPlugins.push(
+        AutoScroll({
+          startDelay: 0,
+          stopOnFocusIn: false,
+          stopOnInteraction: false,
+        })
+      );
+    }
+
+    emblaInstances.push(EmblaCarousel(node, options, emblaPlugins));
+    node.setAttribute(
+      "data-carousel-instance-index",
+      emblaNodeIndex.toString()
+    );
+
+    if (typeof node.getAttribute("data-auto-scroll") !== "string") {
+      prevButtonNode.addEventListener(
+        "click",
+        (e) => {
+          const instanceIndex = e.currentTarget.parentNode
+            .querySelector("[data-carousel-instance-index]")
+            .getAttribute("data-carousel-instance-index");
+          emblaInstances[instanceIndex].scrollPrev();
+        },
+        false
+      );
+      nextButtonNode.addEventListener(
+        "click",
+        (e) => {
+          const instanceIndex = e.currentTarget.parentNode
+            .querySelector("[data-carousel-instance-index]")
+            .getAttribute("data-carousel-instance-index");
+          emblaInstances[instanceIndex].scrollNext();
+        },
+        false
+      );
+    }
   });
 </script>
 
@@ -55,6 +133,10 @@ const { classes, blok, color } = Astro.props;
   :global(.carousel-slide) {
     flex: 0 0 100%;
     min-width: 0;
+  }
+
+  .carousel-container {
+    transition: height 0.2s;
   }
 
   .carousel-prev,

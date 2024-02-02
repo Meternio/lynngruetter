@@ -60,7 +60,7 @@ let dimensions = {
         {
           blok.gallery?.map((gallery, index) => {
             return (
-              <div class="carousel-slide">
+              <div class="carousel-slide" data-carousel-slide>
                 <StoryblokComponent blok={gallery} current={index + 1} max={blok.gallery?.length}/>
               </div>
             );
