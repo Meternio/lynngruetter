@@ -19,61 +19,65 @@
 </div>
 
 <script>
-  const header = document.querySelector(
-    "[data-header]"
-  );
   const heroAnimationText = document.querySelector(
     "[data-hero-animation-text]"
   );
-  const heroAnimationTextMixBlendMode = document.querySelector(
-    "[data-hero-animation-text-mix-blend-mode]"
-  );
-  const heroAnimationBackground = document.querySelector(
-    "[data-hero-animation-background]"
-  );
-  const heroVideo = document.querySelector(
-    "[data-storyblok] > [data-hero]:first-child [data-hero-video], [data-storyblok] > [data-scroll-section]:first-child [data-hero] [data-hero-video]"
-  );
-  const headerNavContentMenu = document.querySelector(
-    "[data-header-nav-content-menu]"
-  );
-  const headerNavContentMenuItems =
-    document.querySelectorAll("[data-header] a");
-  const headerNavContentMenuButton = document.querySelectorAll(
-    "[data-header-nav-content-menu-button] .bar"
-  );
+  if (heroAnimationText) {
+    const body = document.querySelector("[data-body]");
+    const main = document.querySelector("[data-main]");
+    const header = document.querySelector("[data-header]");
+    const heroAnimationTextMixBlendMode = document.querySelector(
+      "[data-hero-animation-text-mix-blend-mode]"
+    );
+    const heroAnimationBackground = document.querySelector(
+      "[data-hero-animation-background]"
+    );
+    const heroVideo = document.querySelector(
+      "[data-storyblok] > [data-hero]:first-child [data-hero-video], [data-storyblok] > [data-scroll-section]:first-child [data-hero] [data-hero-video]"
+    );
+    const headerNavContentMenu = document.querySelector(
+      "[data-header-nav-content-menu]"
+    );
+    const headerNavContentMenuItems =
+      document.querySelectorAll("[data-header] a");
+    const headerNavContentMenuButton = document.querySelectorAll(
+      "[data-header-nav-content-menu-button] .bar"
+    );
 
-  let bottomPosition = heroAnimationText.getBoundingClientRect();
-  headerNavContentMenu.style.transform = `translateY(${bottomPosition.bottom}px)`;
+    body.classList.add("overflow-hidden");
+    main.classList.add("opacity-0");
+    let bottomPosition = heroAnimationText.getBoundingClientRect();
+    headerNavContentMenu.style.transform = `translateY(${bottomPosition.bottom}px)`;
 
-  setTimeout(function () {
-    window.scrollTo(0, 0);
-    document.querySelector("[data-body]").classList.remove("overflow-hidden");
-    document.querySelector("[data-main]").classList.remove("opacity-0");
-    heroAnimationBackground.classList.add("opacity-0");
-    heroAnimationText.classList.add("opacity-0");
-    heroAnimationTextMixBlendMode.classList.remove("opacity-0");
-    if (heroVideo) {
-      heroVideo.play();
-    }
-  }, 3750);
-  setTimeout(function () {
-    header.classList.add("mix-blend-difference");
-    heroAnimationTextMixBlendMode.classList.add("opacity-0");
-    headerNavContentMenu.style.transition = `all 0.75s ease-in-out`;
-    headerNavContentMenu.classList.add("header-nav-content-menu-animation");
-  }, 4500);
-  setTimeout(function () {
-    heroAnimationTextMixBlendMode.remove();
-    heroAnimationText.remove();
-    heroAnimationBackground.remove();
-    headerNavContentMenuItems.forEach((item) => {
-      item.classList.add("!animate-none");
-    });
-    headerNavContentMenuButton.forEach((item) => {
-      item.classList.add("!animate-none");
-    });
-  }, 5250);
+    setTimeout(function () {
+      window.scrollTo(0, 0);
+      document.querySelector("[data-body]").classList.remove("overflow-hidden");
+      document.querySelector("[data-main]").classList.remove("opacity-0");
+      heroAnimationBackground.classList.add("opacity-0");
+      heroAnimationText.classList.add("opacity-0");
+      heroAnimationTextMixBlendMode.classList.remove("opacity-0");
+      if (heroVideo) {
+        heroVideo.play();
+      }
+    }, 3750);
+    setTimeout(function () {
+      header.classList.add("mix-blend-difference");
+      heroAnimationTextMixBlendMode.classList.add("opacity-0");
+      headerNavContentMenu.style.transition = `all 0.75s ease-in-out`;
+      headerNavContentMenu.classList.add("header-nav-content-menu-animation");
+    }, 4500);
+    setTimeout(function () {
+      heroAnimationTextMixBlendMode.remove();
+      heroAnimationText.remove();
+      heroAnimationBackground.remove();
+      headerNavContentMenuItems.forEach((item) => {
+        item.classList.add("!animate-none");
+      });
+      headerNavContentMenuButton.forEach((item) => {
+        item.classList.add("!animate-none");
+      });
+    }, 5250);
+  }
 </script>
 
 <style>

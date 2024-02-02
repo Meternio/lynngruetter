@@ -4,8 +4,9 @@ import Header from "../components/Header.astro";
 import HeroAnimation from "../components/HeroAnimation.astro";
 
 const storyblokApi = useStoryblokApi();
+const dev = import.meta.env.DEV;
 const { data } = await storyblokApi.get("cdn/stories/home", {
-  version: import.meta.env.DEV ? "draft" : "published",
+  version: dev ? "draft" : "published",
 });
 const content = data.story.content;
 ---
@@ -36,10 +37,10 @@ const content = data.story.content;
         "Ich moderiere: Vor der Fernsehkamera, online oder live an Ihrem Anlass."}
     />
   </head>
-  <body data-body class="overflow-hidden font-montrealRegular">
+  <body data-body class="font-montrealRegular">
     <Header />
-    <HeroAnimation />
-    <main class="opacity-0 relative" data-main>
+    {!dev && <HeroAnimation />}
+    <main class="relative" data-main>
       <slot />
     </main>
   </body>
