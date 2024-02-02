@@ -36,4 +36,9 @@ const isPropEmpty = (prop) => {
       <RichTextRenderer richTextData={blok.content} />
     )
   }
+  {
+    blok.author && (
+      <p class="text-sm mt-4">{blok.author}</p>
+    )
+  }
 </div>

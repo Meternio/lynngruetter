@@ -1,18 +1,33 @@
 ---
-const { classes } = Astro.props;
+import { storyblokEditable } from "@storyblok/astro";
+import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
+
+const { classes, blok, color } = Astro.props;
 ---
 
-<div class={`carousel overflow-hidden relative ${classes}`} data-carousel>
-  <div class="carousel-viewport h-full" data-carousel-viewport>
+<div
+  class={`carousel overflow-hidden relative ${classes}`}
+  data-carousel
+  {...storyblokEditable(blok)}
+>
+  <div class="carousel-viewport h-full max-w-[calc(100%-100px)] m-auto overflow-hidden" data-carousel-viewport>
     <div class="carousel-container h-full flex">
-      <slot />
+      {
+        blok?.items ? (
+          blok.items.map((blok) => {
+            return <div class="carousel-slide text-center"><StoryblokComponent blok={blok} /></div>;
+          })
+        ) : (
+          <slot />
+        )
+      }
     </div>
   </div>
   <button
-    class="carousel-prev absolute left-0 top-[calc(50%-30px)] -translate-y-1/2 z-30"
+    class=`carousel-prev absolute left-0 ${blok?.items ? 'top-[calc(50%-18px)] ' : 'top-[calc(50%-30px)] '} -translate-y-1/2 z-30`
     data-carousel-prev></button>
   <button
-    class="carousel-next absolute right-0 top-[calc(50%-30px)] -translate-y-1/2 z-30"
+    class=`carousel-next absolute right-0 ${blok?.items ? 'top-[calc(50%-18px)] ' : 'top-[calc(50%-30px)] '} -translate-y-1/2 z-30`
     data-carousel-next></button>
 </div>
 
@@ -36,7 +51,7 @@ const { classes } = Astro.props;
   });
 </script>
 
-<style>
+<style define:vars={{ color }}>
   :global(.carousel-slide) {
     flex: 0 0 100%;
     min-width: 0;
@@ -54,14 +69,14 @@ const { classes } = Astro.props;
   .carousel-prev {
     border-top: 8px solid transparent;
     border-bottom: 8px solid transparent;
-    border-right: 12px solid black;
+    border-right: 12px solid var(--color, black);
   }
 
   .carousel-prev:after {
     content: "";
     border-top: 8px solid transparent;
     border-bottom: 8px solid transparent;
-    border-right: 12px solid black;
+    border-right: 12px solid var(--color, black);
     top: -8px;
     left: 12px;
     position: relative;
@@ -70,14 +85,14 @@ const { classes } = Astro.props;
   .carousel-next {
     border-top: 8px solid transparent;
     border-bottom: 8px solid transparent;
-    border-left: 12px solid black;
+    border-left: 12px solid var(--color, black);
   }
 
   .carousel-next:after {
     content: "";
     border-top: 8px solid transparent;
     border-bottom: 8px solid transparent;
-    border-left: 12px solid black;
+    border-left: 12px solid var(--color, black);
     top: -8px;
     right: 24px;
     position: relative;

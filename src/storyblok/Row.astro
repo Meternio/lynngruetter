@@ -2,7 +2,7 @@
 import { storyblokEditable } from "@storyblok/astro";
 import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
 
-const { blok } = Astro.props;
+const { blok, color } = Astro.props;
 ---
 
 <div
@@ -11,8 +11,8 @@ const { blok } = Astro.props;
   style=`grid-template-columns: repeat(${blok.columns}, minmax(0, 1fr));`
 >
   {
-    blok.content?.map((blok) => {
-      return <StoryblokComponent blok={blok} />;
+    blok.content?.map((innerBlok) => {
+      return <StoryblokComponent blok={innerBlok} color={color} />;
     })
   }
 </div>

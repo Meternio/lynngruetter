@@ -11,8 +11,8 @@ const { blok } = Astro.props;
   style={`background-color: ${blok.background?.color || "transparent"}; color: ${blok.color?.color || "inherit"};`}
 >
   {
-    blok.rows?.map((blok) => {
-      return <StoryblokComponent blok={blok} />;
+    blok.rows?.map((innerBlok) => {
+      return <StoryblokComponent blok={innerBlok} color={blok.color?.color} />;
     })
   }
 </div>
