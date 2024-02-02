@@ -1,0 +1,29 @@
+---
+import { storyblokEditable } from "@storyblok/astro";
+
+const { blok } = Astro.props;
+
+const assetUrl = blok.asset?.filename;
+let dimensions = {
+  width: assetUrl.split("/")[5].split("x")[0],
+  height: assetUrl.split("/")[5].split("x")[1],
+};
+---
+
+<div {...storyblokEditable(blok)} class="" data-image>
+  <img
+    srcset={`
+            ${
+              assetUrl + "/m/500x0/smart/filters:format(webp):quality(80)"
+            } 500w,
+            ${
+              assetUrl + "/m/375x0/smart/filters:format(webp):quality(80)"
+            } 375w`}
+    src={assetUrl + "/m/500x0/smart/filters:format(webp):quality(80)"}
+    alt={blok.asset?.alt || "Image"}
+    loading="lazy"
+    class=""
+    height={dimensions?.height}
+    width={dimensions?.width}
+  />
+</div>

@@ -31,6 +31,7 @@ export default defineConfig({
       row: 'storyblok/Row',
       container: 'storyblok/Container',
       empty: 'storyblok/Empty',
+      image: 'storyblok/Image',
     }
   }), tailwind()],
   vite: {

@@ -3,17 +3,37 @@ import { storyblokEditable } from "@storyblok/astro";
 import RichTextRenderer from "@storyblok/astro/RichTextRenderer.astro";
 
 const { blok } = Astro.props;
+
+const isPropEmpty = (prop) => {
+  return (
+    prop &&
+    prop?.content?.length > 0 &&
+    (prop?.content[0]?.content || prop?.content[0]?.attrs)
+  );
+};
 ---
 
 <div class="text-section-content mt-8" {...storyblokEditable(blok)}>
   <h3 class="uppercase text-lg">{blok.title}</h3>
-  <div class="grid grid-flow-col auto-cols-fr gap-2">
-    <div><RichTextRenderer richTextData={blok.content} /></div>
-    {blok.content2 && blok.content2?.content?.length > 0 && (blok.content2?.content[0]?.content || blok.content2?.content[0]?.attrs) &&
-      <div class="justify-self-center"><RichTextRenderer richTextData={blok.content2} /></div>
-    }
-    {blok.content3 && blok.content3?.content?.length > 0 && (blok.content3?.content[0]?.content || blok.content3?.content[0]?.attrs) &&
-      <div class="justify-self-end"><RichTextRenderer richTextData={blok.content3} /></div>
-    }
-  </div>
+  {
+    isPropEmpty(blok.content2) ? (
+      <div class="grid grid-flow-row sm:grid-flow-col grid-cols-2 sm:auto-cols-fr gap-2">
+        <div>
+          <RichTextRenderer richTextData={blok.content} />
+        </div>
+
+        <div class="sm:justify-self-center">
+          <RichTextRenderer richTextData={blok.content2} />
+        </div>
+
+        {isPropEmpty(blok.content3) && (
+          <div class="col-start-2 sm:col-start-3 sm:justify-self-end">
+            <RichTextRenderer richTextData={blok.content3} />
+          </div>
+        )}
+      </div>
+    ) : (
+      <RichTextRenderer richTextData={blok.content} />
+    )
+  }
 </div>
