@@ -11,7 +11,7 @@ const { classes, blok, color } = Astro.props;
   {...storyblokEditable(blok)}
 >
   <div
-    class=`carousel-viewport h-full m-auto ${blok?.items ? 'max-w-[calc(100%-100px)] overflow-hidden' : ''}`
+    class=`carousel-viewport h-full m-auto ${(blok?.items && !blok?.autoScroll)  ? 'max-w-[calc(100%-100px)] overflow-hidden' : ''}`
     data-carousel-viewport
     {...{
       "data-auto-height": blok?.autoHeight ? true : false,
@@ -96,6 +96,8 @@ const { classes, blok, color } = Astro.props;
           stopOnInteraction: false,
         })
       );
+
+      options.dragFree = true;
     }
 
     emblaInstances.push(EmblaCarousel(node, options, emblaPlugins));
