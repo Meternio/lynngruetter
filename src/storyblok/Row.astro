@@ -3,6 +3,7 @@ import { storyblokEditable } from "@storyblok/astro";
 import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
 
 const { blok, color } = Astro.props;
+const maxWidth = blok.fullWidth ? "100" : blok.maxWidth;
 ---
 
 <div
@@ -17,7 +18,13 @@ const { blok, color } = Astro.props;
   }
 </div>
 
-<style>
+<style define:vars={{ maxWidth }}>
+  @media screen and (min-width: 1024px) {
+    .row-container > :global(*) {
+      max-width: calc(var(--maxWidth, 100) * 1%);
+    }
+  }
+
   @media screen and (max-width: 1023px) {
     .row-container {
       grid-template-columns: 1fr !important;

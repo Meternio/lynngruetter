@@ -16,6 +16,7 @@ const { classes, blok, color } = Astro.props;
     {...{
       "data-auto-height": blok?.autoHeight ? true : false,
       "data-auto-scroll": blok?.autoScroll ? true : false,
+      "data-auto-play": blok?.autoPlay ? true : false,
     }}
   >
     <div
@@ -37,7 +38,7 @@ const { classes, blok, color } = Astro.props;
     </div>
   </div>
   {
-    !blok?.autoScroll && (
+    !blok?.autoScroll && !blok?.autoPlay && (
       <>
         <button
           class={`carousel-prev absolute left-0 ${
@@ -98,6 +99,12 @@ const { classes, blok, color } = Astro.props;
       );
 
       options.dragFree = true;
+    }
+
+    if (typeof node.getAttribute("data-auto-play") === "string") {
+      emblaPlugins.push(
+        AutoPlay()
+      );
     }
 
     emblaInstances.push(EmblaCarousel(node, options, emblaPlugins));

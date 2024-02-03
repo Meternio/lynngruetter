@@ -18,7 +18,7 @@ const { blok } = Astro.props;
   }
   {
     blok.signature && (
-      <div class="scroll-section-signature p-4">
+      <div class={`scroll-section-signature p-4 ${blok.signatureAbsolute ? 'absolute w-full bottom-0 left-0' : ''}`}>
         <div class="uppercase line-h text-[41svw] md:text-[305px] leading-[0.72] -left-5 relative">
           LYNN
         </div>

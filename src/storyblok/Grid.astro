@@ -53,103 +53,112 @@ const { blok } = Astro.props;
   import Masonry from "masonry-layout";
   import imagesLoaded from "imagesloaded";
 
-  var grid = document.querySelector('[data-grid-category-content="0"]');
+  var grid = document.querySelectorAll("[data-grid]");
 
-  var thumbnails = document.querySelectorAll(
-    '[data-grid-category-content="0"] [data-grid-category-item-thumbnail]'
-  );
+  grid.forEach((grid) => {
+    var thumbnails = grid.querySelectorAll(
+      "[data-grid-category-content='0'] [data-grid-category-item-thumbnail]"
+    );
 
-  let msnry = [];
+    const gridContent = grid.querySelector("[data-grid-category-content='0']");
 
-  imagesLoaded(thumbnails, function () {
-    msnry.push(new Masonry(grid, {
-      itemSelector:
-        '[data-grid-category-content="0"] [data-grid-category-item]',
-      gutter: 16,
-      percentPosition: true,
-      horizontalOrder: true,
-    }));
-  });
+    let msnry = [];
 
-  const tabLists = document.querySelectorAll('[role="tablist"]');
-  let tabFocus = 0;
-  tabLists.forEach((tabList) => {
-    tabList.addEventListener("keydown", (e) => {
-      const tabs = tabList.querySelectorAll('[role="tab"]');
-      if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
-        tabs[tabFocus].setAttribute("tabindex", -1);
-        if (e.key === "ArrowRight") {
-          tabFocus++;
-          // If we're at the end, go to the start
-          if (tabFocus >= tabs.length) {
-            tabFocus = 0;
-          }
-          // Move left
-        } else if (e.key === "ArrowLeft") {
-          tabFocus--;
-          // If we're at the start, move to the end
-          if (tabFocus < 0) {
-            tabFocus = tabs.length - 1;
-          }
-        }
-
-        tabs[tabFocus].setAttribute("tabindex", 0);
-        tabs[tabFocus].focus();
-      }
+    imagesLoaded(thumbnails, function () {
+      msnry.push(
+        new Masonry(gridContent, {
+          itemSelector: "[data-grid-category-content='0'] [data-grid-category-item]",
+          gutter: 16,
+          percentPosition: true,
+          horizontalOrder: true,
+        })
+      );
     });
-  });
 
-  // add on click event to category title to show the content
-  var categoryTitles = document.querySelectorAll("[data-grid-category-title]");
-  categoryTitles.forEach((categoryTitle, index) => {
-    categoryTitle.addEventListener("click", function () {
-      // hide all category contents
-      var categoryContents = document.querySelectorAll(
-        "[data-grid-category-content]"
-      );
-      var categoryTitles = document.querySelectorAll(
-        "[data-grid-category-title]"
-      );
-      categoryContents.forEach((categoryContent) => {
-        categoryContent.classList.add("opacity-0", "!h-0");
-        categoryContent.setAttribute("hidden", "");
-      });
-      categoryTitles.forEach((categoryTitle) => {
-        categoryTitle.setAttribute("aria-selected", "false");
-        categoryTitle.setAttribute("tabindex", "-1");
-      });
+    const tabLists = grid.querySelectorAll('[role="tablist"]');
+    let tabFocus = 0;
+    tabLists.forEach((tabList) => {
+      tabList.addEventListener("keydown", (e) => {
+        const tabs = tabList.querySelectorAll('[role="tab"]');
+        if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+          tabs[tabFocus].setAttribute("tabindex", -1);
+          if (e.key === "ArrowRight") {
+            tabFocus++;
+            // If we're at the end, go to the start
+            if (tabFocus >= tabs.length) {
+              tabFocus = 0;
+            }
+            // Move left
+          } else if (e.key === "ArrowLeft") {
+            tabFocus--;
+            // If we're at the start, move to the end
+            if (tabFocus < 0) {
+              tabFocus = tabs.length - 1;
+            }
+          }
 
-      // show the selected category content
-      categoryContents[index].classList.remove("opacity-0", "!h-0");
-      categoryContents[index].removeAttribute("hidden");
-      categoryTitle.setAttribute("aria-selected", "true");
-      categoryTitle.setAttribute("tabindex", "0");
-
-      // init masonry
-      var thumbnails = document.querySelectorAll(
-        `[data-grid-category-content="${index}"] [data-grid-category-item-thumbnail]`
-      );
-      imagesLoaded(thumbnails, function () {
-        if(msnry[index]) {
-          msnry[index].layout();
-        } else {
-          msnry.push(new Masonry(categoryContents[index], {
-            itemSelector: `[data-grid-category-content="${index}"] [data-grid-category-item]`,
-            gutter: 16,
-            percentPosition: true,
-            horizontalOrder: true,
-          }));
+          tabs[tabFocus].setAttribute("tabindex", 0);
+          tabs[tabFocus].focus();
         }
       });
+    });
 
-      // remove active class from all category titles
-      var categoryTitles = document.querySelectorAll(
-        "[data-grid-category-title]"
-      );
-      categoryTitles.forEach((categoryTitle) => {
-        categoryTitle.classList.remove("grid-category-title-active");
+    // add on click event to category title to show the content
+    var categoryTitles = grid.querySelectorAll(
+      "[data-grid-category-title]"
+    );
+    categoryTitles.forEach((categoryTitle, index) => {
+      categoryTitle.addEventListener("click", function () {
+        // hide all category contents
+        var categoryContents = grid.querySelectorAll(
+          "[data-grid-category-content]"
+        );
+        var categoryTitles = grid.querySelectorAll(
+          "[data-grid-category-title]"
+        );
+        categoryContents.forEach((categoryContent) => {
+          categoryContent.classList.add("opacity-0", "!h-0");
+          categoryContent.setAttribute("hidden", "");
+        });
+        categoryTitles.forEach((categoryTitle) => {
+          categoryTitle.setAttribute("aria-selected", "false");
+          categoryTitle.setAttribute("tabindex", "-1");
+        });
+
+        // show the selected category content
+        categoryContents[index].classList.remove("opacity-0", "!h-0");
+        categoryContents[index].removeAttribute("hidden");
+        categoryTitle.setAttribute("aria-selected", "true");
+        categoryTitle.setAttribute("tabindex", "0");
+
+        // init masonry
+        var thumbnails = grid.querySelectorAll(
+          `[data-grid-category-content="${index}"] [data-grid-category-item-thumbnail]`
+        );
+        imagesLoaded(thumbnails, function () {
+          if (msnry[index]) {
+            msnry[index].layout();
+          } else {
+            msnry.push(
+              new Masonry(categoryContents[index], {
+                itemSelector: `[data-grid-category-content="${index}"] [data-grid-category-item]`,
+                gutter: 16,
+                percentPosition: true,
+                horizontalOrder: true,
+              })
+            );
+          }
+        });
+
+        // remove active class from all category titles
+        var categoryTitles = grid.querySelectorAll(
+          "[data-grid-category-title]"
+        );
+        categoryTitles.forEach((categoryTitle) => {
+          categoryTitle.classList.remove("grid-category-title-active");
+        });
+        categoryTitles[index].classList.add("grid-category-title-active");
       });
-      categoryTitles[index].classList.add("grid-category-title-active");
     });
   });
 </script>
