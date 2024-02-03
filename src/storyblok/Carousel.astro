@@ -115,7 +115,7 @@ const { classes, blok, color } = Astro.props;
       emblaNodeIndex.toString()
     );
 
-    if (typeof node.getAttribute("data-auto-scroll") !== "string") {
+    if (typeof node.getAttribute("data-auto-scroll") !== "string" || typeof node.getAttribute("data-auto-play") !== "string"{
       prevButtonNode.addEventListener(
         "click",
         (e) => {
