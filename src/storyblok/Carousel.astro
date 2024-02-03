@@ -6,7 +6,7 @@ const { classes, blok, color } = Astro.props;
 ---
 
 <div
-  class={`carousel overflow-hidden relative ${classes}`}
+  class={`carousel overflow-hidden relative ${(blok?.items) ? 'carousel-storyblok' : ''} ${classes}`}
   data-carousel
   {...storyblokEditable(blok)}
 >
@@ -61,9 +61,9 @@ const { classes, blok, color } = Astro.props;
   import EmblaCarousel from "embla-carousel";
   import AutoHeight from "embla-carousel-auto-height";
   import AutoScroll from "embla-carousel-auto-scroll";
+  import AutoPlay from "embla-carousel-autoplay";
 
   const emblaNodes = document.querySelectorAll("[data-carousel-viewport]");
-  const options = { loop: true };
 
   const emblaInstances = [];
   let emblaNodeIndex = -1;
@@ -73,6 +73,8 @@ const { classes, blok, color } = Astro.props;
     if (node.querySelectorAll("[data-carousel-slide]").length === 0) {
       return true;
     }
+
+    const options = { loop: true };
 
     emblaNodeIndex += 1;
 
@@ -142,6 +144,10 @@ const { classes, blok, color } = Astro.props;
   :global(.carousel-slide) {
     flex: 0 0 100%;
     min-width: 0;
+  }
+
+  :global(.carousel-storyblok .carousel-slide img) {
+    margin: auto;
   }
 
   .carousel-container {

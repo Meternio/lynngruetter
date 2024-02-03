@@ -12,8 +12,8 @@ const maxWidth = blok.fullWidth ? "100" : blok.maxWidth;
   style=`grid-template-columns: repeat(${blok.columns}, minmax(0, 1fr));`
 >
   {
-    blok.content?.map((innerBlok) => {
-      return <StoryblokComponent blok={innerBlok} color={color} />;
+    blok.content?.map((innerBlok, index) => {
+      return <div style={`order: ${blok.swapOrderOnMobile ? (blok.content.length - index) : index}`}><StoryblokComponent blok={innerBlok} color={color} /></div>;
     })
   }
 </div>
@@ -22,6 +22,7 @@ const maxWidth = blok.fullWidth ? "100" : blok.maxWidth;
   @media screen and (min-width: 1024px) {
     .row-container > :global(*) {
       max-width: calc(var(--maxWidth, 100) * 1%);
+      order: 0 !important;
     }
   }
 
