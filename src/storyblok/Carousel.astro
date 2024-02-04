@@ -45,12 +45,14 @@ const { classes, blok, color } = Astro.props;
             blok?.items ? "top-[calc(50%-18px)] " : "top-[calc(50%-30px)] "
           } -translate-y-1/2 z-30`}
           data-carousel-prev
+          aria-label="Button to slide backwards in the carousel"
         />
         <button
           class={`carousel-next absolute right-0 ${
             blok?.items ? "top-[calc(50%-18px)] " : "top-[calc(50%-30px)] "
           } -translate-y-1/2 z-30`}
           data-carousel-next
+          aria-label="Button to slide forward in the carousel"
         />
       </>
     )
