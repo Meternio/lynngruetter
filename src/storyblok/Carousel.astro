@@ -107,7 +107,10 @@ const { classes, blok, color } = Astro.props;
 
     if (typeof node.getAttribute("data-auto-play") === "string") {
       emblaPlugins.push(
-        AutoPlay()
+        AutoPlay({
+          stopOnInteraction: false,
+          stopOnFocusIn: false,
+        })
       );
     }
 

@@ -9,6 +9,7 @@ const { data } = await storyblokApi.get("cdn/stories/home", {
   version: dev ? "draft" : "published",
 });
 const content = data.story.content;
+const isFrontendEditor = Astro.url.searchParams.get('_storyblok')! || '';
 ---
 
 <html lang="de">
@@ -39,7 +40,7 @@ const content = data.story.content;
   </head>
   <body data-body class="font-montrealRegular">
     <Header />
-    {!dev && <HeroAnimation />}
+    {(!dev && !isFrontendEditor) && <HeroAnimation />}
     <main class="relative" data-main>
       <slot />
     </main>
