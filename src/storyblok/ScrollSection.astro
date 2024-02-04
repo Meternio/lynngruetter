@@ -58,3 +58,9 @@ const { blok } = Astro.props;
     scrollSectionsObserver.observe(section);
   });
 </script>
+
+<style>
+  .scroll-section :global(> .py-32 + .py-32) {
+    padding-top: 0;
+  }
+</style>

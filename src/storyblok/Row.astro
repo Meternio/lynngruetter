@@ -32,11 +32,16 @@ const maxWidth = blok.fullWidth ? "100" : blok.maxWidth;
       grid-auto-flow: row;
     }
   }
-  .row-container :global(.text-section-content) {
+
+  .row-container :global(.text-section) {
+    padding: 0;
+  }
+
+  .row-container > div :global(> .text-section-content) {
     margin-top: 0;
   }
 
   .row-container + .row-container {
-    margin-top: 3rem;
+    margin-top: 6rem;
   }
 </style>

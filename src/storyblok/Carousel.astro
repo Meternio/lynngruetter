@@ -11,7 +11,7 @@ const { classes, blok, color } = Astro.props;
   {...storyblokEditable(blok)}
 >
   <div
-    class=`carousel-viewport h-full m-auto ${(blok?.items && !blok?.autoScroll)  ? 'max-w-[calc(100%-100px)] overflow-hidden' : ''}`
+    class=`carousel-viewport h-full m-auto ${(blok?.items && !blok?.autoScroll && !blok?.autoPlay)  ? 'max-w-[calc(100%-100px)] overflow-hidden' : ''}`
     data-carousel-viewport
     {...{
       "data-auto-height": blok?.autoHeight ? true : false,
@@ -150,6 +150,14 @@ const { classes, blok, color } = Astro.props;
 
   :global(.carousel-storyblok .carousel-slide img) {
     margin: auto;
+  }
+
+  :global(.carousel-slide > .text-section-content) {
+    margin-top: 0;
+  }
+
+  [data-auto-height="true"] {
+    height: calc(100% - 32px);
   }
 
   .carousel-container {
