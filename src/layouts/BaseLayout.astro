@@ -2,6 +2,7 @@
 import { useStoryblokApi } from "@storyblok/astro";
 import Header from "../components/Header.astro";
 import HeroAnimation from "../components/HeroAnimation.astro";
+import lynnWhite from "../assets/lynnWhite.svg";
 
 const storyblokApi = useStoryblokApi();
 const dev = import.meta.env.DEV;
@@ -31,6 +32,7 @@ const isFrontendEditor = Astro.url.searchParams.get('_storyblok')! || '';
       type="font/woff2"
       crossorigin
     />
+    <link rel="preload" href={lynnWhite?.src} as="image">
     <title>{content?.meta?.title || "Lynn Grütter"}</title>
     <meta
       name="description"
