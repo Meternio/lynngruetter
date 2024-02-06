@@ -3,6 +3,8 @@ import { storyblokEditable } from "@storyblok/astro";
 import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
 
 const { classes, blok, color } = Astro.props;
+
+const maxItemWidth = (blok?.maxItemWidth) ? blok?.maxItemWidth + "px" : "100%";
 ---
 
 <div
@@ -145,10 +147,11 @@ const { classes, blok, color } = Astro.props;
   });
 </script>
 
-<style define:vars={{ color }}>
+<style define:vars={{ color, maxItemWidth }}>
   :global(.carousel-slide) {
     flex: 0 0 100%;
     min-width: 0;
+    max-width: var(--maxItemWidth, "100%");
   }
 
   :global(.carousel-storyblok .carousel-slide img) {
