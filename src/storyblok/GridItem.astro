@@ -15,7 +15,7 @@ let dimensions = {
 
 <div
   {...storyblokEditable(blok)}
-  class={`grid-category-item mb-4 ${
+  class={`grid-category-item mb-4 opacity-0 translate-y-3 ${
     blok.doubleWidth ? "w-full lg:w-[calc(50%-8px)]" : "w-[calc(50%-8px)] lg:w-[calc(25%-12px)]"
   }`}
   data-grid-category-item
@@ -87,3 +87,9 @@ let dimensions = {
     });
   });
 </script>
+
+<style>
+  .grid-category-item {
+    transition: opacity 0.75s ease-in-out, transform 0.75s ease-in-out;
+  }
+</style>

@@ -64,15 +64,22 @@ const { blok } = Astro.props;
 
     let msnry = [];
 
-    imagesLoaded(thumbnails, function () {
-      msnry.push(
-        new Masonry(gridContent, {
-          itemSelector: "[data-grid-category-content='0'] [data-grid-category-item]",
-          columnWidth: "[data-grid-category-content='0'] [data-grid-category-item-sizer]",
-          gutter: 16,
-          percentPosition: true,
-        })
-      );
+    msnry.push(
+      new Masonry(gridContent, {
+        itemSelector:
+          "[data-grid-category-content='0'] [data-grid-category-item]",
+        columnWidth:
+          "[data-grid-category-content='0'] [data-grid-category-item-sizer]",
+        gutter: 16,
+        percentPosition: true,
+      })
+    );
+
+    const imgLoad = imagesLoaded(thumbnails);
+
+    imgLoad.on("progress", function (instance, image) {
+      image.img.closest('[data-grid-category-item]').classList.remove("opacity-0", "translate-y-3");
+      msnry[0].layout();
     });
 
     const tabLists = grid.querySelectorAll('[role="tablist"]');
@@ -104,9 +111,7 @@ const { blok } = Astro.props;
     });
 
     // add on click event to category title to show the content
-    var categoryTitles = grid.querySelectorAll(
-      "[data-grid-category-title]"
-    );
+    var categoryTitles = grid.querySelectorAll("[data-grid-category-title]");
     categoryTitles.forEach((categoryTitle, index) => {
       categoryTitle.addEventListener("click", function () {
         // hide all category contents
@@ -119,6 +124,9 @@ const { blok } = Astro.props;
         categoryContents.forEach((categoryContent) => {
           categoryContent.classList.add("opacity-0", "!h-0");
           categoryContent.setAttribute("hidden", "");
+          categoryContent.querySelectorAll('[data-grid-category-item]').forEach((item) => {
+            item.classList.add("opacity-0", "translate-y-3");
+          });
         });
         categoryTitles.forEach((categoryTitle) => {
           categoryTitle.setAttribute("aria-selected", "false");
@@ -132,22 +140,32 @@ const { blok } = Astro.props;
         categoryTitle.setAttribute("tabindex", "0");
 
         // init masonry
+        if (msnry[index]) {
+          msnry[index].layout();
+
+          categoryContents[index].querySelectorAll('[data-grid-category-item]').forEach((item) => {
+            item.classList.remove("opacity-0", "translate-y-3");
+          });
+        } else {
+          msnry.push(
+            new Masonry(categoryContents[index], {
+              itemSelector: `[data-grid-category-content="${index}"] [data-grid-category-item]`,
+              columnWidth: `[data-grid-category-content="${index}"] [data-grid-category-item-sizer]`,
+              gutter: 16,
+              percentPosition: true,
+            })
+          );
+        }
+
         var thumbnails = grid.querySelectorAll(
           `[data-grid-category-content="${index}"] [data-grid-category-item-thumbnail]`
         );
-        imagesLoaded(thumbnails, function () {
-          if (msnry[index]) {
-            msnry[index].layout();
-          } else {
-            msnry.push(
-              new Masonry(categoryContents[index], {
-                itemSelector: `[data-grid-category-content="${index}"] [data-grid-category-item]`,
-                columnWidth: `[data-grid-category-content="${index}"] [data-grid-category-item-sizer]`,
-                gutter: 16,
-                percentPosition: true,
-              })
-            );
-          }
+
+        const imgLoad = imagesLoaded(thumbnails);
+
+        imgLoad.on("progress", function (instance, image) {
+          image.img.closest('[data-grid-category-item]').classList.remove("opacity-0", "translate-y-3");
+          msnry[index].layout();
         });
 
         // remove active class from all category titles
