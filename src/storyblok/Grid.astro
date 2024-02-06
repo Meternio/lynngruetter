@@ -68,9 +68,9 @@ const { blok } = Astro.props;
       msnry.push(
         new Masonry(gridContent, {
           itemSelector: "[data-grid-category-content='0'] [data-grid-category-item]",
+          columnWidth: "[data-grid-category-content='0'] [data-grid-category-item-sizer]",
           gutter: 16,
           percentPosition: true,
-          horizontalOrder: true,
         })
       );
     });
@@ -142,9 +142,9 @@ const { blok } = Astro.props;
             msnry.push(
               new Masonry(categoryContents[index], {
                 itemSelector: `[data-grid-category-content="${index}"] [data-grid-category-item]`,
+                columnWidth: `[data-grid-category-content="${index}"] [data-grid-category-item-sizer]`,
                 gutter: 16,
                 percentPosition: true,
-                horizontalOrder: true,
               })
             );
           }
