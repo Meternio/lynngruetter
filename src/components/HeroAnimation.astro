@@ -5,18 +5,11 @@
 </div>
 
 <h1
-  class="hero-animation-text uppercase fixed z-30 top-24 line-h leading-[0.72]"
+  class="hero-animation-text text-white uppercase fixed z-30 top-24 line-h leading-[0.72] mix-blend-difference max-w-[calc(100%+28px)] overflow-hidden"
   data-hero-animation-text
 >
   Lynn
 </h1>
-
-<div
-  class="hero-animation-text uppercase fixed z-30 top-24 line-h leading-[0.72] mix-blend-difference opacity-0"
-  data-hero-animation-text-mix-blend-mode
->
-  Lynn
-</div>
 
 <script>
   const heroAnimationText = document.querySelector(
@@ -25,10 +18,6 @@
   if (heroAnimationText) {
     const body = document.querySelector("[data-body]");
     const main = document.querySelector("[data-main]");
-    const header = document.querySelector("[data-header]");
-    const heroAnimationTextMixBlendMode = document.querySelector(
-      "[data-hero-animation-text-mix-blend-mode]"
-    );
     const heroAnimationBackground = document.querySelector(
       "[data-hero-animation-background]"
     );
@@ -38,43 +27,36 @@
     const headerNavContentMenu = document.querySelector(
       "[data-header-nav-content-menu]"
     );
-    const headerNavContentMenuItems =
-      document.querySelectorAll("[data-header] a");
-    const headerNavContentMenuButton = document.querySelectorAll(
-      "[data-header-nav-content-menu-button] .bar"
-    );
 
+    window.scrollTo(0, 0);
     body.classList.add("overflow-hidden");
     main.classList.add("opacity-0");
+    headerNavContentMenu.querySelectorAll("a").forEach((link) => {
+      link.classList.add("text-white");
+    });
     let bottomPosition = heroAnimationText.getBoundingClientRect();
     headerNavContentMenu.style.transform = `translateY(${bottomPosition.bottom}px)`;
 
     setTimeout(function () {
-      window.scrollTo(0, 0);
-      document.querySelector("[data-body]").classList.remove("overflow-hidden");
-      document.querySelector("[data-main]").classList.remove("opacity-0");
+      body.classList.remove("overflow-hidden");
+      main.classList.remove("opacity-0");
       heroAnimationBackground.classList.add("opacity-0");
       heroAnimationText.classList.add("opacity-0");
-      heroAnimationTextMixBlendMode.classList.remove("opacity-0");
-      if (heroVideo) {
+
+      // Play video if screen above 1023px
+      if (heroVideo && window.innerWidth >= 1024) {
         heroVideo.play();
       }
     }, 3750);
     setTimeout(function () {
-      header.classList.add("mix-blend-difference");
-      heroAnimationTextMixBlendMode.classList.add("opacity-0");
       headerNavContentMenu.style.transition = `all 0.75s ease-in-out`;
       headerNavContentMenu.classList.add("header-nav-content-menu-animation");
     }, 4500);
     setTimeout(function () {
-      heroAnimationTextMixBlendMode.remove();
-      heroAnimationText.remove();
-      heroAnimationBackground.remove();
-      headerNavContentMenuItems.forEach((item) => {
-        item.classList.add("!animate-none");
-      });
-      headerNavContentMenuButton.forEach((item) => {
-        item.classList.add("!animate-none");
+      heroAnimationText.classList.add("hidden");
+      heroAnimationBackground.classList.add("hidden");
+      headerNavContentMenu.querySelectorAll("a").forEach((link) => {
+        link.classList.remove("text-white");
       });
     }, 5250);
   }
@@ -83,18 +65,6 @@
 <style>
   :global(main) {
     transition: opacity 0.75s ease-in-out;
-  }
-
-  :global(.header a) {
-    animation:
-      3s linear colorChangeText forwards,
-      1.7s 3.875s ease-in-out colorChangeTextHeader forwards;
-  }
-
-  :global(.header button .bar) {
-    animation:
-      3s linear colorChangeBackgroundBar forwards,
-      1.7s 3.875s ease-in-out colorChangeBackgroundHeaderBar forwards;
   }
 
   :global(.header-nav-content-menu-animation) {
@@ -109,74 +79,42 @@
   }
 
   .hero-animation-text {
-    animation: 3s linear colorChangeText forwards;
-    @apply text-darkGreen;
     transition: opacity 0.75s ease-in-out;
     left: -28px;
     font-size: 605px;
   }
 
-  .hero-animation-text-mix-blend-mode {
-    transition: opacity 0.75s ease-in-out;
-  }
-
   @keyframes colorChangeBackground {
     0%,
-    25% {
+    18% {
       @apply bg-violet;
     }
-    50%,
-    75% {
+    33%,
+    51% {
       @apply bg-green;
     }
-    100% {
-      @apply bg-blue;
-    }
-  }
-
-  @keyframes colorChangeText {
-    0%,
-    25% {
-      @apply text-darkGreen;
-    }
-    50%,
-    75% {
-      @apply text-pink;
-    }
-    100% {
-      @apply text-brown;
-    }
-  }
-
-  @keyframes colorChangeTextHeader {
-    0% {
-      @apply text-brown;
-    }
-    100% {
-      @apply text-black;
-    }
-  }
-
-  @keyframes colorChangeBackgroundBar {
-    0%,
-    25% {
-      @apply bg-darkGreen;
-    }
-    50%,
-    75% {
-      @apply bg-pink;
-    }
-    100% {
-      @apply bg-brown;
-    }
-  }
-
-  @keyframes colorChangeBackgroundHeaderBar {
-    0% {
+    66%,
+    84% {
       @apply bg-brown;
     }
     100% {
-      @apply bg-black;
+      @apply bg-gray;
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .hero-animation-background,
+    .hero-animation-text {
+      display: block;
+      opacity: 1;
+    }
+
+    .hero-animation-background {
+      position: relative;
+    }
+
+    .hero-animation-text {
+      position: absolute;
     }
   }
 </style>

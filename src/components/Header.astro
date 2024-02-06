@@ -10,7 +10,7 @@ const { data } = await storyblokApi.get("cdn/stories/home", {
 const content = data.story.content;
 ---
 
-<header class="header fixed w-full z-40 h-20 p-4 text-black" data-header>
+<header class="header fixed w-full z-40 h-20 p-4 text-white mix-blend-difference" data-header>
   <nav
     class="header-nav h-full flex items-center lg:justify-between uppercase lg:normal-case"
   >
@@ -64,18 +64,18 @@ const content = data.story.content;
   <style>
     .header-nav-content-menu-button {
       position: relative;
-      height: 30px;
-      min-width: 30px;
+      height: 25px;
+      min-width: 25px;
     }
 
     .header-nav-content-menu-button .bar {
-      width: 30px;
+      width: 25px;
       height: 2px;
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background-color: black;
+      background-color: white;
       transition: all 0.3s ease-in-out;
     }
 

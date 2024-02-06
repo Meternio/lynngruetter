@@ -13,7 +13,7 @@ const isPropEmpty = (prop) => {
 };
 ---
 
-<div class="text-section-content mt-8" {...storyblokEditable(blok)}>
+<div class="text-section-content mt-8 break-words sm:break-normal" {...storyblokEditable(blok)}>
   <h3 class="uppercase text-lg">{blok.title}</h3>
   {
     isPropEmpty(blok.content2) ? (
