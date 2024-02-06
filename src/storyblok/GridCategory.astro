@@ -12,7 +12,7 @@ const { blok, index, uid } = Astro.props;
   tabindex="0"
   aria-labelledby={`tab-${uid}-${index}`}
   {...{ "hidden": index === 0 ? false : true}}
-  class={`-mb-4 grid-category-content relativ block ${index !== 0 && "opacity-0 !h-0"}`} data-grid-category-content={index}
+  class={`-mt-4 grid-category-content relativ block ${index !== 0 && "opacity-0 !h-0"}`} data-grid-category-content={index}
 >
   <div class="grid-category-item mb-4 w-[calc(50%-8px)] lg:w-[calc(25%-12px)]"
   data-grid-category-item-sizer></div>
