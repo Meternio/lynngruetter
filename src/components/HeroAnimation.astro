@@ -1,15 +1,27 @@
+---
+import lynnWhite from "../assets/lynnWhite.svg";
+import { Image } from "astro:assets";
+---
+
 <div
   class="hero-animation-background h-svh w-svw fixed hero-animation z-10"
   data-hero-animation-background
 >
 </div>
 
-<h1
-  class="hero-animation-text text-white uppercase fixed z-30 top-24 line-h leading-[0.72] mix-blend-difference max-w-[calc(100%+28px)] overflow-hidden"
+<div
+  class="overflow-hidden fixed z-30 top-24 w-full h-fit mix-blend-difference hero-animation-text-wrapper"
   data-hero-animation-text
 >
-  Lynn
-</h1>
+  <h1 class="visually-hidden">Lynn Grütter</h1>
+  <Image
+    src={lynnWhite}
+    alt="Lynn Gruetter's signature"
+    width="984"
+    height="302"
+    class="hero-animation-text mx-4"
+  />
+</div>
 
 <script>
   const heroAnimationText = document.querySelector(
@@ -72,6 +84,18 @@
     transform: none !important;
   }
 
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
   .hero-animation-background {
     animation: 3s linear colorChangeBackground forwards;
     @apply bg-violet;
@@ -79,9 +103,21 @@
   }
 
   .hero-animation-text {
+    animation: 2.25s linear slideFromLeftToRight forwards 0.75s;
+    min-width: 1408px;
+  }
+
+  .hero-animation-text-wrapper {
     transition: opacity 0.75s ease-in-out;
-    left: -28px;
-    font-size: 605px;
+  }
+
+  @keyframes slideFromLeftToRight {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(calc(-100% + 100svw - 32px));
+    }
   }
 
   @keyframes colorChangeBackground {
@@ -104,7 +140,7 @@
 
   @media (max-width: 1023px) {
     .hero-animation-background,
-    .hero-animation-text {
+    .hero-animation-text-wrapper {
       display: block;
       opacity: 1;
     }
@@ -113,8 +149,14 @@
       position: relative;
     }
 
-    .hero-animation-text {
+    .hero-animation-text-wrapper {
       position: absolute;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero-animation-text {
+      animation: none;
     }
   }
 </style>

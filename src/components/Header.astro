@@ -56,12 +56,24 @@ const content = data.story.content;
 
     headerNavContentMenuButton.addEventListener("click", (e) => {
       e.currentTarget.classList.toggle("active");
-      headerNavContentMenu.classList.toggle("invisible");
+
+      if(!headerNavContentMenu.classList.contains("invisible")) {
+        window.setTimeout(() => {
+          headerNavContentMenu.classList.toggle("invisible");
+        }, 750);
+      } else {
+        headerNavContentMenu.classList.toggle("invisible");
+      }
+
       headerNavContentMenu.classList.toggle("opacity-0");
     });
   </script>
 
   <style>
+    .header-nav-content-menu {
+      transition: opacity 0.75s ease-in-out;
+    }
+
     .header-nav-content-menu-button {
       position: relative;
       height: 25px;
