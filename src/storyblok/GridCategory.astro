@@ -14,7 +14,7 @@ const { blok, index, uid, masonry } = Astro.props;
   {...{ hidden: index === 0 ? false : true }}
   class={`grid-category-content relativ block ${
     index !== 0 && "opacity-0 !h-0"
-  } ${!masonry ? "flex flex-row flex-wrap gap-4" : '-mt-4'}`}
+  } ${!masonry ? "flex flex-row flex-wrap gap-x-2 gap-y-8 lg:gap-x-4 lg:gap-y-16" : '-mt-4'}`}
   data-grid-category-content={index}
 >
   {
