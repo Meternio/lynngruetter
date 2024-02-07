@@ -54,6 +54,10 @@ const isFrontendEditor = Astro.url.searchParams.get('_storyblok')! || '';
     scroll-behavior: smooth;
   }
 
+  body, a, button, video, [data-grid-category-item-content] {
+    cursor: url("/custom-cursor.png") 10 10, auto !important;
+  }
+
   .container {
     padding-left: 1rem;
     padding-right: 1rem;
