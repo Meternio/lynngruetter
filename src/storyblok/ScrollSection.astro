@@ -1,8 +1,7 @@
 ---
 import { storyblokEditable } from "@storyblok/astro";
 import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
-import lynn from "../assets/lynn.svg";
-import { Image } from "astro:assets";
+import Signature from "./Signature.astro";
 
 const { blok } = Astro.props;
 ---
@@ -18,28 +17,7 @@ const { blok } = Astro.props;
       return <StoryblokComponent blok={blok} />;
     })
   }
-  {
-    blok.signature && (
-      <div
-        class={`scroll-section-signature p-4 ${
-          blok.signatureAbsolute ? "absolute w-full bottom-0 left-0" : ""
-        }`}
-      >
-        <Image
-          src={lynn}
-          alt="Lynn Gruetter's signature"
-          width="796"
-          height="243"
-        />
-        <div class="scroll-section-signature-footer pt-4 flex items-center justify-between">
-          <span class="">{blok.name}</span>
-          <a target="_blank" href="https://www.instagram.com/lynngruetter">
-            @lynngruetter
-          </a>
-        </div>
-      </div>
-    )
-  }
+  {(blok.signature || blok.signatureAbsolute) && <Signature blok={blok} />}
 </section>
 
 <script>

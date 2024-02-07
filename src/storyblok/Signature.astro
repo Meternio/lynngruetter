@@ -1,0 +1,52 @@
+---
+import { storyblokEditable } from "@storyblok/astro";
+import lynn from "../assets/lynn.svg";
+import { Image } from "astro:assets";
+
+const { blok } = Astro.props;
+---
+
+<div
+  {...storyblokEditable(blok)}
+  class={`scroll-section-signature p-4 ${
+    blok.signatureAbsolute ? "absolute w-full bottom-0 left-0" : ""
+  }`}
+>
+  {
+    blok?.signatureAbsolute ? (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0.74 0.33 796.38 242.67" class="signature-svg">
+    <path d="M31.2855 0.330368V215.848H158.56V243H0.739671V0.330368H31.2855Z" fill="black"/>
+    <path d="M168.145 0.330368L238.401 119.12H239.079L309.674 0.330368H342.596L254.013 143.556V243H223.467V143.556L135.224 0.330368H168.145Z" fill="black"/>
+    <path d="M370.379 0.330368H407.712L528.878 200.236H529.556V0.330368H560.102V243H522.768L401.603 43.7733H400.924V243H370.379V0.330368Z" fill="black"/>
+    <path d="M607.4 0.330368H644.734L765.899 200.236H766.578V0.330368H797.124V243H759.79L638.625 43.7733H637.946V243H607.4V0.330368Z" fill="black"/>
+</svg>
+    ) : (
+      <Image
+        src={lynn}
+        alt="Lynn Gruetter's signature"
+        width="796"
+        height="243"
+      />
+    )
+  }
+
+  <div
+    class="scroll-section-signature-footer pt-4 flex items-center justify-between"
+  >
+    {blok?.name && <span class="">{blok.name}</span>}
+    <a target="_blank" href="https://www.instagram.com/lynngruetter">
+      @lynngruetter
+    </a>
+  </div>
+</div>
+
+<style>
+    .signature-svg > *{
+        transition: filter 0.325s ease-in-out, opacity 0.75s ease-in-out;
+    }
+
+    .signature-svg > *:hover{
+        filter: blur(2px);
+        opacity: 0;
+    }
+</style>

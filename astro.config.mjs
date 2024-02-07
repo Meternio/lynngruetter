@@ -32,6 +32,7 @@ export default defineConfig({
       container: 'storyblok/Container',
       empty: 'storyblok/Empty',
       image: 'storyblok/Image',
+      signature: 'storyblok/Signature',
     }
   }), tailwind()],
   vite: {
