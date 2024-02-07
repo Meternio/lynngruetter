@@ -83,13 +83,13 @@ const content = data.story.content;
               ? -80
               : 0;
 
-        body.classList.add("blur-sm");
+        body.classList.add("opacity-0", "blur-sm");
 
         window.setTimeout(() => {
           scrollTo(targetEl.offsetTop - offsetTop, () => {
-            body.classList.remove("blur-sm");
+            body.classList.remove("blur-sm", "opacity-0");
           });
-        }, 325);
+        }, 500);
       });
     });
 
@@ -155,6 +155,12 @@ const content = data.story.content;
 
     .header-nav-content-menu {
       transition: opacity 0.75s ease-in-out;
+    }
+
+    @media screen and (min-width: 1024px) {
+      .header a:hover {
+        filter: blur(2px);
+      }
     }
 
     /*.header-nav-content-menu-button {

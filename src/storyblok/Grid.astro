@@ -27,7 +27,7 @@ const { blok } = Astro.props;
       blok.categories.map((category, index) => {
         return (
           <button
-            class={`grid-category-title p-2 lg:p-4 uppercase invisible lg:visible text-black/40 cursor-pointer lg:hover:text-black ${
+            class={`grid-category-title p-2 lg:p-4 uppercase invisible lg:visible text-black/40 cursor-pointer ${
               index === 0 ? "grid-category-title-active" : ""
             }`}
             role="tab"
@@ -292,6 +292,10 @@ const { blok } = Astro.props;
 
     .grid-category-title-trigger ~ .grid-category-title {
       opacity: 1;
+    }
+
+    .grid-category-title:hover {
+      filter: blur(2px);
     }
   }
 </style>
