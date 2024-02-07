@@ -10,13 +10,16 @@ const { data } = await storyblokApi.get("cdn/stories/home", {
 const content = data.story.content;
 ---
 
-<header class="header fixed w-full z-40 h-20 p-4 text-white mix-blend-difference" data-header>
+<header
+  class="header fixed w-full z-40 h-20 p-4 text-black bg-white"
+  data-header
+>
   <nav
-    class="header-nav h-full flex items-center lg:justify-between uppercase lg:normal-case"
+    class="header-nav h-full flex items-center lg:justify-between"
   >
-    <a href="/" class="uppercase order-1 hover:text-blue">Lynn</a>
+    <a href="/" class="uppercase order-1">Lynn</a>
     <div
-      class="header-nav-content-menu w-full invisible opacity-0 lg:visible lg:opacity-100 order-2 flex flex-col relative top-1/4 self-start px-4 lg:self-auto lg:top-0 lg:flex-row lg:gap-16 lg:px-16 lg:flex-grow lg:order-1"
+      class="header-nav-content-menu w-full order-2 flex flex-row relative px-4 gap-4 text-sm lg:self-auto lg:top-0 lg:gap-16 lg:px-16 lg:flex-grow lg:order-1"
       data-header-nav-content-menu
     >
       {
@@ -25,17 +28,14 @@ const content = data.story.content;
             href={`#${item.id}`}
             class={`${
               index === content.body.length - 1 && "flex-grow"
-            } lg:text-center hover:text-blue`}
+            } lg:text-center`}
           >
             {item.name}
           </a>
         ))
       }
     </div>
-    <a href="/" class="uppercase order-1 pl-1 lg:pl-0 hover:text-blue"
-      >Grütter</a
-    >
-    <button
+    <!--<button
       class="header-nav-content-menu-button order-2 lg:hidden"
       data-header-nav-content-menu-button
       aria-label="Button to open the menu"
@@ -43,11 +43,40 @@ const content = data.story.content;
       <span class="bar"></span>
       <span class="bar"></span>
       <span class="bar"></span>
-    </button>
+    </button>-->
   </nav>
 
   <script>
-    const headerNavContentMenu = document.querySelector(
+    // only show header when scrolling up
+    let lastScrollTop = 0;
+    const header = document.querySelector("[data-header]");
+    window.addEventListener("scroll", () => {
+      if(document.querySelector('.grid-categories-titles-active-animation')) {
+        return;
+      }
+
+      const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+
+      if (currentScroll > lastScrollTop && currentScroll > 80) {
+        header.classList.add("-translate-y-full");
+        document.querySelectorAll("[data-grid-categories-titles]").forEach((el) => {
+          el.classList.remove("top-20");
+          el.classList.add("top-0");
+        });
+      } else {
+        header.classList.remove("-translate-y-full");
+        document.querySelectorAll("[data-grid-categories-titles]").forEach((el) => {
+          el.classList.add("top-20");
+          el.classList.remove("top-0");
+        });
+      }
+
+
+
+      lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+    });
+
+    /*const headerNavContentMenu = document.querySelector(
       "[data-header-nav-content-menu]"
     );
     const headerNavContentMenuButton = document.querySelector(
@@ -66,15 +95,19 @@ const content = data.story.content;
       }
 
       headerNavContentMenu.classList.toggle("opacity-0");
-    });
+    });*/
   </script>
 
   <style>
+    .header {
+      transition: transform 0.325s ease-in-out;
+    }
+
     .header-nav-content-menu {
       transition: opacity 0.75s ease-in-out;
     }
 
-    .header-nav-content-menu-button {
+    /*.header-nav-content-menu-button {
       position: relative;
       height: 25px;
       min-width: 25px;
@@ -111,6 +144,6 @@ const content = data.story.content;
 
     .header-nav-content-menu-button .bar:nth-of-type(3) {
       top: calc(50% + 9px);
-    }
+    }*/
   </style>
 </header>

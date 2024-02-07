@@ -2,7 +2,7 @@
 import { storyblokEditable } from "@storyblok/astro";
 import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
 import lynn from "../assets/lynn.svg";
-import { Image } from 'astro:assets';
+import { Image } from "astro:assets";
 
 const { blok } = Astro.props;
 ---
@@ -20,8 +20,17 @@ const { blok } = Astro.props;
   }
   {
     blok.signature && (
-      <div class={`scroll-section-signature p-4 ${blok.signatureAbsolute ? 'absolute w-full bottom-0 left-0' : ''}`}>
-        <Image src={lynn} alt="Lynn Gruetter's signature" width="796" height="243"/>
+      <div
+        class={`scroll-section-signature p-4 ${
+          blok.signatureAbsolute ? "absolute w-full bottom-0 left-0" : ""
+        }`}
+      >
+        <Image
+          src={lynn}
+          alt="Lynn Gruetter's signature"
+          width="796"
+          height="243"
+        />
         <div class="scroll-section-signature-footer pt-4 flex items-center justify-between">
           <span class="">{blok.name}</span>
           <a target="_blank" href="https://www.instagram.com/lynngruetter">
@@ -35,6 +44,7 @@ const { blok } = Astro.props;
 
 <script>
   // observe all scroll sections and if they are in view, add the active class
+  /*
   const scrollSections = document.querySelectorAll("[data-scroll-section]");
   const scrollSectionsObserver = new IntersectionObserver(
     (entries) => {
@@ -56,7 +66,7 @@ const { blok } = Astro.props;
 
   scrollSections.forEach((section) => {
     scrollSectionsObserver.observe(section);
-  });
+  });*/
 </script>
 
 <style>

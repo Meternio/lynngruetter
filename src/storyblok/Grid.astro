@@ -72,11 +72,15 @@ const { blok } = Astro.props;
       categoryTitlesTrigger.parentElement.classList.toggle(
         "grid-categories-titles-active"
       );
+      categoryTitlesTrigger.parentElement.classList.add(
+        "grid-categories-titles-active-animation"
+      );
       window.setTimeout(() => {
         categoryTitlesTrigger.parentElement
           .querySelectorAll("[data-grid-category-title]")
           .forEach((categoryTitle) => {
             categoryTitle.classList.toggle("invisible");
+            categoryTitle.parentElement.classList.remove("grid-categories-titles-active-animation");
           });
       }, 750);
     });
@@ -153,8 +157,7 @@ const { blok } = Astro.props;
         );
 
         // scroll to the top of the grid
-        const gridTop =
-          grid.getBoundingClientRect().top + window.scrollY;
+        const gridTop = grid.getBoundingClientRect().top + window.scrollY;
         const offset = 76;
         const offsetPosition = gridTop - offset;
         window.scrollTo({
@@ -246,8 +249,10 @@ const { blok } = Astro.props;
 
 <style>
   .grid-categories-titles {
-    max-height: 56px;
-    transition: max-height 0.75s ease-in-out;
+    max-height: 40px;
+    transition:
+      max-height 0.75s ease-in-out,
+      top 0.325s ease-in-out;
     transform-origin: top;
   }
 

@@ -39,21 +39,28 @@ import { Image } from "astro:assets";
     const headerNavContentMenu = document.querySelector(
       "[data-header-nav-content-menu]"
     );
+    const header = document.querySelector("[data-header]");
 
     window.scrollTo(0, 0);
     body.classList.add("overflow-hidden");
-    main.classList.add("opacity-0");
-    headerNavContentMenu.querySelectorAll("a").forEach((link) => {
-      link.classList.add("text-white");
-    });
+    main.classList.add("opacity-0", "bg-gray");
+    header.classList.remove("bg-white", "text-black");
+    header.classList.add("mix-blend-difference", "text-white");
     let bottomPosition = heroAnimationText.getBoundingClientRect();
     headerNavContentMenu.style.transform = `translateY(${bottomPosition.bottom}px)`;
 
     setTimeout(function () {
+      headerNavContentMenu.style.transition = `transform 0.75s ease-in-out`;
+      headerNavContentMenu.classList.add("header-nav-content-menu-animation");
+      header.style.transition = `background 0.75s ease-in-out`;
+    }, 3000);
+    setTimeout(function () {
       body.classList.remove("overflow-hidden");
-      main.classList.remove("opacity-0");
       heroAnimationBackground.classList.add("opacity-0");
       heroAnimationText.classList.add("opacity-0");
+      header.classList.remove("mix-blend-difference", "text-white");
+      header.classList.add("bg-white", "text-black");
+      main.classList.remove("opacity-0", "bg-gray");
 
       // Play video if screen above 1023px
       if (heroVideo && window.innerWidth >= 1024) {
@@ -61,15 +68,11 @@ import { Image } from "astro:assets";
       }
     }, 3750);
     setTimeout(function () {
-      headerNavContentMenu.style.transition = `all 0.75s ease-in-out`;
-      headerNavContentMenu.classList.add("header-nav-content-menu-animation");
+
     }, 4500);
     setTimeout(function () {
       heroAnimationText.classList.add("hidden");
       heroAnimationBackground.classList.add("hidden");
-      headerNavContentMenu.querySelectorAll("a").forEach((link) => {
-        link.classList.remove("text-white");
-      });
     }, 5250);
   }
 </script>

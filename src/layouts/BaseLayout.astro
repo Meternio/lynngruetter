@@ -44,7 +44,9 @@ const isFrontendEditor = Astro.url.searchParams.get('_storyblok')! || '';
     <Header />
     {(!dev && !isFrontendEditor) && <HeroAnimation />}
     <main class="relative" data-main>
-      <slot />
+      <div class=`lg:pt-20 ${(dev || isFrontendEditor) && 'pt-20'}`>
+        <slot/>
+      </div>
     </main>
   </body>
 </html>
