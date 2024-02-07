@@ -14,9 +14,7 @@ const content = data.story.content;
   class="header fixed w-full z-40 h-20 p-4 text-black bg-white"
   data-header
 >
-  <nav
-    class="header-nav h-full flex items-center lg:justify-between"
-  >
+  <nav class="header-nav h-full flex items-center lg:justify-between">
     <a href="/" class="uppercase order-1">Lynn</a>
     <div
       class="header-nav-content-menu w-full order-2 flex flex-row relative px-4 gap-4 text-sm lg:self-auto lg:top-0 lg:gap-16 lg:px-16 lg:flex-grow lg:order-1"
@@ -50,28 +48,80 @@ const content = data.story.content;
     // only show header when scrolling up
     let lastScrollTop = 0;
     const header = document.querySelector("[data-header]");
+    const headerNav = document.querySelectorAll(
+      "[data-header-nav-content-menu] > a"
+    );
+    const body = document.querySelector("body");
+
+    function scrollTo(offset, callback) {
+      const fixedOffset = offset.toFixed();
+      const onScroll = function () {
+        if (window.pageYOffset.toFixed() === fixedOffset) {
+          window.removeEventListener("scroll", onScroll);
+          callback();
+        }
+      };
+
+      window.addEventListener("scroll", onScroll);
+      onScroll();
+      window.scrollTo({
+        top: offset,
+        behavior: "smooth",
+      });
+    }
+
+    headerNav.forEach((el, index) => {
+      el.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        const target = e.currentTarget.getAttribute("href").replace("#", "");
+        const targetEl = document.getElementById(target);
+        const offsetTop =
+          lastScrollTop > targetEl.getBoundingClientRect()?.top + lastScrollTop
+            ? 80
+            : index === 0
+              ? -80
+              : 0;
+
+        body.classList.add("blur-sm");
+
+        window.setTimeout(() => {
+          scrollTo(targetEl.offsetTop - offsetTop, () => {
+            body.classList.remove("blur-sm");
+          });
+        }, 325);
+      });
+    });
+
     window.addEventListener("scroll", () => {
-      if(document.querySelector('.grid-categories-titles-active-animation')) {
+      if (document.querySelector(".grid-categories-titles-active-animation")) {
         return;
       }
 
-      const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+      const currentScroll =
+        window.pageYOffset || document.documentElement.scrollTop;
 
       if (currentScroll > lastScrollTop && currentScroll > 80) {
         header.classList.add("-translate-y-full");
-        document.querySelectorAll("[data-grid-categories-titles]").forEach((el) => {
-          el.classList.remove("top-20");
-          el.classList.add("top-0");
-        });
+        document
+          .querySelectorAll("[data-grid-categories-titles]")
+          .forEach((el) => {
+            el.style.transition =
+              "max-height 0.75s ease-in-out, top 0.26s ease-in-out";
+            el.classList.remove("top-20");
+            el.classList.add("top-0");
+          });
       } else {
         header.classList.remove("-translate-y-full");
-        document.querySelectorAll("[data-grid-categories-titles]").forEach((el) => {
-          el.classList.add("top-20");
-          el.classList.remove("top-0");
-        });
+        document
+          .querySelectorAll("[data-grid-categories-titles]")
+          .forEach((el) => {
+            el.style.transition =
+              "max-height 0.75s ease-in-out, top 0.35s ease-in-out";
+            el.classList.add("top-20");
+            el.classList.remove("top-0");
+          });
       }
-
-
 
       lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
     });

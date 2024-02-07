@@ -171,21 +171,31 @@ const maxItemWidth = (blok?.maxItemWidth) ? blok?.maxItemWidth + "px" : "100%";
   }
 
   .carousel-prev,
-  .carousel-prev:after,
-  .carousel-next,
-  .carousel-next:after {
+  .carousel-next{
     width: 0;
     height: 0;
     display: block;
+    filter: blur(2px);
+  }
+
+  .carousel-prev:hover,
+  .carousel-next:hover{
+    filter: blur(0);
   }
 
   .carousel-prev {
     border-top: 8px solid transparent;
     border-bottom: 8px solid transparent;
-    border-right: 12px solid var(--color, black);
+    border-right: 12px solid var(--color, #A6A6A6);
   }
 
-  .carousel-prev:after {
+  .carousel-next {
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-left: 12px solid var(--color, #A6A6A6);
+  }
+
+  /*.carousel-prev:after {
     content: "";
     border-top: 8px solid transparent;
     border-bottom: 8px solid transparent;
@@ -193,12 +203,6 @@ const maxItemWidth = (blok?.maxItemWidth) ? blok?.maxItemWidth + "px" : "100%";
     top: -8px;
     left: 12px;
     position: relative;
-  }
-
-  .carousel-next {
-    border-top: 8px solid transparent;
-    border-bottom: 8px solid transparent;
-    border-left: 12px solid var(--color, black);
   }
 
   .carousel-next:after {
@@ -209,5 +213,5 @@ const maxItemWidth = (blok?.maxItemWidth) ? blok?.maxItemWidth + "px" : "100%";
     top: -8px;
     right: 24px;
     position: relative;
-  }
+  }*/
 </style>
