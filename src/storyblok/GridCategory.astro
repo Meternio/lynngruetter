@@ -2,7 +2,7 @@
 import { storyblokEditable } from "@storyblok/astro";
 import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
 
-const { blok, index, uid } = Astro.props;
+const { blok, index, uid, masonry } = Astro.props;
 ---
 
 <div
@@ -11,14 +11,23 @@ const { blok, index, uid } = Astro.props;
   role="tabpanel"
   tabindex="0"
   aria-labelledby={`tab-${uid}-${index}`}
-  {...{ "hidden": index === 0 ? false : true}}
-  class={`-mt-4 grid-category-content relativ block ${index !== 0 && "opacity-0 !h-0"}`} data-grid-category-content={index}
+  {...{ hidden: index === 0 ? false : true }}
+  class={`grid-category-content relativ block ${
+    index !== 0 && "opacity-0 !h-0"
+  } ${!masonry ? "flex flex-row flex-wrap gap-4" : '-mt-4'}`}
+  data-grid-category-content={index}
 >
-  <div class="grid-category-item mb-4 w-[calc(50%-8px)] lg:w-[calc(25%-12px)]"
-  data-grid-category-item-sizer></div>
+  {
+    masonry && (
+      <div
+        class={`grid-category-item mb-4 w-[calc(50%-8px)] lg:w-[calc(25%-12px)]`}
+        data-grid-category-item-sizer
+      />
+    )
+  }
   {
     blok.items?.map((blok) => {
-      return <StoryblokComponent blok={blok} />;
+      return <StoryblokComponent blok={blok} masonry={masonry}/>;
     })
   }
 </div>
