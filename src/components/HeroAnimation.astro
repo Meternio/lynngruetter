@@ -44,6 +44,7 @@ import { Image } from "astro:assets";
     window.scrollTo(0, 0);
     let bottomPosition = heroAnimationText.getBoundingClientRect();
     headerNavContentMenu.style.transform = `translateY(${bottomPosition.bottom}px)`;
+    headerNavContentMenu.classList.remove("opacity-0");
 
     setTimeout(function () {
       headerNavContentMenu.style.transition = `transform 0.75s ease-in-out`;
