@@ -7,7 +7,7 @@ const { classes, blok, color } = Astro.props;
 
 const maxItemWidth = blok?.maxItemWidth ? blok?.maxItemWidth + "px" : "100%";
 
-if(blok){
+if (blok) {
   blok.signatureAbsolute = true;
 }
 ---
@@ -49,20 +49,22 @@ if(blok){
   {
     !blok?.autoScroll && !blok?.autoPlay && (
       <>
-        <button
-          class={`carousel-prev absolute left-0 ${
-            blok?.items ? "top-[calc(50%-18px)] " : "top-[calc(50%-30px)] "
-          } -translate-y-1/2 z-30`}
-          data-carousel-prev
-          aria-label="Button to slide backwards in the carousel"
-        />
-        <button
-          class={`carousel-next absolute right-0 ${
-            blok?.items ? "top-[calc(50%-18px)] " : "top-[calc(50%-30px)] "
-          } -translate-y-1/2 z-30`}
-          data-carousel-next
-          aria-label="Button to slide forward in the carousel"
-        />
+        <div data-carousel-prev class={`carousel-navigation-prev-wrapper absolute w-1/2 ${blok?.items ? 'h-full' : 'h-[calc(100%-60px)]'} top-0`}>
+          <button
+            class={`carousel-prev absolute left-0 ${
+              blok?.items ? "top-[calc(50%-18px)] " : "top-1/2"
+            } -translate-y-1/2 z-30`}
+            aria-label="Button to slide backwards in the carousel"
+          />
+        </div>
+        <div data-carousel-next class={`carousel-navigation-next-wrapper absolute w-1/2 ${blok?.items ? 'h-full' : 'h-[calc(100%-60px)]'} top-0 right-0`}>
+          <button
+            class={`carousel-next absolute right-0 ${
+              blok?.items ? "top-[calc(50%-18px)] " : "top-1/2"
+            } -translate-y-1/2 z-30`}
+            aria-label="Button to slide forward in the carousel"
+          />
+        </div>
       </>
     )
   }
@@ -175,6 +177,14 @@ if(blok){
 
   [data-auto-height="true"] {
     height: calc(100% - 32px);
+  }
+
+  .carousel-navigation-prev-wrapper, .carousel-navigation-prev-wrapper button {
+    cursor: url("/custom-cursor-left.png") -15 15, auto !important;
+  }
+
+  .carousel-navigation-next-wrapper, .carousel-navigation-next-wrapper button {
+    cursor: url("/custom-cursor-right.png") 15 15, auto !important;
   }
 
   .carousel-container {
