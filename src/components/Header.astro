@@ -76,6 +76,9 @@ const content = data.story.content;
 
         const target = e.currentTarget.getAttribute("href").replace("#", "");
         const targetEl = document.getElementById(target);
+        const rect = targetEl.getBoundingClientRect();
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const targetScrollPosition = rect.top + scrollTop;
         const offsetTop =
           lastScrollTop > targetEl.getBoundingClientRect()?.top + lastScrollTop
             ? 80
@@ -86,7 +89,7 @@ const content = data.story.content;
         body.classList.add("opacity-0", "blur-sm");
 
         window.setTimeout(() => {
-          scrollTo(targetEl.offsetTop - offsetTop, () => {
+          scrollTo(targetScrollPosition - offsetTop, () => {
             body.classList.remove("blur-sm", "opacity-0");
           });
         }, 500);
