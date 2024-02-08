@@ -17,16 +17,14 @@ const content = data.story.content;
   <nav class="header-nav h-full flex items-center lg:justify-between">
     <a href="/" class="uppercase order-1">Lynn</a>
     <div
-      class="header-nav-content-menu w-full order-2 flex flex-row relative px-4 gap-4 text-sm lg:self-auto lg:top-0 lg:gap-16 lg:px-16 lg:flex-grow lg:order-1 opacity-0"
+      class="header-nav-content-menu w-full order-2 flex flex-row relative px-4 gap-4 text-sm lg:self-auto lg:top-0 lg:gap-16 lg:px-16 lg:flex-grow lg:order-1"
       data-header-nav-content-menu
     >
       {
         content.body.map((item, index) => (
           <a
             href={`#${item.id}`}
-            class={`${
-              index === content.body.length - 1 && "flex-grow"
-            } lg:text-center`}
+            class={`lg:text-center`}
           >
             {item.name}
           </a>
@@ -102,7 +100,15 @@ const content = data.story.content;
       }
 
       const currentScroll =
-        window.pageYOffset || document.documentElement.scrollTop;
+        window.scrollY || document.documentElement.scrollTop;
+
+      if(currentScroll > 80 && !header.classList.contains("bg-white")) {
+        window.setTimeout(() => {
+          header.classList.add("bg-white");
+        }, 750);
+      } else if(currentScroll <= 80 && header.classList.contains("bg-white")) {
+        header.classList.remove("bg-white");
+      }
 
       if (currentScroll > lastScrollTop && currentScroll > 80) {
         header.classList.add("-translate-y-full");

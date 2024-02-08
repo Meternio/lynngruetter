@@ -44,7 +44,7 @@ const isFrontendEditor = Astro.url.searchParams.get('_storyblok')! || '';
     <Header />
     {(!dev && !isFrontendEditor) && <HeroAnimation />}
     <main class="relative opacity-0 bg-gray" data-main>
-      <div class=`lg:pt-20`>
+      <div>
         <slot/>
       </div>
     </main>
@@ -78,14 +78,10 @@ const isFrontendEditor = Astro.url.searchParams.get('_storyblok')! || '';
     background: transparent;
   }
 
-  .dev main > div{
-    padding-top: 80px;
-  }
-
   .dev header {
     mix-blend-mode: normal;
     color: black;
-    background-color: white;
+    transition: background 0.75s ease-in-out, transform .325s ease-in-out !important;
   }
 
   .dev .header-nav-content-menu {

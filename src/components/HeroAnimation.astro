@@ -45,9 +45,9 @@ import { Image } from "astro:assets";
     const header = document.querySelector("[data-header]");
 
     window.scrollTo(0, 0);
-    let bottomPosition = heroAnimationText.getBoundingClientRect();
+    /*let bottomPosition = heroAnimationText.getBoundingClientRect();
     headerNavContentMenu.style.transform = `translateY(${bottomPosition.bottom}px)`;
-    headerNavContentMenu.classList.remove("opacity-0");
+    headerNavContentMenu.classList.remove("opacity-0");*/
 
     setTimeout(function () {
       headerNavContentMenu.style.transition = `transform 0.75s ease-in-out`;
@@ -59,7 +59,8 @@ import { Image } from "astro:assets";
       heroAnimationBackground.classList.add("opacity-0");
       heroAnimationText.classList.add("opacity-0");
       header.classList.remove("mix-blend-difference", "text-white");
-      header.classList.add("bg-white", "text-black");
+      //header.classList.add("bg-white", "text-black");
+      header.classList.add("text-black");
       main.classList.remove("opacity-0", "bg-gray");
 
       // Play video if screen above 1023px
