@@ -79,9 +79,9 @@ const content = data.story.content;
         const targetScrollPosition = rect.top + scrollTop;
         const offsetTop =
           lastScrollTop > targetEl.getBoundingClientRect()?.top + lastScrollTop
-            ? 80
+            ? 40
             : index === 0
-              ? -80
+              ? -40
               : 0;
 
         body.classList.add("opacity-0", "blur-sm");
