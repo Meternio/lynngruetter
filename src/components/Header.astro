@@ -54,7 +54,7 @@ const content = data.story.content;
     function scrollTo(offset, callback) {
       const fixedOffset = offset.toFixed();
       const onScroll = function () {
-        if (window.pageYOffset.toFixed() === fixedOffset) {
+        if (window.scrollY.toFixed() === fixedOffset || window.scrollY === 0) {
           window.removeEventListener("scroll", onScroll);
           callback();
         }
