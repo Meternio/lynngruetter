@@ -48,15 +48,15 @@ let dimensions = {
       width={dimensions?.width}
       data-grid-category-item-thumbnail
     />
-    <h2 class="text-center">{blok.title}</h2>
+    <h2 class="sm:text-center">{blok.title}</h2>
   </div>
   <Dialog
     classes="grid-gallery-dialog"
     attrs={{ "data-grid-gallery-dialog": true }}
   >
     <div class="container mx-auto h-full">
-      <h2 class="text-xl text-center p-4 h-[60px]">{blok.title}</h2>
-      <Carousel classes="h-[calc(100%-60px)]">
+      <h2 class="sm:text-xl h-[88px] w-[35%] p-0 pt-4 sm:w-full sm:text-center sm:p-4 sm:h-[60px]">{blok.title}</h2>
+      <Carousel classes="h-[calc(100%-88px)] sm:h-[calc(100%-60px)]">
         {
           blok.gallery?.map((gallery, index) => {
             return (
