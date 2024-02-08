@@ -7,13 +7,17 @@ import { Image } from "astro:assets";
   class="hero-animation-background h-svh w-svw fixed hero-animation z-10"
   data-hero-animation-background
 >
-  <a class="absolute left-4 bottom-4 mix-blend-difference text-white" target="_blank" href="https://www.instagram.com/lynngruetter">
+  <a
+    class="absolute left-4 bottom-4 mix-blend-difference text-white"
+    target="_blank"
+    href="https://www.instagram.com/lynngruetter"
+  >
     @lynngruetter
   </a>
 </div>
 
 <div
-  class="overflow-hidden fixed z-30 top-24 w-full h-fit mix-blend-difference hero-animation-text-wrapper"
+  class="overflow-hidden fixed z-30 top-4 w-full h-fit mix-blend-difference hero-animation-text-wrapper"
   data-hero-animation-text
 >
   <h1 class="visually-hidden">Lynn Grütter</h1>
@@ -58,15 +62,20 @@ import { Image } from "astro:assets";
       body.classList.remove("overflow-hidden");
       heroAnimationBackground.classList.add("opacity-0");
       heroAnimationText.classList.add("opacity-0");
-      header.classList.remove("mix-blend-difference", "text-white");
-      //header.classList.add("bg-white", "text-black");
-      header.classList.add("text-black");
       main.classList.remove("opacity-0", "bg-gray");
 
+      if (heroVideo && window.innerWidth >= 1024) {
+        if(heroVideo){
+          heroVideo.play();
+        }
+        header.classList.remove("mix-blend-difference", "text-white");
+        header.classList.add("text-black");
+      }
       // Play video if screen above 1023px
       if (heroVideo && window.innerWidth >= 1024) {
         heroVideo.play();
       }
+      //header.classList.add("bg-white", "text-black");
     }, 3750);
     setTimeout(function () {}, 4500);
     setTimeout(function () {
@@ -124,19 +133,23 @@ import { Image } from "astro:assets";
 
   @keyframes colorChangeBackground {
     0%,
-    18% {
+    15% {
       @apply bg-violet;
     }
-    33%,
-    51% {
+    25%,
+    40% {
       @apply bg-green;
     }
-    66%,
-    84% {
+    50%,
+    65% {
       @apply bg-brown;
     }
-    100% {
+    75%,
+    90% {
       @apply bg-gray;
+    }
+    100% {
+      @apply bg-blue;
     }
   }
 
@@ -159,6 +172,11 @@ import { Image } from "astro:assets";
   @media (min-width: 1024px) {
     .hero-animation-text {
       animation: none;
+    }
+
+    .hero-animation-text {
+      width: calc(100% - 32px);
+      min-width: auto;
     }
   }
 </style>

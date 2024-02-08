@@ -11,13 +11,13 @@ const content = data.story.content;
 ---
 
 <header
-  class="header fixed w-full z-40 h-20 p-4 mix-blend-difference text-white"
+  class="header absolute w-full z-40 h-10 px-4 py-2 mix-blend-difference text-white"
   data-header
 >
-  <nav class="header-nav h-full flex items-center lg:justify-between">
+  <nav class="header-nav h-full flex items-center lg:justify-between lg:text-2xl !leading-none">
     <a href="/" class="uppercase order-1">Lynn</a>
     <div
-      class="header-nav-content-menu w-full order-2 flex flex-row relative px-4 gap-4 text-sm lg:self-auto lg:top-0 lg:gap-16 lg:px-16 lg:flex-grow lg:order-1"
+      class="header-nav-content-menu w-full order-2 flex flex-row relative px-2 gap-2 lg:px-4 lg:gap-4 lg:self-auto lg:top-0 lg:flex-grow lg:order-1"
       data-header-nav-content-menu
     >
       {
@@ -102,34 +102,47 @@ const content = data.story.content;
       const currentScroll =
         window.scrollY || document.documentElement.scrollTop;
 
-      if(currentScroll > 80 && !header.classList.contains("bg-white")) {
+      if(currentScroll > 40 && !header.classList.contains("bg-white")) {
         window.setTimeout(() => {
           header.classList.add("bg-white");
         }, 750);
-      } else if(currentScroll <= 80 && header.classList.contains("bg-white")) {
+      } else if(currentScroll <= 40 && header.classList.contains("bg-white")) {
         header.classList.remove("bg-white");
+
+        window.setTimeout(() => {
+          if (window.innerWidth < 1024) {
+            header.classList.add("mix-blend-difference", "text-white");
+            header.classList.remove("text-black");
+          }
+        }, 600);
       }
 
-      if (currentScroll > lastScrollTop && currentScroll > 80) {
+      if (currentScroll > lastScrollTop && currentScroll > 40) {
         header.classList.add("-translate-y-full");
         document
           .querySelectorAll("[data-grid-categories-titles]")
           .forEach((el) => {
             el.style.transition =
               "max-height 0.75s ease-in-out, top 0.26s ease-in-out";
-            el.classList.remove("top-20");
+            el.classList.remove("top-10");
             el.classList.add("top-0");
           });
-      } else {
-        header.classList.remove("-translate-y-full");
+          header.classList.remove("mix-blend-difference", "text-white");
+          header.classList.add("text-black");
+      } else if(currentScroll > 40) {
+        header.classList.remove("-translate-y-full", "absolute");
+        header.classList.add("fixed");
         document
           .querySelectorAll("[data-grid-categories-titles]")
           .forEach((el) => {
             el.style.transition =
               "max-height 0.75s ease-in-out, top 0.35s ease-in-out";
-            el.classList.add("top-20");
+            el.classList.add("top-10");
             el.classList.remove("top-0");
           });
+      } else if(currentScroll > lastScrollTop && currentScroll < 40) {
+        header.classList.remove("fixed");
+        header.classList.add("absolute");
       }
 
       lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
