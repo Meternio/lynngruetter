@@ -40,11 +40,11 @@ const isFrontendEditor = Astro.url.searchParams.get('_storyblok')! || '';
         "Ich moderiere: Vor der Fernsehkamera, online oder live an Ihrem Anlass."}
     />
   </head>
-  <body data-body class="font-montrealRegular">
+  <body data-body class=`font-montrealRegular overflow-hidden ${(dev || isFrontendEditor) && 'dev'}`>
     <Header />
     {(!dev && !isFrontendEditor) && <HeroAnimation />}
-    <main class="relative" data-main>
-      <div class=`lg:pt-20 ${(dev || isFrontendEditor) && 'pt-20'}`>
+    <main class="relative opacity-0 bg-gray" data-main>
+      <div class=`lg:pt-20`>
         <slot/>
       </div>
     </main>
@@ -67,6 +67,25 @@ const isFrontendEditor = Astro.url.searchParams.get('_storyblok')! || '';
   .container {
     padding-left: 1rem;
     padding-right: 1rem;
+  }
+
+  .dev {
+    overflow: auto;
+  }
+
+  .dev main {
+    opacity: 1;
+    background: transparent;
+  }
+
+  .dev main > div{
+    padding-top: 80px;
+  }
+
+  .dev header {
+    mix-blend-mode: normal;
+    color: black;
+    background-color: white;
   }
 
   @font-face {

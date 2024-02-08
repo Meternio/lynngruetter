@@ -42,10 +42,6 @@ import { Image } from "astro:assets";
     const header = document.querySelector("[data-header]");
 
     window.scrollTo(0, 0);
-    body.classList.add("overflow-hidden");
-    main.classList.add("opacity-0", "bg-gray");
-    header.classList.remove("bg-white", "text-black");
-    header.classList.add("mix-blend-difference", "text-white");
     let bottomPosition = heroAnimationText.getBoundingClientRect();
     headerNavContentMenu.style.transform = `translateY(${bottomPosition.bottom}px)`;
 
