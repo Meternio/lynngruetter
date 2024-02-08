@@ -7,6 +7,9 @@ import { Image } from "astro:assets";
   class="hero-animation-background h-svh w-svw fixed hero-animation z-10"
   data-hero-animation-background
 >
+  <a class="absolute left-4 bottom-4" target="_blank" href="https://www.instagram.com/lynngruetter">
+    @lynngruetter
+  </a>
 </div>
 
 <div
@@ -64,9 +67,7 @@ import { Image } from "astro:assets";
         heroVideo.play();
       }
     }, 3750);
-    setTimeout(function () {
-
-    }, 4500);
+    setTimeout(function () {}, 4500);
     setTimeout(function () {
       heroAnimationText.classList.add("hidden");
       heroAnimationBackground.classList.add("hidden");
