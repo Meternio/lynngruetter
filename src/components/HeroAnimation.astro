@@ -110,7 +110,7 @@ import { Image } from "astro:assets";
   }
 
   .hero-animation-text {
-    animation: 2.25s linear slideFromLeftToRight forwards 0.75s;
+    animation: 10s linear slideFromLeftToRight infinite;
     min-width: 1408px;
   }
 
@@ -120,10 +120,10 @@ import { Image } from "astro:assets";
 
   @keyframes slideFromLeftToRight {
     0% {
-      transform: translateX(0);
+      transform: translateX(100svw);
     }
     100% {
-      transform: translateX(calc(-100% + 100svw - 32px));
+      transform: translateX(calc(-100% - 32px));
     }
   }
 
