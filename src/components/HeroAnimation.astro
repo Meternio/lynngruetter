@@ -65,14 +65,10 @@ import { Image } from "astro:assets";
       main.classList.remove("opacity-0", "bg-gray");
 
       if (heroVideo && window.innerWidth >= 1024) {
-        if(heroVideo){
-          heroVideo.play();
-        }
         header.classList.remove("mix-blend-difference", "text-white");
         header.classList.add("text-black");
       }
-      // Play video if screen above 1023px
-      if (heroVideo && window.innerWidth >= 1024) {
+      if (heroVideo) {
         heroVideo.play();
       }
       //header.classList.add("bg-white", "text-black");
