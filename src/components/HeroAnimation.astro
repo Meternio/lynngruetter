@@ -47,8 +47,15 @@ import { Image } from "astro:assets";
       "[data-header-nav-content-menu]"
     );
     const header = document.querySelector("[data-header]");
+    const headerNavLogo = document.querySelector("[data-header-nav-logo]");
+    const headerNavLogoWhite = document.querySelector(
+      "[data-header-nav-logo-white]"
+    );
 
-    window.scrollTo(0, 0);
+    window.addEventListener('load', function() {
+      window.scrollTo(0, 0);
+    });
+
     /*let bottomPosition = heroAnimationText.getBoundingClientRect();
     headerNavContentMenu.style.transform = `translateY(${bottomPosition.bottom}px)`;
     headerNavContentMenu.classList.remove("opacity-0");*/
@@ -64,10 +71,13 @@ import { Image } from "astro:assets";
       heroAnimationText.classList.add("opacity-0");
       main.classList.remove("opacity-0", "bg-gray");
 
-      if (heroVideo && window.innerWidth >= 1024) {
+      if (window.innerWidth >= 1024) {
         header.classList.remove("mix-blend-difference", "text-white");
         header.classList.add("text-black");
+        headerNavLogo.classList.remove("opacity-0");
+        headerNavLogoWhite.classList.add("opacity-0");
       }
+
       if (heroVideo) {
         heroVideo.play();
       }
@@ -129,20 +139,16 @@ import { Image } from "astro:assets";
 
   @keyframes colorChangeBackground {
     0%,
-    15% {
+    22% {
       @apply bg-violet;
     }
-    25%,
-    40% {
+    33%,
+    55% {
       @apply bg-green;
     }
-    50%,
-    65% {
+    66%,
+    88% {
       @apply bg-brown;
-    }
-    75%,
-    90% {
-      @apply bg-gray;
     }
     100% {
       @apply bg-blue;

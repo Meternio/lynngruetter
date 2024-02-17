@@ -1,5 +1,8 @@
 ---
 import { useStoryblokApi } from "@storyblok/astro";
+import lynn from "../assets/lynn_reworked.svg";
+import lynnWhite from "../assets/lynn_reworked-white.svg";
+import { Image } from "astro:assets";
 
 const storyblokApi = useStoryblokApi();
 
@@ -11,21 +14,38 @@ const content = data.story.content;
 ---
 
 <header
-  class="header absolute w-full z-40 h-10 px-4 py-2 mix-blend-difference text-white"
+  class="header absolute w-full z-40 px-5 sm lg:py-6 py-4 mix-blend-difference text-white"
   data-header
 >
-  <nav class="header-nav h-full flex items-center lg:justify-between lg:text-2xl !leading-none">
-    <a href="/" class="uppercase order-1">Lynn</a>
+  <nav
+    class="header-nav h-full flex items-center lg:justify-between lg:text-2xl !leading-none"
+  >
+    <a href="/" class="uppercase order-1 w-[54px] lg:w-[82px] h-4 lg:h-6 flex-shrink-0">
+      <Image
+        src={lynnWhite}
+        alt="Lynn Gruetter's signature"
+        width="82"
+        height="24"
+        class="header-nav-logo-white absolute w-auto h-4 lg:h-6"
+        data-header-nav-logo-white
+      />
+      <Image
+        src={lynn}
+        alt="Lynn Gruetter's signature"
+        width="82"
+        height="24"
+        loading="lazy"
+        class="header-nav-logo absolute w-auto h-4 lg:h-6 opacity-0"
+        data-header-nav-logo
+      />
+    </a>
     <div
-      class="header-nav-content-menu w-full order-2 flex flex-row relative px-2 gap-2 lg:px-4 lg:gap-4 lg:self-auto lg:top-0 lg:flex-grow lg:order-1"
+      class="header-nav-content-menu w-full order-2 flex flex-row justify-center relative px-2 gap-2 lg:px-4 lg:gap-4 lg:self-auto lg:top-0 lg:order-1 lg:w-1/2"
       data-header-nav-content-menu
     >
       {
         content.body.map((item, index) => (
-          <a
-            href={`#${item.id}`}
-            class={`lg:text-center`}
-          >
+          <a href={`#${item.id}`} class={`lg:text-center`}>
             {item.name}
           </a>
         ))
@@ -50,6 +70,11 @@ const content = data.story.content;
       "[data-header-nav-content-menu] > a"
     );
     const body = document.querySelector("body");
+    const headerNavLogo = document.querySelector("[data-header-nav-logo]");
+    const headerNavLogoWhite = document.querySelector(
+      "[data-header-nav-logo-white]"
+    );
+    let headerHeight = (window.innerWidth >= 1024) ? 72 : 48;
 
     function scrollTo(offset, callback) {
       const fixedOffset = offset.toFixed();
@@ -79,9 +104,9 @@ const content = data.story.content;
         const targetScrollPosition = rect.top + scrollTop;
         const offsetTop =
           lastScrollTop > targetEl.getBoundingClientRect()?.top + lastScrollTop
-            ? 40
+            ? headerHeight
             : index === 0
-              ? -40
+              ? (headerHeight * -1)
               : 0;
 
         body.classList.add("opacity-0", "blur-sm");
@@ -94,58 +119,74 @@ const content = data.story.content;
       });
     });
 
-    window.addEventListener("scroll", () => {
-      if (document.querySelector(".grid-categories-titles-active-animation")) {
-        return;
-      }
+    window.setTimeout(() => {
+      window.addEventListener("scroll", () => {
+        if (
+          document.querySelector(".grid-categories-titles-active-animation")
+        ) {
+          return;
+        }
 
-      const currentScroll =
-        window.scrollY || document.documentElement.scrollTop;
+        const currentScroll =
+          window.scrollY || document.documentElement.scrollTop;
 
-      if(currentScroll > 40 && !header.classList.contains("bg-white")) {
-        window.setTimeout(() => {
-          header.classList.add("bg-white");
-        }, 750);
-      } else if(currentScroll <= 40 && header.classList.contains("bg-white")) {
-        header.classList.remove("bg-white");
+        if (currentScroll > headerHeight && !header.classList.contains("bg-white")) {
+          window.setTimeout(() => {
+            header.classList.add("bg-white");
+          }, 750);
+          headerNavLogo.classList.remove("opacity-0");
+          headerNavLogoWhite.classList.add("opacity-0");
+        } else if (
+          currentScroll <= headerHeight &&
+          header.classList.contains("bg-white")
+        ) {
+          header.classList.remove("bg-white");
 
-        window.setTimeout(() => {
+          window.setTimeout(() => {
+            if (window.innerWidth < 1024) {
+              header.classList.add("mix-blend-difference", "text-white");
+              header.classList.remove("text-black");
+            }
+          }, 600);
+
           if (window.innerWidth < 1024) {
-            header.classList.add("mix-blend-difference", "text-white");
-            header.classList.remove("text-black");
+            headerNavLogo.classList.add("opacity-0");
+            headerNavLogoWhite.classList.remove("opacity-0");
           }
-        }, 600);
-      }
+        }
 
-      if (currentScroll > lastScrollTop && currentScroll > 40) {
-        header.classList.add("-translate-y-full");
-        document
-          .querySelectorAll("[data-grid-categories-titles]")
-          .forEach((el) => {
-            el.style.transition =
-              "max-height 0.75s ease-in-out, top 0.26s ease-in-out";
-            el.classList.remove("top-10");
-            el.classList.add("top-0");
-          });
+        if (currentScroll > lastScrollTop && currentScroll > headerHeight) {
+          header.classList.add("-translate-y-full");
+          document
+            .querySelectorAll("[data-grid-categories-titles]")
+            .forEach((el) => {
+              el.style.transition =
+              "max-height 0.75s ease-in-out, top 0.26s ease-in-out;";
+              el.style.top = "0";
+            });
           header.classList.remove("mix-blend-difference", "text-white");
           header.classList.add("text-black");
-      } else if(currentScroll > 40) {
-        header.classList.remove("-translate-y-full", "absolute");
-        header.classList.add("fixed");
-        document
-          .querySelectorAll("[data-grid-categories-titles]")
-          .forEach((el) => {
-            el.style.transition =
-              "max-height 0.75s ease-in-out, top 0.35s ease-in-out";
-            el.classList.add("top-10");
-            el.classList.remove("top-0");
-          });
-      } else if(currentScroll > lastScrollTop && currentScroll < 40) {
-        header.classList.remove("fixed");
-        header.classList.add("absolute");
-      }
+        } else if (currentScroll > headerHeight) {
+          header.classList.remove("-translate-y-full", "absolute");
+          header.classList.add("fixed");
+          document
+            .querySelectorAll("[data-grid-categories-titles]")
+            .forEach((el) => {
+              el.style.transition =
+                "max-height 0.75s ease-in-out, top 0.35s ease-in-out";
+              el.style.top = `${headerHeight}px`;
+            });
+        } else if (currentScroll > lastScrollTop && currentScroll < headerHeight) {
+          header.classList.remove("fixed");
+          header.classList.add("absolute");
+        }
 
-      lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+        lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+      });
+    }, 3000);
+
+    window.addEventListener("resize", () => {
+      headerHeight = (window.innerWidth >= 1024) ? 72 : 48;
     });
 
     /*const headerNavContentMenu = document.querySelector(
@@ -176,6 +217,10 @@ const content = data.story.content;
     }
 
     .header-nav-content-menu {
+      transition: opacity 0.75s ease-in-out;
+    }
+
+    .header-nav-logo {
       transition: opacity 0.75s ease-in-out;
     }
 
