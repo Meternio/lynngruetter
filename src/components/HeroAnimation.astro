@@ -68,7 +68,6 @@ import { Image } from "astro:assets";
     setTimeout(function () {
       body.classList.remove("overflow-hidden");
       heroAnimationBackground.classList.add("opacity-0");
-      heroAnimationText.classList.add("opacity-0");
       main.classList.remove("opacity-0", "bg-gray");
 
       if (window.innerWidth >= 1024) {
@@ -83,7 +82,11 @@ import { Image } from "astro:assets";
       }
       //header.classList.add("bg-white", "text-black");
     }, 3750);
-    setTimeout(function () {}, 4500);
+    setTimeout(function () {
+      if (window.innerWidth >= 1024) {
+        heroAnimationText.classList.add("opacity-0");
+      }
+    }, 4500);
     setTimeout(function () {
       heroAnimationText.classList.add("hidden");
       heroAnimationBackground.classList.add("hidden");
