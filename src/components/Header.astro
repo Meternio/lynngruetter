@@ -79,10 +79,11 @@ const content = data.story.content;
     function scrollTo(offset, callback) {
       const fixedOffset = offset.toFixed();
       const onScroll = function () {
-        if (window.scrollY.toFixed() === fixedOffset || window.scrollY === 0) {
-          window.removeEventListener("scroll", onScroll);
-          callback();
-        }
+          const threshold = 80;
+          if (Math.abs(window.scrollY - fixedOffset) <= threshold || Math.abs(window.scrollY) <= threshold) {
+              window.removeEventListener("scroll", onScroll);
+              callback();
+          }
       };
 
       window.addEventListener("scroll", onScroll);
@@ -161,7 +162,7 @@ const content = data.story.content;
             .querySelectorAll("[data-grid-categories-titles]")
             .forEach((el) => {
               el.style.transition =
-              "max-height 0.75s ease-in-out, top 0.26s ease-in-out;";
+              "max-height 0.75s ease-in-out, top 0.30s ease-out";
               el.style.top = "0";
             });
           header.classList.remove("mix-blend-difference", "text-white");
