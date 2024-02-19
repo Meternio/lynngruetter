@@ -31,7 +31,7 @@ const { blok } = Astro.props;
           playsinline
           preload="auto"
           autoplay
-          class="scroll-section-video object-cover w-52 h-28 rounded absolute bottom-0 right-0 touch-none"
+          class="scroll-section-video object-cover w-52 h-auto rounded absolute bottom-0 right-0 touch-none"
         >
           Sorry, dein Browser unterstüzt keine Videos.
         </video>
@@ -45,6 +45,8 @@ const { blok } = Astro.props;
   import interact from "interactjs";
 
   const position = { x: 0, y: 0 };
+  let isDragging = false;
+  let isZoomed = false;
 
   function getNearestCorner(x, y) {
     // Get the viewport dimensions
@@ -84,9 +86,12 @@ const { blok } = Astro.props;
   function updatePosition(event) {
     const positionAsString = getNearestCorner(event.client.x, event.client.y);
 
+    // get scrollbar width
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+
     switch (positionAsString) {
       case "top-left":
-        position.x = (window.innerWidth - 240) * -1;
+        position.x = (window.innerWidth - 240 - scrollbarWidth) * -1;
         position.y = (window.innerHeight - 144) * -1;
         break;
       case "top-right":
@@ -94,7 +99,7 @@ const { blok } = Astro.props;
         position.y = (window.innerHeight - 144) * -1;
         break;
       case "bottom-left":
-        position.x = (window.innerWidth - 240) * -1;
+        position.x = (window.innerWidth - 240 - scrollbarWidth) * -1;
         position.y = 0;
         break;
       case "bottom-right":
@@ -105,6 +110,9 @@ const { blok } = Astro.props;
 
     event.target.style.transform = `translate(${position.x}px, ${position.y}px)`;
   }
+
+  // get all videos
+  const videos = document.querySelectorAll("[data-scroll-section-video]");
 
   // Make all videos draggable
   interact("[data-scroll-section-video]").draggable({
@@ -120,6 +128,9 @@ const { blok } = Astro.props;
     listeners: {
       // Call this function on every dragmove event
       move: (event) => {
+        if (isZoomed) return;
+
+        isDragging = true;
         event.target.style.transition = "none";
 
         position.x += event.dx;
@@ -128,20 +139,45 @@ const { blok } = Astro.props;
         event.target.style.transform = `translate(${position.x}px, ${position.y}px)`;
       },
       end: (event) => {
-        event.target.style.transition = "transform 0.3s ease-in-out";
+        if (isZoomed) return;
+
+        event.target.style.transition = "transform 0.3s ease-in-out, width 0.3s ease-in-out, height 0.3s ease-in-out"
         updatePosition(event);
+        window.setTimeout(() => {
+          isDragging = false;
+        }, 1);
       },
     },
   });
 
+  // add click event to all videos to resize them to their original size
+  videos.forEach((video) => {
+    video.addEventListener("click", (event) => {
+      if(isDragging) return;
+
+      if (video.classList.contains("w-52")) {
+        isZoomed = true;
+        video.classList.remove("w-52");
+        video.classList.add("w-4/5");
+        video.style.transform = "translate(-12.5%, 0)";
+      } else {
+        isZoomed = false;
+        video.classList.remove("w-4/5");
+        video.classList.add("w-52");
+        video.style.transform = `translate(${position.x}px, ${position.y}px)`;
+      }
+    });
+  });
+
   window.addEventListener("resize", (event) => {
-    const videoElement = document.querySelector("[data-scroll-section-video]");
-    updatePosition({
-      client: {
-        x: videoElement.offsetLeft + videoElement.offsetWidth / 2,
-        y: videoElement.offsetTop + videoElement.offsetHeight / 2,
-      },
-      target: videoElement,
+    videos.forEach((video) => {
+      updatePosition({
+        client: {
+          x: video.offsetLeft + video.offsetWidth / 2,
+          y: video.offsetTop + video.offsetHeight / 2,
+        },
+        target: video,
+      });
     });
   });
 
@@ -196,5 +232,9 @@ const { blok } = Astro.props;
     transition:
       opacity 0.75s,
       blur 0.325s;
+  }
+
+  .scroll-section-video {
+    transition: transform 0.3s ease-in-out, width 0.3s ease-in-out, height 0.3s ease-in-out;
   }
 </style>
