@@ -9,7 +9,7 @@ const maxWidth = blok.fullWidth ? "100" : blok.maxWidth;
 <div
   {...storyblokEditable(blok)}
   class=`row-container gap-12 grid grid-flow-col ${!blok.fullWidth ? 'container mx-auto' : ''}`
-  style=`grid-template-columns: repeat(${blok.columns}, minmax(0, 1fr));`
+  {...{"style": (blok?.columns >= 2) ? `grid-template-columns: calc(60% - 3rem) 1fr;` : ""}}
 >
   {
     blok.content?.map((innerBlok, index) => {
