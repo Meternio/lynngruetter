@@ -24,6 +24,7 @@
     "embla-carousel-auto-scroll": "^8.0.0-rc22",
     "embla-carousel-autoplay": "^8.0.0-rc22",
     "imagesloaded": "^5.0.0",
+    "interactjs": "^1.10.26",
     "masonry-layout": "^4.2.2"
   }
 }

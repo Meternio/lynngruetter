@@ -7,7 +7,7 @@ const { blok } = Astro.props;
 ---
 
 <section
-  class="scroll-section"
+  class="scroll-section relative"
   {...storyblokEditable(blok)}
   id={blok.id}
   data-scroll-section
@@ -17,38 +17,184 @@ const { blok } = Astro.props;
       return <StoryblokComponent blok={blok} />;
     })
   }
+  {
+    blok.video && (
+      <div
+        class="scroll-section-video-wrapper z-50 absolute w-[calc(100%-32px)] h-[calc(100%-32px)] top-0 left-0 m-4 opacity-0 blur-sm"
+        data-scroll-section-video-wrapper
+      >
+        <video
+          data-scroll-section-video
+          src={blok.video.filename}
+          muted
+          loop
+          playsinline
+          preload="auto"
+          autoplay
+          class="scroll-section-video object-cover w-52 h-28 rounded absolute bottom-0 right-0 touch-none"
+        >
+          Sorry, dein Browser unterstüzt keine Videos.
+        </video>
+      </div>
+    )
+  }
   {(blok.signature || blok.signatureAbsolute) && <Signature blok={blok} />}
 </section>
 
 <script>
-  // observe all scroll sections and if they are in view, add the active class
-  /*
+  import interact from "interactjs";
+
+  const position = { x: 0, y: 0 };
+
+  function getNearestCorner(x, y) {
+    // Get the viewport dimensions
+    const vw = Math.max(
+      document.documentElement.clientWidth || 0,
+      window.innerWidth || 0
+    );
+    const vh = Math.max(
+      document.documentElement.clientHeight || 0,
+      window.innerHeight || 0
+    );
+
+    // Calculate the distances to each corner
+    const distances = {
+      "top-left": Math.sqrt((x - 208) * (x - 208) + y * y),
+      "top-right": Math.sqrt((vw - x - 208) * (vw - x - 208) + y * y),
+      "bottom-left": Math.sqrt((x - 208) * (x - 208) + (vh - y) * (vh - y)),
+      "bottom-right": Math.sqrt(
+        (vw - x - 208) * (vw - x - 208) + (vh - y) * (vh - y)
+      ),
+    };
+
+    // Find the smallest distance
+    let nearestCorner = "top-left";
+    let minDistance = distances["top-left"];
+
+    for (const corner in distances) {
+      if (distances[corner] < minDistance) {
+        nearestCorner = corner;
+        minDistance = distances[corner];
+      }
+    }
+
+    return nearestCorner;
+  }
+
+  function updatePosition(event) {
+    const positionAsString = getNearestCorner(event.client.x, event.client.y);
+
+    switch (positionAsString) {
+      case "top-left":
+        position.x = (window.innerWidth - 240) * -1;
+        position.y = (window.innerHeight - 144) * -1;
+        break;
+      case "top-right":
+        position.x = 0;
+        position.y = (window.innerHeight - 144) * -1;
+        break;
+      case "bottom-left":
+        position.x = (window.innerWidth - 240) * -1;
+        position.y = 0;
+        break;
+      case "bottom-right":
+        position.x = 0;
+        position.y = 0;
+        break;
+    }
+
+    event.target.style.transform = `translate(${position.x}px, ${position.y}px)`;
+  }
+
+  // Make all videos draggable
+  interact("[data-scroll-section-video]").draggable({
+    // Enable inertial throwing
+    inertia: true,
+    // Keep the element within the area of it's parent
+    modifiers: [
+      interact.modifiers.restrictRect({
+        restriction: "parent",
+        endOnly: true,
+      }),
+    ],
+    listeners: {
+      // Call this function on every dragmove event
+      move: (event) => {
+        event.target.style.transition = "none";
+
+        position.x += event.dx;
+        position.y += event.dy;
+
+        event.target.style.transform = `translate(${position.x}px, ${position.y}px)`;
+      },
+      end: (event) => {
+        event.target.style.transition = "transform 0.3s ease-in-out";
+        updatePosition(event);
+      },
+    },
+  });
+
+  window.addEventListener("resize", (event) => {
+    const videoElement = document.querySelector("[data-scroll-section-video]");
+    updatePosition({
+      client: {
+        x: videoElement.offsetLeft + videoElement.offsetWidth / 2,
+        y: videoElement.offsetTop + videoElement.offsetHeight / 2,
+      },
+      target: videoElement,
+    });
+  });
+
+  // observe all scroll sections and if they are in view, make the video div fixed
   const scrollSections = document.querySelectorAll("[data-scroll-section]");
   const scrollSectionsObserver = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          if (document.querySelector(".active-scroll-section-link")) {
-            document
-              .querySelector(".active-scroll-section-link")
-              .classList.remove("text-accent", "active-scroll-section-link");
+          const videoWrapper = entry.target.querySelector(
+            "[data-scroll-section-video-wrapper]"
+          );
+
+          if (videoWrapper) {
+            videoWrapper.style.position = "fixed";
+            videoWrapper.style.opacity = 1;
+            window.setTimeout(() => {
+              videoWrapper.style.filter = "blur(0px)";
+            }, 325);
           }
-          document
-            .querySelector(`a[href="#${entry.target.id}"]`)
-            .classList.add("active-scroll-section-link", "text-accent");
+        } else {
+          const videoWrapper = entry.target.querySelector(
+            "[data-scroll-section-video-wrapper]"
+          );
+
+          if (videoWrapper) {
+            window.setTimeout(() => {
+              videoWrapper.style.position = "absolute";
+            }, 750);
+            videoWrapper.style.opacity = 0;
+            videoWrapper.style.filter = "blur(5px)";
+          }
         }
       });
     },
-    { threshold: 0.2 }
+    {
+      threshold: 0.1,
+    }
   );
 
   scrollSections.forEach((section) => {
     scrollSectionsObserver.observe(section);
-  });*/
+  });
 </script>
 
 <style>
   .scroll-section :global(> .py-32 + .py-32) {
     padding-top: 0;
+  }
+
+  .scroll-section-video-wrapper {
+    transition:
+      opacity 0.75s,
+      blur 0.325s;
   }
 </style>
