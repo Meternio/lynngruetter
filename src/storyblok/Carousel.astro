@@ -30,6 +30,7 @@ if (blok) {
   >
     <div
       class=`carousel-container h-full flex ${blok?.items ? 'items-start' : ''}`
+      data-carousel-container
     >
       {
         blok?.items ? (
@@ -49,7 +50,10 @@ if (blok) {
   {
     !blok?.autoScroll && !blok?.autoPlay && (
       <>
-        <div data-carousel-prev class={`carousel-navigation-prev-wrapper absolute w-1/2 ${blok?.items ? 'h-full' : 'h-[calc(100%-60px)]'} top-0`}>
+        <div
+          data-carousel-prev
+          class={`carousel-navigation-prev-wrapper absolute w-1/2 ${blok?.items ? "h-full" : "h-[calc(100%-60px)]"} top-0`}
+        >
           <button
             class={`carousel-prev absolute left-0 ${
               blok?.items ? "top-[calc(50%-18px)] " : "top-1/2"
@@ -57,7 +61,10 @@ if (blok) {
             aria-label="Button to slide backwards in the carousel"
           />
         </div>
-        <div data-carousel-next class={`carousel-navigation-next-wrapper absolute w-1/2 ${blok?.items ? 'h-full' : 'h-[calc(100%-60px)]'} top-0 right-0`}>
+        <div
+          data-carousel-next
+          class={`carousel-navigation-next-wrapper absolute w-1/2 ${blok?.items ? "h-full" : "h-[calc(100%-60px)]"} top-0 right-0`}
+        >
           <button
             class={`carousel-next absolute right-0 ${
               blok?.items ? "top-[calc(50%-18px)] " : "top-1/2"
@@ -132,6 +139,26 @@ if (blok) {
       emblaNodeIndex.toString()
     );
 
+    // check if the current slide is a video. If so, remove data-carousel-next and data-carousel-prev
+    function checkIfCurrentSlideIsVideo(node) {
+      console.log(node);
+      const video = node.querySelector("video");
+      if (video) {
+        prevButtonNode.classList.remove("w-1/2");
+        nextButtonNode.classList.remove("w-1/2");
+      } else if (
+        prevButtonNode &&
+        nextButtonNode &&
+        !prevButtonNode.classList.contains("w-1/2") &&
+        !nextButtonNode.classList.contains("w-1/2")
+      ) {
+        prevButtonNode.classList.add("w-1/2");
+        nextButtonNode.classList.add("w-1/2");
+      }
+    }
+
+    checkIfCurrentSlideIsVideo(node);
+
     if (
       typeof node.getAttribute("data-auto-scroll") !== "string" &&
       typeof node.getAttribute("data-auto-play") !== "string"
@@ -139,20 +166,32 @@ if (blok) {
       prevButtonNode.addEventListener(
         "click",
         (e) => {
-          const instanceIndex = e.currentTarget.parentNode
+          const parent = e.currentTarget.parentNode;
+          const instanceIndex = parent
             .querySelector("[data-carousel-instance-index]")
             .getAttribute("data-carousel-instance-index");
           emblaInstances[instanceIndex].scrollPrev();
+          checkIfCurrentSlideIsVideo(
+            parent.querySelectorAll("[data-carousel-slide]")[
+              emblaInstances[instanceIndex].selectedScrollSnap()
+            ]
+          );
         },
         false
       );
       nextButtonNode.addEventListener(
         "click",
         (e) => {
-          const instanceIndex = e.currentTarget.parentNode
+          const parent = e.currentTarget.parentNode;
+          const instanceIndex = parent
             .querySelector("[data-carousel-instance-index]")
             .getAttribute("data-carousel-instance-index");
           emblaInstances[instanceIndex].scrollNext();
+          checkIfCurrentSlideIsVideo(
+            parent.querySelectorAll("[data-carousel-slide]")[
+              emblaInstances[instanceIndex].selectedScrollSnap()
+            ]
+          );
         },
         false
       );
@@ -179,12 +218,18 @@ if (blok) {
     height: calc(100% - 32px);
   }
 
-  .carousel-navigation-prev-wrapper, .carousel-navigation-prev-wrapper button {
-    cursor: url("/custom-cursor-left.png") -15 15, auto !important;
+  .carousel-navigation-prev-wrapper,
+  .carousel-navigation-prev-wrapper button {
+    cursor:
+      url("/custom-cursor-left.png") -15 15,
+      auto !important;
   }
 
-  .carousel-navigation-next-wrapper, .carousel-navigation-next-wrapper button {
-    cursor: url("/custom-cursor-right.png") 15 15, auto !important;
+  .carousel-navigation-next-wrapper,
+  .carousel-navigation-next-wrapper button {
+    cursor:
+      url("/custom-cursor-right.png") 15 15,
+      auto !important;
   }
 
   .carousel-container {

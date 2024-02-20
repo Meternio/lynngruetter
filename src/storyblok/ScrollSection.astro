@@ -18,7 +18,7 @@ const { blok } = Astro.props;
     })
   }
   {
-    blok.video && (
+    blok.video && blok.video.filename && (
       <div
         class="scroll-section-video-wrapper z-50 absolute w-[calc(100%-32px)] h-[calc(100%-32px)] top-0 left-0 m-4 opacity-0 blur-sm"
         data-scroll-section-video-wrapper

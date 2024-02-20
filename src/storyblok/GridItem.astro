@@ -8,46 +8,65 @@ const { blok, masonry } = Astro.props;
 
 const thumbnailUrl = blok.thumbnail?.filename;
 let dimensions = {
-  width: thumbnailUrl.split('/')[5].split('x')[0],
-  height: thumbnailUrl.split('/')[5].split('x')[1]
-}
+  width: thumbnailUrl.split("/")[5].split("x")[0],
+  height: thumbnailUrl.split("/")[5].split("x")[1],
+};
+
+const isVideo = thumbnailUrl.match(/\.(mp4|mov|webm)$/i);
 ---
 
 <div
   {...storyblokEditable(blok)}
-  class={`grid-category-item custom-transition ${masonry && 'mb-4'} opacity-0 translate-y-3 ${
-    blok.doubleWidth ? "w-full lg:w-[calc(50%-8px)]" : "w-[calc(50%-8px)] lg:w-[calc(25%-12px)]"
+  class={`grid-category-item custom-transition ${masonry && "mb-4"} opacity-0 translate-y-3 ${
+    blok.doubleWidth
+      ? "w-full lg:w-[calc(50%-8px)]"
+      : "w-[calc(50%-8px)] lg:w-[calc(25%-12px)]"
   }`}
   data-grid-category-item
 >
   <div data-grid-category-item-content class="cursor-pointer">
-    <img
-      srcset={`
+    {
+      !isVideo ? (
+        <img
+          srcset={`
             ${
-              thumbnailUrl +
-              "/m/1920x0/smart/filters:format(webp):quality(80)"
+              thumbnailUrl + "/m/1920x0/smart/filters:format(webp):quality(80)"
             } 1200w,
             ${
-              thumbnailUrl +
-              "/m/992x0/smart/filters:format(webp):quality(80)"
+              thumbnailUrl + "/m/992x0/smart/filters:format(webp):quality(80)"
             } 992w,
             ${
-              thumbnailUrl +
-              "/m/768x0/smart/filters:format(webp):quality(80)"
+              thumbnailUrl + "/m/768x0/smart/filters:format(webp):quality(80)"
             } 768w,
             ${
-              thumbnailUrl +
-              "/m/576x0/smart/filters:format(webp):quality(80)"
+              thumbnailUrl + "/m/576x0/smart/filters:format(webp):quality(80)"
             } 576w`}
-      src={thumbnailUrl +
-        "/m/1920x0/smart/filters:format(webp):quality(80)"}
-      alt={blok.thumbnail?.alt || "Grid Item"}
-      loading="lazy"
-      class="grid-category-item-thumbnail min-h-56 w-full object-cover"
-      height={dimensions?.height}
-      width={dimensions?.width}
-      data-grid-category-item-thumbnail
-    />
+          src={
+            thumbnailUrl + "/m/1920x0/smart/filters:format(webp):quality(80)"
+          }
+          alt={blok.thumbnail?.alt || "Grid Item"}
+          loading="lazy"
+          class="grid-category-item-thumbnail min-h-56 w-full object-cover"
+          height={dimensions?.height}
+          width={dimensions?.width}
+          data-grid-category-item-thumbnail
+        />
+      ) : (
+        <video
+          src={thumbnailUrl}
+          class="grid-category-item-thumbnail min-h-56 w-full object-cover"
+          height={dimensions?.height}
+          width={dimensions?.width}
+          data-grid-category-item-thumbnail-video
+          loop
+          muted
+          preload="none"
+          autoplay
+          playsinline
+        />
+      )
+    }
+
     <h2 class="sm:text-center">{blok.title}</h2>
   </div>
   <Dialog
@@ -55,13 +74,21 @@ let dimensions = {
     attrs={{ "data-grid-gallery-dialog": true }}
   >
     <div class="container mx-auto h-full">
-      <h2 class="sm:text-xl h-[88px] w-[35%] p-0 pt-4 sm:w-full sm:text-center sm:p-4 sm:h-[60px]">{blok.title}</h2>
+      <h2
+        class="sm:text-xl h-[88px] w-[35%] p-0 pt-4 sm:w-full sm:text-center sm:p-4 sm:h-[60px]"
+      >
+        {blok.title}
+      </h2>
       <Carousel classes="h-[calc(100%-88px)] sm:h-[calc(100%-60px)]">
         {
           blok.gallery?.map((gallery, index) => {
             return (
               <div class="carousel-slide" data-carousel-slide>
-                <StoryblokComponent blok={gallery} current={index + 1} max={blok.gallery?.length}/>
+                <StoryblokComponent
+                  blok={gallery}
+                  current={index + 1}
+                  max={blok.gallery?.length}
+                />
               </div>
             );
           })
@@ -90,6 +117,8 @@ let dimensions = {
 
 <style>
   .grid-category-item.custom-transition {
-    transition: opacity 0.75s ease-in-out, transform 0.75s ease-in-out;
+    transition:
+      opacity 0.75s ease-in-out,
+      transform 0.75s ease-in-out;
   }
 </style>

@@ -6,6 +6,8 @@ const { blok, current, max } = Astro.props;
 
 const regex = /\/([^\/]+)(?=\.\w+$)/;
 const filename = blok.image?.filename.match(regex);
+
+const isVideo = blok.image?.filename.match(/\.(mp4|mov|webm)$/i);
 ---
 
 <div
@@ -14,31 +16,45 @@ const filename = blok.image?.filename.match(regex);
   data-grid-category-item-gallery
 >
   <div class="h-[calc(100%-60px)]">
-    <img
-      srcset={`
-              ${
-                blok.image?.filename +
-                "/m/1920x0/smart/filters:format(webp):quality(80)"
-              } 1200w,
-              ${
-                blok.image?.filename +
-                "/m/992x0/smart/filters:format(webp):quality(80)"
-              } 992w,
-              ${
-                blok.image?.filename +
-                "/m/768x0/smart/filters:format(webp):quality(80)"
-              } 768w,
-              ${
-                blok.image?.filename +
-                "/m/576x0/smart/filters:format(webp):quality(80)"
-              } 576w`}
-      src={blok.image?.filename +
-        "/m/1920x0/smart/filters:format(webp):quality(80)"}
-      alt={blok.image?.alt || "Grid Item Gallery"}
-      loading="lazy"
-      class="grid-category-item-gallery-image relative top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-h-full"
-      data-grid-category-item-gallery-image
-    />
+    {
+      !isVideo ? (
+        <img
+          srcset={`
+                ${
+                  blok.image?.filename +
+                  "/m/1920x0/smart/filters:format(webp):quality(80)"
+                } 1200w,
+                ${
+                  blok.image?.filename +
+                  "/m/992x0/smart/filters:format(webp):quality(80)"
+                } 992w,
+                ${
+                  blok.image?.filename +
+                  "/m/768x0/smart/filters:format(webp):quality(80)"
+                } 768w,
+                ${
+                  blok.image?.filename +
+                  "/m/576x0/smart/filters:format(webp):quality(80)"
+                } 576w`}
+          src={
+            blok.image?.filename +
+            "/m/1920x0/smart/filters:format(webp):quality(80)"
+          }
+          alt={blok.image?.alt || "Grid Item Gallery"}
+          loading="lazy"
+          class="grid-category-item-gallery-image relative top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-h-full"
+          data-grid-category-item-gallery-image
+        />
+      ) : (
+        <video
+          src={blok.image?.filename}
+          alt={blok.image?.alt || "Grid Item Gallery"}
+          class="grid-category-item-gallery-image relative top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-h-full"
+          data-grid-category-item-gallery-image
+          controls
+        />
+      )
+    }
   </div>
   <div
     class="grid-category-item-gallery-footer flex justify-between items-center flex-grow relative text-sm"
