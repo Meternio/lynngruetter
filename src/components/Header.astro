@@ -130,14 +130,14 @@ const content = data.story.content;
       if(rect.top > (headerHeight + 16)) return;
 
       // add or subtract 72px to the current translateY value based on the operation
-      let newTranslateY = `calc(-100svh + 32px + 100%)`;
+      let newTranslateY = `calc(-100dvh + 32px + 100%)`;
 
       if (
         !document
           .querySelector("[data-header]")
           .classList.contains("-translate-y-full")
       ) {
-        newTranslateY = `calc(-100svh + 32px + 100% + ${headerHeight}px)`;
+        newTranslateY = `calc(-100dvh + 32px + 100% + ${headerHeight}px)`;
       }
 
       // replace the current translateY value with the new one
