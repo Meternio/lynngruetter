@@ -13,6 +13,8 @@ let dimensions = {
 };
 
 const isVideo = thumbnailUrl.match(/\.(mp4|mov|webm)$/i);
+
+const Tag = blok?.link ? "a" : "div";
 ---
 
 <div
@@ -24,7 +26,14 @@ const isVideo = thumbnailUrl.match(/\.(mp4|mov|webm)$/i);
   }`}
   data-grid-category-item
 >
-  <div data-grid-category-item-content class="cursor-pointer">
+  <Tag
+    {...{
+      href: blok?.link ? blok?.link?.url : false,
+      target: blok?.link ? "_blank" : false,
+      "data-grid-category-item-content": blok?.link ? false : true,
+    }}
+    class="cursor-pointer"
+  >
     {
       !isVideo ? (
         <img
@@ -68,40 +77,58 @@ const isVideo = thumbnailUrl.match(/\.(mp4|mov|webm)$/i);
     }
 
     <h2 class="sm:text-center">{blok.title}</h2>
-  </div>
-  <Dialog
-    classes="grid-gallery-dialog"
-    attrs={{ "data-grid-gallery-dialog": true }}
-  >
-    <div class="container mx-auto h-full">
-      <h2
-        class="sm:text-xl h-[88px] w-[35%] p-0 pt-4 sm:w-full sm:text-center sm:p-4 sm:h-[60px]"
+  </Tag>
+  {
+    blok.gallery && blok.gallery.length > 0 && (
+      <Dialog
+        classes="grid-gallery-dialog"
+        attrs={{ "data-grid-gallery-dialog": true }}
       >
-        {blok.title}
-      </h2>
-      <Carousel classes="h-[calc(100%-88px)] sm:h-[calc(100%-60px)]">
-        {
-          blok.gallery?.map((gallery, index) => {
-            return (
-              <div class="carousel-slide" data-carousel-slide>
-                <StoryblokComponent
-                  blok={gallery}
-                  current={index + 1}
-                  max={blok.gallery?.length}
-                />
-              </div>
-            );
-          })
-        }
-      </Carousel>
-    </div>
-  </Dialog>
+        <div class="container mx-auto h-full">
+          <h2 class="sm:text-xl h-[88px] w-[35%] p-0 pt-4 sm:w-full sm:text-center sm:p-4 sm:h-[60px]">
+            {blok.title}
+          </h2>
+          <Carousel classes="h-[calc(100%-88px)] sm:h-[calc(100%-60px)]" noPagination={(blok.gallery.length <= 1) ? true : false}>
+            {blok.gallery?.map((gallery, index) => {
+              return (
+                <div class="carousel-slide" data-carousel-slide>
+                  <StoryblokComponent
+                    blok={gallery}
+                    current={index + 1}
+                    max={blok.gallery?.length}
+                  />
+                </div>
+              );
+            })}
+          </Carousel>
+        </div>
+      </Dialog>
+    )
+  }
 </div>
 
 <script>
+  const videos = document.querySelectorAll("[data-grid-category-item-thumbnail-video]");
+
+  videos.forEach((video) => {
+    video.addEventListener("mouseenter", function () {
+      video.pause();
+    });
+    video.addEventListener("mouseleave", function () {
+      video.play();
+    });
+    video.addEventListener("touchstart", function () {
+      video.pause();
+    });
+    video.addEventListener("touchend", function () {
+      video.play();
+    });
+  });
+
   const gridItems = document.querySelectorAll(
     "[data-grid-category-item-content]"
   );
+
   gridItems.forEach((item) => {
     item.addEventListener("click", function (e) {
       e.preventDefault();

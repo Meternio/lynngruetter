@@ -3,7 +3,7 @@ import { storyblokEditable } from "@storyblok/astro";
 import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
 import Signature from "./Signature.astro";
 
-const { classes, blok, color } = Astro.props;
+const { classes, blok, color, noPagination } = Astro.props;
 
 const maxItemWidth = blok?.maxItemWidth ? blok?.maxItemWidth + "px" : "100%";
 
@@ -48,7 +48,7 @@ if (blok) {
     </div>
   </div>
   {
-    !blok?.autoScroll && !blok?.autoPlay && (
+    !blok?.autoScroll && !blok?.autoPlay && (blok?.items.lenght > 1 || !noPagination) && (
       <>
         <div
           data-carousel-prev
@@ -139,9 +139,12 @@ if (blok) {
       emblaNodeIndex.toString()
     );
 
+    if (!prevButtonNode && !nextButtonNode) {
+      return;
+    }
+
     // check if the current slide is a video. If so, remove data-carousel-next and data-carousel-prev
     function checkIfCurrentSlideIsVideo(node) {
-      console.log(node);
       const video = node.querySelector("video");
       if (video) {
         prevButtonNode.classList.remove("w-1/2");

@@ -7,7 +7,7 @@ const { blok } = Astro.props;
 ---
 
 <section
-  class="scroll-section relative"
+  class=`scroll-section relative ${blok.video && blok.video.filename ? "" : "z-[5] "}`
   {...storyblokEditable(blok)}
   id={blok.id}
   data-scroll-section
@@ -20,7 +20,7 @@ const { blok } = Astro.props;
   {
     blok.video && blok.video.filename && (
       <div
-        class="scroll-section-video-wrapper z-50 absolute w-[calc(100%-32px)] h-[calc(100%-32px)] top-0 left-0 m-4 opacity-0 blur-sm"
+        class="scroll-section-video-wrapper absolute w-[calc(100%-32px)] h-[calc(100%-32px)] top-0 left-0 m-4 opacity-0 blur-sm"
         data-scroll-section-video-wrapper
       >
         <video
@@ -160,11 +160,15 @@ const { blok } = Astro.props;
         video.classList.remove("w-52");
         video.classList.add("w-4/5");
         video.style.transform = "translate(-12.5%, 0)";
+        video.closest('[data-scroll-section]').classList.add('z-10');
       } else {
         isZoomed = false;
         video.classList.remove("w-4/5");
         video.classList.add("w-52");
         video.style.transform = `translate(${position.x}px, ${position.y}px)`;
+        window.setTimeout(() => {
+          video.closest('[data-scroll-section]').classList.remove('z-10');
+        }, 175);
       }
     });
   });
