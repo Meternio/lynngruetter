@@ -20,7 +20,10 @@ const content = data.story.content;
   <nav
     class="header-nav h-full flex items-center lg:justify-between lg:text-xl !leading-none"
   >
-    <a href="/" class="uppercase order-1 w-[54px] lg:w-[82px] h-4 lg:h-6 flex-shrink-0">
+    <a
+      href="/"
+      class="uppercase order-1 w-[54px] lg:w-[82px] h-4 lg:h-6 flex-shrink-0"
+    >
       <Image
         src={lynnWhite}
         alt="Lynn Gruetter's signature"
@@ -74,16 +77,19 @@ const content = data.story.content;
     const headerNavLogoWhite = document.querySelector(
       "[data-header-nav-logo-white]"
     );
-    let headerHeight = (window.innerWidth >= 1024) ? 72 : 48;
+    let headerHeight = window.innerWidth >= 1024 ? 72 : 48;
 
     function scrollTo(offset, callback) {
       const fixedOffset = offset.toFixed();
       const onScroll = function () {
-          const threshold = 80;
-          if (Math.abs(window.scrollY - fixedOffset) <= threshold || Math.abs(window.scrollY) <= threshold) {
-              window.removeEventListener("scroll", onScroll);
-              callback();
-          }
+        const threshold = 80;
+        if (
+          Math.abs(window.scrollY - fixedOffset) <= threshold ||
+          Math.abs(window.scrollY) <= threshold
+        ) {
+          window.removeEventListener("scroll", onScroll);
+          callback();
+        }
       };
 
       window.addEventListener("scroll", onScroll);
@@ -92,6 +98,39 @@ const content = data.story.content;
         top: offset,
         behavior: "smooth",
       });
+    }
+
+    function adjustTransform(el, operation) {
+      // get current transform
+      const transform = el.style.transform;
+
+      if (!transform || el.getAttribute("data-transform") === operation) return;
+
+      // add attribute to element to prevent multiple transformations
+      el.setAttribute("data-transform", operation);
+
+      // get the current translateY value, example string 'translate(0px, -706px)'
+      let translateY = transform.match(/translate\(\d+px, (-?\d+)px\)/);
+
+      if (!translateY || !translateY[1]) return;
+
+      translateY = parseInt(translateY[1]);
+
+      const headerHeight = window.innerWidth >= 1024 ? 72 : 48;
+
+      if (Math.abs(translateY) <= headerHeight) {
+        return;
+      }
+
+      // add or subtract 72px to the current translateY value based on the operation
+      const newTranslateY =
+        operation === "added" ? translateY - headerHeight : translateY + headerHeight;
+
+      // replace the current translateY value with the new one
+      el.style.transform = transform.replace(
+        /translate\(\d+px, (-?\d+)px\)/,
+        `translate(0px, ${newTranslateY}px)`
+      );
     }
 
     headerNav.forEach((el, index) => {
@@ -107,7 +146,7 @@ const content = data.story.content;
           lastScrollTop > targetEl.getBoundingClientRect()?.top + lastScrollTop
             ? headerHeight
             : index === 0
-              ? (headerHeight * -1)
+              ? headerHeight * -1
               : 0;
 
         body.classList.add("opacity-0", "blur-sm");
@@ -131,7 +170,10 @@ const content = data.story.content;
         const currentScroll =
           window.scrollY || document.documentElement.scrollTop;
 
-        if (currentScroll > headerHeight && !header.classList.contains("bg-white")) {
+        if (
+          currentScroll > headerHeight &&
+          !header.classList.contains("bg-white")
+        ) {
           window.setTimeout(() => {
             header.classList.add("bg-white");
           }, 750);
@@ -162,8 +204,13 @@ const content = data.story.content;
             .querySelectorAll("[data-grid-categories-titles]")
             .forEach((el) => {
               el.style.transition =
-              "max-height 0.75s ease-in-out, top 0.30s ease-out";
+                "max-height 0.75s ease-in-out, top 0.30s ease-out";
               el.style.top = "0";
+            });
+          document
+            .querySelectorAll("[data-scroll-section-video]")
+            .forEach((el) => {
+              adjustTransform(el, "added");
             });
           header.classList.remove("mix-blend-difference", "text-white");
           header.classList.add("text-black");
@@ -177,7 +224,15 @@ const content = data.story.content;
                 "max-height 0.75s ease-in-out, top 0.35s ease-in-out";
               el.style.top = `${headerHeight}px`;
             });
-        } else if (currentScroll > lastScrollTop && currentScroll < headerHeight) {
+          document
+            .querySelectorAll("[data-scroll-section-video]")
+            .forEach((el) => {
+              adjustTransform(el, "subtracted");
+            });
+        } else if (
+          currentScroll > lastScrollTop &&
+          currentScroll < headerHeight
+        ) {
           header.classList.remove("fixed");
           header.classList.add("absolute");
         }
@@ -187,7 +242,7 @@ const content = data.story.content;
     }, 3000);
 
     window.addEventListener("resize", () => {
-      headerHeight = (window.innerWidth >= 1024) ? 72 : 48;
+      headerHeight = window.innerWidth >= 1024 ? 72 : 48;
     });
 
     /*const headerNavContentMenu = document.querySelector(

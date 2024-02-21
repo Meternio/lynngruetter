@@ -20,7 +20,10 @@ const { blok } = Astro.props;
   {
     blok.video && blok.video.filename && (
       <>
-        <div data-sentinel class="sentinel absolute top-[50svh] w-full h-[calc(100%-50svh)]" />
+        <div
+          data-sentinel
+          class="sentinel absolute top-[50svh] w-full h-[calc(100%-50svh)]"
+        />
         <div
           class="scroll-section-video-wrapper absolute w-[calc(100%-32px)] h-[calc(100%-32px)] top-0 left-0 m-4 opacity-0 blur-sm"
           data-scroll-section-video-wrapper
@@ -33,7 +36,7 @@ const { blok } = Astro.props;
             playsinline
             preload="auto"
             autoplay
-            class="scroll-section-video object-cover w-52 h-auto rounded absolute bottom-0 right-0 touch-none"
+            class="scroll-section-video object-cover w-48 h-auto rounded-xl absolute bottom-0 right-0 touch-none"
           >
             Sorry, dein Browser unterstüzt keine Videos.
           </video>
@@ -105,21 +108,26 @@ const { blok } = Astro.props;
 
     switch (positionAsString) {
       case "top-left":
-        position.x = (window.innerWidth - 240 - scrollbarWidth) * -1;
-        position.y = (window.innerHeight - 149) * -1;
+        position.x = (window.innerWidth - 226 - scrollbarWidth) * -1;
+        position.y = (window.innerHeight - 140) * -1;
         break;
       case "top-right":
         position.x = 0;
-        position.y = (window.innerHeight - 149) * -1;
+        position.y = (window.innerHeight - 140) * -1;
         break;
       case "bottom-left":
-        position.x = (window.innerWidth - 240 - scrollbarWidth) * -1;
+        position.x = (window.innerWidth - 226 - scrollbarWidth) * -1;
         position.y = 0;
         break;
       case "bottom-right":
         position.x = 0;
         position.y = 0;
         break;
+    }
+
+    if(positionAsString.indexOf("top") > -1 && !document.querySelector("[data-header]").classList.contains("-translate-y-full")) {
+      const headerHeight = window.innerWidth >= 1024 ? 72 : 48;
+      position.y += headerHeight;
     }
 
     event.target.style.transform = `translate(${position.x}px, ${position.y}px)`;
@@ -165,26 +173,43 @@ const { blok } = Astro.props;
     },
   });
 
+  const resetVideoSize = (event) => {
+    if (event.target.closest("[data-scroll-section-video]")) return;
+
+    const videos = event.target.querySelectorAll("[data-scroll-section-video]");
+    videos.forEach((video) => {
+      isZoomed = false;
+      video.muted = true;
+      video.classList.remove("w-4/5", "bottom-1/2");
+      video.classList.add("w-48", "bottom-0");
+      video.style.transform = `translate(${position.x}px, ${position.y}px)`;
+      video.controls = false;
+      window.setTimeout(() => {
+        video.closest("[data-scroll-section]").classList.remove("z-10");
+      }, 175);
+
+      video
+        .closest("[data-scroll-section-video-wrapper]")
+        .removeEventListener("click", resetVideoSize);
+    });
+  };
+
   // add click event to all videos to resize them to their original size
   videos.forEach((video) => {
     video.addEventListener("click", (event) => {
-      if (isDragging) return;
+      if (isDragging || isZoomed) return;
 
-      if (video.classList.contains("w-52")) {
-        isZoomed = true;
-        video.classList.remove("w-52", "bottom-0");
-        video.classList.add("w-4/5", "bottom-1/2");
-        video.style.transform = "translate(-12.5%, 50%)";
-        video.closest("[data-scroll-section]").classList.add("z-10");
-      } else {
-        isZoomed = false;
-        video.classList.remove("w-4/5", "bottom-1/2");
-        video.classList.add("w-52", "bottom-0");
-        video.style.transform = `translate(${position.x}px, ${position.y}px)`;
-        window.setTimeout(() => {
-          video.closest("[data-scroll-section]").classList.remove("z-10");
-        }, 175);
-      }
+      isZoomed = true;
+      video.classList.remove("w-48", "bottom-0");
+      video.classList.add("w-4/5", "bottom-1/2");
+      video.style.transform = "translate(-12.5%, 50%)";
+      video.closest("[data-scroll-section]").classList.add("z-10");
+      video.controls = true;
+
+      // on outside video click, reset the video to its original size
+      video
+        .closest("[data-scroll-section-video-wrapper]")
+        .addEventListener("click", resetVideoSize);
     });
   });
 
