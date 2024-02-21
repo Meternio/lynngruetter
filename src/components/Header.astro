@@ -215,7 +215,7 @@ const content = data.story.content;
             .forEach((el) => {
               window.setTimeout(() => {
                 adjustTransform(el, "added");
-              }, 1);
+              }, 250);
             });
           header.classList.remove("mix-blend-difference", "text-white");
           header.classList.add("text-black");
@@ -234,7 +234,7 @@ const content = data.story.content;
             .forEach((el) => {
               window.setTimeout(() => {
                 adjustTransform(el, "subtracted");
-              }, 1);
+              }, 250);
             });
         } else if (
           currentScroll > lastScrollTop &&
