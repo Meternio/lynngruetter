@@ -216,7 +216,7 @@ const content = data.story.content;
             }
           }
 
-          if (currentScroll > lastScrollTop && currentScroll > headerHeight && !header.classList.contains("-translate-y-full")) {
+          if (currentScroll > lastScrollTop && currentScroll > headerHeight) {
             header.classList.add("-translate-y-full");
             document
               .querySelectorAll("[data-grid-categories-titles]")
@@ -232,7 +232,7 @@ const content = data.story.content;
               });
             header.classList.remove("mix-blend-difference", "text-white");
             header.classList.add("text-black");
-          } else if (currentScroll > headerHeight && header.classList.contains("-translate-y-full")) {
+          } else if (currentScroll > headerHeight) {
             header.classList.remove("-translate-y-full", "absolute");
             header.classList.add("fixed");
             document
