@@ -248,24 +248,42 @@ if (blok) {
     width: 0;
     height: 0;
     display: block;
-    filter: blur(2px);
-  }
-
-  .carousel-prev:hover,
-  .carousel-next:hover {
-    filter: blur(0);
   }
 
   .carousel-prev {
     border-top: 8px solid transparent;
     border-bottom: 8px solid transparent;
-    border-right: 12px solid var(--color, #a6a6a6);
+    border-right: 12px solid var(--color, black);
   }
 
   .carousel-next {
     border-top: 8px solid transparent;
     border-bottom: 8px solid transparent;
-    border-left: 12px solid var(--color, #a6a6a6);
+    border-left: 12px solid var(--color, black);
+  }
+
+  .carousel-prev:after {
+    content: "";
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-right: 12px solid var(--color, black);
+    top: -8px;
+    left: 12px;
+    position: relative;
+    width: 8px;
+    display: block;
+  }
+
+  .carousel-next:after {
+    content: "";
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-left: 12px solid var(--color, black);
+    top: -8px;
+    right: 24px;
+    position: relative;
+    width: 8px;
+    display: block;
   }
 
   /*.carousel-prev:after {
