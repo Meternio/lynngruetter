@@ -78,6 +78,7 @@ const content = data.story.content;
       "[data-header-nav-logo-white]"
     );
     let headerHeight = window.innerWidth >= 1024 ? 72 : 48;
+    let adjustTransformTimeout = null;
 
     function throttle(func, wait) {
       let timeout = null;
@@ -231,7 +232,8 @@ const content = data.story.content;
                   "max-height 0.75s ease-in-out, top 0.30s ease-out";
                 el.style.top = "0";
               });
-            window.setTimeout(() => {
+            window.clearTimeout(adjustTransformTimeout);
+            adjustTransformTimeout = window.setTimeout(() => {
               document
                 .querySelectorAll("[data-scroll-section-video]")
                 .forEach((el) => {
@@ -250,7 +252,8 @@ const content = data.story.content;
                   "max-height 0.75s ease-in-out, top 0.35s ease-in-out";
                 el.style.top = `${headerHeight}px`;
               });
-            window.setTimeout(() => {
+            window.clearTimeout(adjustTransformTimeout);
+            adjustTransformTimeout = window.setTimeout(() => {
               document
                 .querySelectorAll("[data-scroll-section-video]")
                 .forEach((el) => {
