@@ -23,9 +23,9 @@ if (blok) {
     class=`carousel-viewport h-full m-auto ${(blok?.items && !blok?.autoScroll && !blok?.autoPlay)  ? 'max-w-[calc(100%-100px)] overflow-hidden' : ''}`
     data-carousel-viewport
     {...{
-      "data-auto-height": blok?.autoHeight ? true : false,
-      "data-auto-scroll": blok?.autoScroll ? true : false,
-      "data-auto-play": blok?.autoPlay ? true : false,
+      "data-auto-height": blok?.autoHeight ? "true" : false,
+      "data-auto-scroll": blok?.autoScroll ? "true" : false,
+      "data-auto-play": blok?.autoPlay ? "true" : false,
     }}
   >
     <div
@@ -219,6 +219,10 @@ if (blok) {
 
   [data-auto-height="true"] {
     height: calc(100% - 32px);
+  }
+
+  [data-auto-scroll="true"] :global(img){
+    filter: grayscale(100%);
   }
 
   .carousel-navigation-prev-wrapper,

@@ -8,12 +8,24 @@ const maxWidth = blok.fullWidth ? "100" : blok.maxWidth;
 
 <div
   {...storyblokEditable(blok)}
-  class=`row-container gap-12 grid grid-flow-col ${!blok.fullWidth ? 'container mx-auto' : ''}`
-  {...{"style": (blok?.columns >= 2) ? `grid-template-columns: calc(60% - 3rem) 1fr;` : ""}}
+  class=`row-container gap-12 grid grid-flow-col ${!blok.fullWidth ? 'container mx-auto' : ''} ${blok?.fadeInAndOut ? "fade-in opacity-0 -translate-y-12" : ""}`
+  {...{
+    "data-row-intersect": blok?.fadeInAndOut ? true : false,
+  }}
+  {...{
+    style:
+      blok?.columns >= 2 ? `grid-template-columns: calc(60% - 3rem) 1fr;` : "",
+  }}
 >
   {
     blok.content?.map((innerBlok, index) => {
-      return <div style={`order: ${blok.swapOrderOnMobile ? (blok.content.length - index) : index}`}><StoryblokComponent blok={innerBlok} color={color} /></div>;
+      return (
+        <div
+          style={`order: ${blok.swapOrderOnMobile ? blok.content.length - index : index}`}
+        >
+          <StoryblokComponent blok={innerBlok} color={color} />
+        </div>
+      );
     })
   }
 </div>
@@ -33,6 +45,10 @@ const maxWidth = blok.fullWidth ? "100" : blok.maxWidth;
     }
   }
 
+  .row-container.fade-in {
+    transition: opacity 0.75s ease-in-out, transform 0.75s ease-in-out;
+  }
+
   .row-container :global(.text-section) {
     padding: 0;
   }
@@ -45,3 +61,25 @@ const maxWidth = blok.fullWidth ? "100" : blok.maxWidth;
     margin-top: 6rem;
   }
 </style>
+
+<script>
+  // Intersection Observer
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(
+      (entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.remove("opacity-0", "-translate-y-12");
+        } else {
+          entry.target.classList.add("opacity-0", "-translate-y-12");
+        }
+      },
+      {
+        threshold: 0.6,
+      }
+    );
+  });
+
+  document.querySelectorAll("[data-row-intersect]").forEach((el) => {
+    observer.observe(el);
+  });
+</script>
