@@ -20,13 +20,6 @@ const isFrontendEditor = Astro.url.searchParams.get('_storyblok')! || '';
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <link
       rel="preload"
-      href="/fonts/PPNeueMontreal-Regular.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <link
-      rel="preload"
       href="/fonts/PPNeueMontreal-Medium.woff2"
       as="font"
       type="font/woff2"
@@ -40,7 +33,7 @@ const isFrontendEditor = Astro.url.searchParams.get('_storyblok')! || '';
         "Ich moderiere: Vor der Fernsehkamera, online oder live an Ihrem Anlass."}
     />
   </head>
-  <body data-body class=`font-montrealRegular overflow-hidden ${(dev || isFrontendEditor) && 'dev'}`>
+  <body data-body class=`font-montrealMedium overflow-hidden ${(dev || isFrontendEditor) && 'dev'}`>
     <Header />
     {(!dev && !isFrontendEditor) && <HeroAnimation />}
     <main class="relative opacity-0 bg-gray" data-main>
@@ -95,14 +88,6 @@ const isFrontendEditor = Astro.url.searchParams.get('_storyblok')! || '';
 
   .dev .header-nav-content-menu {
     opacity: 1;
-  }
-
-  @font-face {
-    font-family: "NeueMontreal-Regular";
-    src: url("/fonts/PPNeueMontreal-Regular.woff2") format("woff2");
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
   }
 
   @font-face {

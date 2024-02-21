@@ -15,7 +15,6 @@ module.exports = {
         accent: "#0397F5",
       },
       fontFamily: {
-        montrealRegular: ["NeueMontreal-Regular"],
         montrealMedium: ["NeueMontreal-Medium"],
       },
     },
