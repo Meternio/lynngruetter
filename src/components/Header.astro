@@ -118,7 +118,7 @@ const content = data.story.content;
 
       const headerHeight = window.innerWidth >= 1024 ? 72 : 48;
 
-      if (Math.abs(translateY) <= headerHeight) {
+      if (Math.abs(translateY) <= (headerHeight + 10)) {
         return;
       }
 

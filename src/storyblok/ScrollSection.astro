@@ -67,6 +67,7 @@ if(blok._uid === content.body[content.body.length - 1]._uid) {
   const position = { x: 0, y: 0 };
   let isDragging = false;
   let isZoomed = false;
+  let previousWidth = window.innerWidth;
 
   function getNearestCorner(event) {
     // Get the bounding rectangle of the dragged object
@@ -236,6 +237,13 @@ if(blok._uid === content.body[content.body.length - 1]._uid) {
   });
 
   window.addEventListener("resize", (event) => {
+    // Check if screen size has changed and reset the video size and position if necessary
+    if (window.innerWidth === previousWidth) {
+      return;
+    }
+
+    previousWidth = window.innerWidth;
+
     videos.forEach((video) => {
       updatePosition({
         target: video,
