@@ -122,37 +122,26 @@ const content = data.story.content;
       // add attribute to element to prevent multiple transformations
       el.setAttribute("data-transform", operation);
 
-      // get the current translateY value, example string 'translate(0px, -706px)'
-      let translateY = transform.match(/translate\((-?\d+)px, (-?\d+)px\)/);
+      // get current translate X value
+      const translateX = parseInt(transform.match(/translate\((-?\d+)px, /)[1]);
 
-      if (!translateY || !translateY[1] || !translateY[2]) return;
-
-      const translateX = parseInt(translateY[1]);
-      translateY = parseInt(translateY[2]);
-
-      const headerHeight = window.innerWidth >= 1024 ? 72 : 48;
-
-      if (Math.abs(translateY) <= headerHeight + 10) {
-        return;
-      }
+      // get current screen position of element
+      const rect = el.getBoundingClientRect();
+      if(rect.top > (headerHeight + 16)) return;
 
       // add or subtract 72px to the current translateY value based on the operation
-      let newTranslateY = (window.innerHeight - el.offsetHeight - 32) * -1;
+      let newTranslateY = `calc(-100svh + 32px + 100%)`;
 
       if (
         !document
           .querySelector("[data-header]")
           .classList.contains("-translate-y-full")
       ) {
-        newTranslateY =
-          (window.innerHeight - el.offsetHeight - 32 - headerHeight) * -1;
+        newTranslateY = `calc(-100svh + 32px + 100% + ${headerHeight}px)`;
       }
 
       // replace the current translateY value with the new one
-      el.style.transform = transform.replace(
-        /translate\((-?\d+)px, (-?\d+)px\)/,
-        `translate(${translateX}px, ${newTranslateY}px)`
-      );
+      el.style.transform = `translate(${translateX}px, ${newTranslateY})`;
     }
 
     headerNav.forEach((el, index) => {
