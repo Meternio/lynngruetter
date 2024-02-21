@@ -14,13 +14,13 @@ const { blok } = Astro.props;
   }}
 >
   <div
-    class="grid-categories-titles flex flex-col lg:flex-row items-center lg:justify-center sticky top-[72px] z-30 bg-white"
+    class="grid-categories-titles flex flex-col lg:flex-row items-center gap-1 lg:gap-0 lg:justify-center sticky top-[72px] z-30 bg-white text-sm lg:text-md"
     data-grid-categories-titles
     role="tablist"
     aria-label="Tabbed Grid Categories"
   >
     <button
-      class="grid-category-title grid-category-title-trigger p-2 lg:p-4 uppercase text-black cursor-pointer lg:hidden"
+      class="grid-category-title grid-category-title-trigger lg:p-4 uppercase text-black cursor-pointer lg:hidden min-h-10"
       role="tab"
       data-grid-categories-titles-trigger
     >
@@ -30,7 +30,7 @@ const { blok } = Astro.props;
       blok.categories.map((category, index) => {
         return (
           <button
-            class={`grid-category-title p-2 lg:p-4 uppercase invisible lg:visible text-black/40 cursor-pointer ${
+            class={`grid-category-title lg:p-4 uppercase invisible lg:visible text-black/40 cursor-pointer last:pb-2 lg:last:pb-4${
               index === 0 ? "grid-category-title-active" : ""
             }`}
             role="tab"

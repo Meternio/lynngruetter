@@ -1,9 +1,23 @@
 ---
-import { storyblokEditable } from "@storyblok/astro";
+import { storyblokEditable, useStoryblokApi } from "@storyblok/astro";
 import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
 import Signature from "./Signature.astro";
 
 const { blok } = Astro.props;
+
+const storyblokApi = useStoryblokApi();
+
+const { data } = await storyblokApi.get("cdn/stories/home", {
+  version: "draft",
+});
+
+const content = data.story.content;
+
+let lastSection = false;
+
+if(blok._uid === content.body[content.body.length - 1]._uid) {
+  lastSection = true;
+}
 ---
 
 <section
@@ -44,7 +58,7 @@ const { blok } = Astro.props;
       </>
     )
   }
-  {(blok.signature || blok.signatureAbsolute) && <Signature blok={blok} />}
+  {(blok.signature || blok.signatureAbsolute) && <Signature blok={blok} lastSection={lastSection}/>}
 </section>
 
 <script>
