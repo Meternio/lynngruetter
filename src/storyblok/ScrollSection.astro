@@ -125,7 +125,12 @@ const { blok } = Astro.props;
         break;
     }
 
-    if(positionAsString.indexOf("top") > -1 && !document.querySelector("[data-header]").classList.contains("-translate-y-full")) {
+    if (
+      positionAsString.indexOf("top") > -1 &&
+      !document
+        .querySelector("[data-header]")
+        .classList.contains("-translate-y-full")
+    ) {
       const headerHeight = window.innerWidth >= 1024 ? 72 : 48;
       position.y += headerHeight;
     }
@@ -197,6 +202,9 @@ const { blok } = Astro.props;
   // add click event to all videos to resize them to their original size
   videos.forEach((video) => {
     video.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
       if (isDragging || isZoomed) return;
 
       isZoomed = true;
@@ -218,6 +226,7 @@ const { blok } = Astro.props;
       updatePosition({
         target: video,
       });
+      resetVideoSize({ target: video.parentElement });
     });
   });
 
