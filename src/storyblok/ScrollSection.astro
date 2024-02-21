@@ -7,7 +7,7 @@ const { blok } = Astro.props;
 ---
 
 <section
-  class=`scroll-section relative ${blok.video && blok.video.filename ? "" : "z-[5] "}`
+  class="scroll-section relative"
   {...storyblokEditable(blok)}
   id={blok.id}
   data-scroll-section
@@ -19,23 +19,26 @@ const { blok } = Astro.props;
   }
   {
     blok.video && blok.video.filename && (
-      <div
-        class="scroll-section-video-wrapper absolute w-[calc(100%-32px)] h-[calc(100%-32px)] top-0 left-0 m-4 opacity-0 blur-sm"
-        data-scroll-section-video-wrapper
-      >
-        <video
-          data-scroll-section-video
-          src={blok.video.filename}
-          muted
-          loop
-          playsinline
-          preload="auto"
-          autoplay
-          class="scroll-section-video object-cover w-52 h-auto rounded absolute bottom-0 right-0 touch-none"
+      <>
+        <div data-sentinel class="sentinel absolute top-[50svh] w-full h-[calc(100%-50svh)]" />
+        <div
+          class="scroll-section-video-wrapper absolute w-[calc(100%-32px)] h-[calc(100%-32px)] top-0 left-0 m-4 opacity-0 blur-sm"
+          data-scroll-section-video-wrapper
         >
-          Sorry, dein Browser unterstüzt keine Videos.
-        </video>
-      </div>
+          <video
+            data-scroll-section-video
+            src={blok.video.filename}
+            muted
+            loop
+            playsinline
+            preload="auto"
+            autoplay
+            class="scroll-section-video object-cover w-52 h-auto rounded absolute bottom-0 right-0 touch-none"
+          >
+            Sorry, dein Browser unterstüzt keine Videos.
+          </video>
+        </div>
+      </>
     )
   }
   {(blok.signature || blok.signatureAbsolute) && <Signature blok={blok} />}
@@ -48,28 +51,36 @@ const { blok } = Astro.props;
   let isDragging = false;
   let isZoomed = false;
 
-  function getNearestCorner(x, y) {
-    // Get the viewport dimensions
-    const vw = Math.max(
-      document.documentElement.clientWidth || 0,
-      window.innerWidth || 0
-    );
-    const vh = Math.max(
-      document.documentElement.clientHeight || 0,
-      window.innerHeight || 0
-    );
+  function getNearestCorner(event) {
+    // Get the bounding rectangle of the dragged object
+    const rect = event.rect;
 
-    // Calculate the distances to each corner
+    // Calculate the center of the dragged object
+    const centerX = rect.left + rect.width / 2 - window.scrollX;
+    const centerY = rect.top + rect.height / 2 - window.scrollY;
+
+    // Get the dimensions of the viewport
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+
+    // Calculate the distances from the center of the dragged object to each corner of the viewport
     const distances = {
-      "top-left": Math.sqrt((x - 208) * (x - 208) + y * y),
-      "top-right": Math.sqrt((vw - x - 208) * (vw - x - 208) + y * y),
-      "bottom-left": Math.sqrt((x - 208) * (x - 208) + (vh - y) * (vh - y)),
+      "top-left": Math.sqrt(centerX * centerX + centerY * centerY),
+      "top-right": Math.sqrt(
+        (viewportWidth - centerX) * (viewportWidth - centerX) +
+          centerY * centerY
+      ),
+      "bottom-left": Math.sqrt(
+        centerX * centerX +
+          (viewportHeight - centerY) * (viewportHeight - centerY)
+      ),
       "bottom-right": Math.sqrt(
-        (vw - x - 208) * (vw - x - 208) + (vh - y) * (vh - y)
+        (viewportWidth - centerX) * (viewportWidth - centerX) +
+          (viewportHeight - centerY) * (viewportHeight - centerY)
       ),
     };
 
-    // Find the smallest distance
+    // Determine the nearest corner
     let nearestCorner = "top-left";
     let minDistance = distances["top-left"];
 
@@ -83,20 +94,23 @@ const { blok } = Astro.props;
     return nearestCorner;
   }
 
-  function updatePosition(event) {
-    const positionAsString = getNearestCorner(event.client.x, event.client.y);
+  function updatePosition(event, positionAsString = "bottom-right") {
+    if (event.rect) {
+      positionAsString = getNearestCorner(event);
+    }
 
     // get scrollbar width
-    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    const scrollbarWidth =
+      window.innerWidth - document.documentElement.clientWidth;
 
     switch (positionAsString) {
       case "top-left":
         position.x = (window.innerWidth - 240 - scrollbarWidth) * -1;
-        position.y = (window.innerHeight - 144) * -1;
+        position.y = (window.innerHeight - 149) * -1;
         break;
       case "top-right":
         position.x = 0;
-        position.y = (window.innerHeight - 144) * -1;
+        position.y = (window.innerHeight - 149) * -1;
         break;
       case "bottom-left":
         position.x = (window.innerWidth - 240 - scrollbarWidth) * -1;
@@ -141,7 +155,8 @@ const { blok } = Astro.props;
       end: (event) => {
         if (isZoomed) return;
 
-        event.target.style.transition = "transform 0.3s ease-in-out, width 0.3s ease-in-out, height 0.3s ease-in-out"
+        event.target.style.transition =
+          "transform 0.3s ease-in-out, width 0.3s ease-in-out, height 0.3s ease-in-out, bottom 0.3s ease-in-out";
         updatePosition(event);
         window.setTimeout(() => {
           isDragging = false;
@@ -153,21 +168,21 @@ const { blok } = Astro.props;
   // add click event to all videos to resize them to their original size
   videos.forEach((video) => {
     video.addEventListener("click", (event) => {
-      if(isDragging) return;
+      if (isDragging) return;
 
       if (video.classList.contains("w-52")) {
         isZoomed = true;
-        video.classList.remove("w-52");
-        video.classList.add("w-4/5");
-        video.style.transform = "translate(-12.5%, 0)";
-        video.closest('[data-scroll-section]').classList.add('z-10');
+        video.classList.remove("w-52", "bottom-0");
+        video.classList.add("w-4/5", "bottom-1/2");
+        video.style.transform = "translate(-12.5%, 50%)";
+        video.closest("[data-scroll-section]").classList.add("z-10");
       } else {
         isZoomed = false;
-        video.classList.remove("w-4/5");
-        video.classList.add("w-52");
+        video.classList.remove("w-4/5", "bottom-1/2");
+        video.classList.add("w-52", "bottom-0");
         video.style.transform = `translate(${position.x}px, ${position.y}px)`;
         window.setTimeout(() => {
-          video.closest('[data-scroll-section]').classList.remove('z-10');
+          video.closest("[data-scroll-section]").classList.remove("z-10");
         }, 175);
       }
     });
@@ -176,25 +191,19 @@ const { blok } = Astro.props;
   window.addEventListener("resize", (event) => {
     videos.forEach((video) => {
       updatePosition({
-        client: {
-          x: video.offsetLeft + video.offsetWidth / 2,
-          y: video.offsetTop + video.offsetHeight / 2,
-        },
         target: video,
       });
     });
   });
 
   // observe all scroll sections and if they are in view, make the video div fixed
-  const scrollSections = document.querySelectorAll("[data-scroll-section]");
   const scrollSectionsObserver = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
+        const videoWrapper = entry.target.parentElement.querySelector(
+          "[data-scroll-section-video-wrapper]"
+        );
         if (entry.isIntersecting) {
-          const videoWrapper = entry.target.querySelector(
-            "[data-scroll-section-video-wrapper]"
-          );
-
           if (videoWrapper) {
             videoWrapper.style.position = "fixed";
             videoWrapper.style.opacity = 1;
@@ -203,10 +212,6 @@ const { blok } = Astro.props;
             }, 325);
           }
         } else {
-          const videoWrapper = entry.target.querySelector(
-            "[data-scroll-section-video-wrapper]"
-          );
-
           if (videoWrapper) {
             window.setTimeout(() => {
               videoWrapper.style.position = "absolute";
@@ -218,12 +223,12 @@ const { blok } = Astro.props;
       });
     },
     {
-      threshold: 0.1,
+      threshold: 0.2,
     }
   );
 
-  scrollSections.forEach((section) => {
-    scrollSectionsObserver.observe(section);
+  document.querySelectorAll("[data-sentinel]").forEach((el) => {
+    scrollSectionsObserver.observe(el);
   });
 </script>
 
@@ -239,6 +244,10 @@ const { blok } = Astro.props;
   }
 
   .scroll-section-video {
-    transition: transform 0.3s ease-in-out, width 0.3s ease-in-out, height 0.3s ease-in-out;
+    transition:
+      transform 0.3s ease-in-out,
+      width 0.3s ease-in-out,
+      height 0.3s ease-in-out,
+      bottom 0.3s ease-in-out;
   }
 </style>
