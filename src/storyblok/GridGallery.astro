@@ -8,6 +8,14 @@ const regex = /\/([^\/]+)(?=\.\w+$)/;
 const filename = blok.image?.filename.match(regex);
 
 const isVideo = blok.image?.filename.match(/\.(mp4|mov|webm)$/i);
+
+const isPropEmpty = (prop) => {
+  return (
+    prop &&
+    prop?.content?.length > 0 &&
+    (prop?.content[0]?.content || prop?.content[0]?.attrs)
+  );
+};
 ---
 
 <div
@@ -63,19 +71,23 @@ const isVideo = blok.image?.filename.match(/\.(mp4|mov|webm)$/i);
       {current && max ? `${current}/${max}` : ""}
       {filename && filename[1]}
     </div>
-    <div class="ml-auto w-[65%] sm:w-full sm:flex-grow sm:text-center">
-      <div class="inline-block static sm:relative">
-        <button
-          class="grid-category-item-gallery-footer-trigger"
-          data-grid-category-item-gallery-footer-trigger>Information</button
-        >
-        <div
-          class="grid-category-item-gallery-footer-description pt-2 pb-1 sm:pb-0 bg-white/80 sm:bg-transparent opacity-0 absolute bottom-10 sm:bottom-5 left-0 w-full sm:w-80 text-left z-30"
-        >
-          <RichTextRenderer richTextData={blok.description} />
+    {
+      isPropEmpty(blok.description) && (
+        <div class="ml-auto w-[65%] sm:w-full sm:flex-grow sm:text-center">
+          <div class="inline-block static sm:relative">
+            <button
+              class="grid-category-item-gallery-footer-trigger"
+              data-grid-category-item-gallery-footer-trigger
+            >
+              Information
+            </button>
+            <div class="grid-category-item-gallery-footer-description pt-2 pb-1 sm:pb-0 bg-white/80 sm:bg-transparent opacity-0 absolute bottom-10 sm:bottom-5 left-0 w-full sm:w-80 text-left z-30">
+              <RichTextRenderer richTextData={blok.description} />
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      )
+    }
   </div>
 </div>
 
