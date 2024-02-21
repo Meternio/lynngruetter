@@ -138,8 +138,13 @@ const content = data.story.content;
       // add or subtract 72px to the current translateY value based on the operation
       let newTranslateY = (window.innerHeight - el.offsetHeight - 32) * -1;
 
-      if(!document.querySelector("[data-header]").classList.contains("-translate-y-full")) {
-        newTranslateY = (window.innerHeight - el.offsetHeight - 32 - headerHeight) * -1;
+      if (
+        !document
+          .querySelector("[data-header]")
+          .classList.contains("-translate-y-full")
+      ) {
+        newTranslateY =
+          (window.innerHeight - el.offsetHeight - 32 - headerHeight) * -1;
       }
 
       // replace the current translateY value with the new one
@@ -226,11 +231,13 @@ const content = data.story.content;
                   "max-height 0.75s ease-in-out, top 0.30s ease-out";
                 el.style.top = "0";
               });
-            document
-              .querySelectorAll("[data-scroll-section-video]")
-              .forEach((el) => {
-                adjustTransform(el, "added");
-              });
+            window.setTimeout(() => {
+              document
+                .querySelectorAll("[data-scroll-section-video]")
+                .forEach((el) => {
+                  adjustTransform(el, "added");
+                });
+            }, 400);
             header.classList.remove("mix-blend-difference", "text-white");
             header.classList.add("text-black");
           } else if (currentScroll > headerHeight) {
@@ -243,11 +250,13 @@ const content = data.story.content;
                   "max-height 0.75s ease-in-out, top 0.35s ease-in-out";
                 el.style.top = `${headerHeight}px`;
               });
-            document
-              .querySelectorAll("[data-scroll-section-video]")
-              .forEach((el) => {
-                adjustTransform(el, "subtracted");
-              });
+            window.setTimeout(() => {
+              document
+                .querySelectorAll("[data-scroll-section-video]")
+                .forEach((el) => {
+                  adjustTransform(el, "subtracted");
+                });
+            }, 400);
           } else if (
             currentScroll > lastScrollTop &&
             currentScroll < headerHeight
