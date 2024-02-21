@@ -78,6 +78,7 @@ const content = data.story.content;
       "[data-header-nav-logo-white]"
     );
     let headerHeight = window.innerWidth >= 1024 ? 72 : 48;
+    let resizeTimer;
 
     function throttle(func, wait) {
       let timeout = null;
@@ -185,6 +186,11 @@ const content = data.story.content;
             return;
           }
 
+          // Ignore scroll events that occur within 300ms after a resize event
+          if (Date.now() - resizeTimer < 400) {
+            return;
+          }
+
           const currentScroll =
             window.scrollY || document.documentElement.scrollTop;
 
@@ -261,6 +267,7 @@ const content = data.story.content;
     }, 3000);
 
     window.addEventListener("resize", () => {
+      resizeTimer = Date.now();
       headerHeight = window.innerWidth >= 1024 ? 72 : 48;
     });
 
