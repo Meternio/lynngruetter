@@ -136,10 +136,11 @@ const content = data.story.content;
       }
 
       // add or subtract 72px to the current translateY value based on the operation
-      const newTranslateY =
-        operation === "added"
-          ? translateY - headerHeight
-          : translateY + headerHeight;
+      let newTranslateY = (window.innerHeight - el.offsetHeight - 32) * -1;
+
+      if(!document.querySelector("[data-header]").classList.contains("-translate-y-full")) {
+        newTranslateY = (window.innerHeight - el.offsetHeight - 32 - headerHeight) * -1;
+      }
 
       // replace the current translateY value with the new one
       el.style.transform = transform.replace(
