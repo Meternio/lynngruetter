@@ -7,7 +7,7 @@ const { blok } = Astro.props;
 
 <div
   style=`text-align: ${blok.textAlign}`
-  class="text-section container py-32 mx-auto w-3/4 lg:w-full"
+  class=`text-section container py-32 mx-auto ${blok.textAlign !== "left" ? 'w-3/4' : 'w-full'} lg:w-full`
   {...storyblokEditable(blok)}
 >
   {blok.title && <h2 class="text-section-title text-sm font-bold">{blok.title}</h2>}
