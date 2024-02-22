@@ -4,6 +4,8 @@ import lynn from "../assets/lynn_reworked.svg";
 import lynnWhite from "../assets/lynn_reworked-white.svg";
 import { Image } from "astro:assets";
 
+const { updateHeaderLinks } = Astro.props;
+
 const storyblokApi = useStoryblokApi();
 
 const { data } = await storyblokApi.get("cdn/stories/home", {
@@ -48,7 +50,7 @@ const content = data.story.content;
     >
       {
         content.body.map((item, index) => (
-          <a href={`#${item.id}`} class={`lg:text-center`}>
+          <a {...{'data-redirect': updateHeaderLinks ? "true" : false}} href={updateHeaderLinks ? `/#${item.id}` : `#${item.id}`} class={`lg:text-center`}>
             {item.name}
           </a>
         ))
@@ -150,6 +152,8 @@ const content = data.story.content;
 
     headerNav.forEach((el, index) => {
       el.addEventListener("click", (e) => {
+        if(e.currentTarget.getAttribute("data-redirect")) return;
+
         e.preventDefault();
 
         const target = e.currentTarget.getAttribute("href").replace("#", "");

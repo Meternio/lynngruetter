@@ -5,6 +5,7 @@ import HeroAnimation from "../components/HeroAnimation.astro";
 import lynnWhite from "../assets/lynnWhite.svg";
 import CookieBanner from "../components/CookieBanner.astro";
 
+const { updateHeaderLinks } = Astro.props;
 const storyblokApi = useStoryblokApi();
 const dev = import.meta.env.DEV;
 const { data } = await storyblokApi.get("cdn/stories/home", {
@@ -42,7 +43,7 @@ const cookiesAccepted = cookies?.includes("cookiesAccepted=true");
     data-body
     class=`font-montrealMedium overflow-hidden ${(dev || isFrontendEditor) && 'dev'}`
   >
-    <Header />
+    <Header updateHeaderLinks={updateHeaderLinks}/>
     {!dev && !isFrontendEditor && <HeroAnimation />}
     <main class="relative opacity-0 bg-gray" data-main>
       <div>
