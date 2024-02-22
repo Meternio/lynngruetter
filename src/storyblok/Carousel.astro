@@ -52,7 +52,7 @@ if (blok) {
       <>
         <div
           data-carousel-prev
-          class={`carousel-navigation-prev-wrapper z-30 absolute w-1/2 ${blok?.items ? "h-full" : "h-[calc(100%-60px)]"} top-0`}
+          class={`carousel-navigation-prev-wrapper hidden lg:block z-30 absolute w-1/2 ${blok?.items ? "h-full" : "h-[calc(100%-60px)]"} top-0`}
         >
           <button
             class={`carousel-prev absolute left-0 ${
@@ -63,7 +63,7 @@ if (blok) {
         </div>
         <div
           data-carousel-next
-          class={`carousel-navigation-next-wrapper z-30 absolute w-1/2 ${blok?.items ? "h-full" : "h-[calc(100%-60px)]"} top-0 right-0`}
+          class={`carousel-navigation-next-wrapper hidden lg:block z-30 absolute w-1/2 ${blok?.items ? "h-full" : "h-[calc(100%-60px)]"} top-0 right-0`}
         >
           <button
             class={`carousel-next absolute right-0 ${
