@@ -147,6 +147,7 @@ if (blok) {
     function checkIfCurrentSlideIsVideo(node) {
       const video = node.querySelector("video");
       if (video) {
+        prevButtonNode.parentElement.classList.add("isVideo");
         prevButtonNode.classList.remove("w-1/2");
         nextButtonNode.classList.remove("w-1/2");
       } else if (
@@ -155,6 +156,7 @@ if (blok) {
         !prevButtonNode.classList.contains("w-1/2") &&
         !nextButtonNode.classList.contains("w-1/2")
       ) {
+        prevButtonNode.parentElement.classList.remove("isVideo");
         prevButtonNode.classList.add("w-1/2");
         nextButtonNode.classList.add("w-1/2");
       }
@@ -241,6 +243,49 @@ if (blok) {
 
   .carousel-container {
     transition: height 0.2s;
+  }
+
+  .carousel.isVideo .carousel-prev,
+  .carousel.isVideo .carousel-next {
+    width: 0;
+    height: 0;
+    display: block;
+  }
+
+  .carousel.isVideo .carousel-prev {
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-right: 12px solid var(--color, black);
+  }
+
+  .carousel.isVideo .carousel-next {
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-left: 12px solid var(--color, black);
+  }
+
+  .carousel.isVideo .carousel-prev:after {
+    content: "";
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-right: 12px solid var(--color, black);
+    top: -8px;
+    left: 12px;
+    position: relative;
+    width: 8px;
+    display: block;
+  }
+
+  .carousel.isVideo .carousel-next:after {
+    content: "";
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-left: 12px solid var(--color, black);
+    top: -8px;
+    right: 24px;
+    position: relative;
+    width: 8px;
+    display: block;
   }
 
   /*.carousel-prev:after {
