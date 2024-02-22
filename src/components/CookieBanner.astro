@@ -1,0 +1,27 @@
+<div data-cookie-banner class="cookie-banner text-sm fixed right-1/2 translate-x-1/2 lg:translate-x-0 bottom-4 lg:right-4 bg-[#A6A6A6] w-[343px] p-4 rounded-lg z-50 opacity-0 blur-sm">
+    <span>Wir verwenden Cookies nur, um sicherzustellen, dass Sie auf unserer Website die besten Funktionen nutzen können. Wir verwenden keine Tracking- oder Werbe-Cookies.</span>
+    <button data-cookie-banner-accept class="bg-[#767777] w-full uppercase mt-4 rounded-md py-2 text-white">Alle akzeptieren</button>
+    <a href="/datenschutz" target="_blank" class="bg-[#4F5050] w-full uppercase mt-2 rounded-md py-2 text-white">Mehr infos</a>
+</div>
+
+<style>
+    .cookie-banner {
+        transition: opacity 0.75s ease-in-out, filter 0.325s ease-in-out;
+    }
+</style>
+
+<script>
+    const cookieBanner = document.querySelector('[data-cookie-banner]');
+    const cookieBannerAccept = document.querySelector('[data-cookie-banner-accept]');
+
+    cookieBanner.classList.remove("opacity-0", "blur-sm");
+
+    cookieBannerAccept.addEventListener('click', () => {
+        document.cookie = 'cookiesAccepted=true; max-age=31536000; path=/';
+        document.querySelector('.cookie-banner').style.opacity = 0;
+        document.querySelector('.cookie-banner').style.filter = 'blur(5px)';
+        setTimeout(() => {
+            document.querySelector('.cookie-banner').remove();
+        }, 750);
+    });
+</script>

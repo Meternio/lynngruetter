@@ -3,6 +3,7 @@ import { useStoryblokApi } from "@storyblok/astro";
 import Header from "../components/Header.astro";
 import HeroAnimation from "../components/HeroAnimation.astro";
 import lynnWhite from "../assets/lynnWhite.svg";
+import CookieBanner from "../components/CookieBanner.astro";
 
 const storyblokApi = useStoryblokApi();
 const dev = import.meta.env.DEV;
@@ -10,7 +11,11 @@ const { data } = await storyblokApi.get("cdn/stories/home", {
   version: dev ? "draft" : "published",
 });
 const content = data.story.content;
-const isFrontendEditor = Astro.url.searchParams.get('_storyblok')! || '';
+const isFrontendEditor = Astro.url.searchParams.get("_storyblok")! || "";
+
+const cookies = Astro.request.headers.get("cookie");
+
+const cookiesAccepted = cookies?.includes("cookiesAccepted=true");
 ---
 
 <html lang="de">
@@ -25,7 +30,7 @@ const isFrontendEditor = Astro.url.searchParams.get('_storyblok')! || '';
       type="font/woff2"
       crossorigin
     />
-    <link rel="preload" href={lynnWhite?.src} as="image">
+    <link rel="preload" href={lynnWhite?.src} as="image" />
     <title>{content?.meta?.title || "Lynn Grütter"}</title>
     <meta
       name="description"
@@ -33,14 +38,18 @@ const isFrontendEditor = Astro.url.searchParams.get('_storyblok')! || '';
         "Ich moderiere: Vor der Fernsehkamera, online oder live an Ihrem Anlass."}
     />
   </head>
-  <body data-body class=`font-montrealMedium overflow-hidden ${(dev || isFrontendEditor) && 'dev'}`>
+  <body
+    data-body
+    class=`font-montrealMedium overflow-hidden ${(dev || isFrontendEditor) && 'dev'}`
+  >
     <Header />
-    {(!dev && !isFrontendEditor) && <HeroAnimation />}
+    {!dev && !isFrontendEditor && <HeroAnimation />}
     <main class="relative opacity-0 bg-gray" data-main>
       <div>
-        <slot/>
+        <slot />
       </div>
     </main>
+    {!cookiesAccepted && <CookieBanner />}
   </body>
 </html>
 
@@ -50,11 +59,19 @@ const isFrontendEditor = Astro.url.searchParams.get('_storyblok')! || '';
   }
 
   body {
-    transition: filter 0.325s ease-in-out, opacity 0.75s ease-in-out;
+    transition:
+      filter 0.325s ease-in-out,
+      opacity 0.75s ease-in-out;
   }
 
-  body, a, button, video, [data-grid-category-item-content] {
-    cursor: url("/custom-cursor-transparent.png") 15 15, auto !important;
+  body,
+  a,
+  button,
+  video,
+  [data-grid-category-item-content] {
+    cursor:
+      url("/custom-cursor-transparent.png") 15 15,
+      auto !important;
   }
 
   .container {
@@ -75,14 +92,16 @@ const isFrontendEditor = Astro.url.searchParams.get('_storyblok')! || '';
   .dev header {
     mix-blend-mode: normal;
     color: black;
-    transition: background 0.75s ease-in-out, transform .325s ease-in-out !important;
+    transition:
+      background 0.75s ease-in-out,
+      transform 0.325s ease-in-out !important;
   }
 
-  .dev header .header-nav-logo{
+  .dev header .header-nav-logo {
     opacity: 1;
   }
 
-  .dev header .header-nav-logo-white{
+  .dev header .header-nav-logo-white {
     display: none;
   }
 
