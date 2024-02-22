@@ -87,8 +87,11 @@ const Tag = isLink ? "a" : "div";
         />
       )
     }
-
-    <h2 class="sm:text-center leading-tight">{blok.title}</h2>
+    {
+      blok.title && (
+        <h2 class="sm:text-center leading-tight hyphens-auto mt-4">{blok.title}</h2>
+      )
+    }
   </Tag>
   {
     blok.gallery && blok.gallery.length > 0 && (
