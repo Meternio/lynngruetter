@@ -4,10 +4,15 @@ import RichTextRenderer from "@storyblok/astro/RichTextRenderer.astro";
 
 const { blok, current, max } = Astro.props;
 
-const regex = /\/([^\/]+)(?=\.\w+$)/;
-const filename = blok.image?.filename.match(regex);
+let filename;
+let isVideo;
 
-const isVideo = blok.image?.filename.match(/\.(mp4|mov|webm)$/i);
+if (blok?.image?.filename) {
+  const regex = /\/([^\/]+)(?=\.\w+$)/;
+  filename = blok.image?.filename.match(regex);
+
+  isVideo = blok.image?.filename.match(/\.(mp4|mov|webm)$/i);
+}
 
 const isPropEmpty = (prop) => {
   return (

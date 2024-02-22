@@ -3,6 +3,7 @@ import { storyblokEditable } from "@storyblok/astro";
 import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
 import Dialog from "../components/Dialog.astro";
 import Carousel from "./Carousel.astro";
+import GridGallery from "./GridGallery.astro";
 
 const { blok, masonry } = Astro.props;
 
@@ -89,12 +90,14 @@ const Tag = isLink ? "a" : "div";
     }
     {
       blok.title && (
-        <h2 class="sm:text-center leading-tight hyphens-auto mt-1">{blok.title}</h2>
+        <h2 class="sm:text-center leading-tight hyphens-auto mt-1">
+          {blok.title}
+        </h2>
       )
     }
   </Tag>
   {
-    blok.gallery && blok.gallery.length > 0 && (
+    thumbnailUrl && (
       <Dialog
         classes="grid-gallery-dialog"
         attrs={{ "data-grid-gallery-dialog": true }}
@@ -103,14 +106,20 @@ const Tag = isLink ? "a" : "div";
           <h2 class="sm:text-xl h-[88px] w-[35%] p-0 pt-4 sm:w-full sm:text-center sm:p-4 sm:h-[60px]">
             {blok.title}
           </h2>
-          <Carousel classes="h-[calc(100%-88px)] sm:h-[calc(100%-60px)]" noPagination={(blok.gallery.length <= 1) ? true : false}>
-            {blok.gallery?.map((gallery, index) => {
+          <Carousel
+            classes="h-[calc(100%-88px)] sm:h-[calc(100%-60px)]"
+            noPagination={blok.gallery.length <= 1 ? true : false}
+          >
+            <div class="carousel-slide" data-carousel-slide>
+              <GridGallery blok={{image: {filename: thumbnailUrl}, description: null}} current={1} max={blok.gallery?.length + 1} />
+            </div>
+            {blok?.gallery && blok?.gallery.length > 0 && blok.gallery?.map((gallery, index) => {
               return (
                 <div class="carousel-slide" data-carousel-slide>
                   <StoryblokComponent
                     blok={gallery}
-                    current={index + 1}
-                    max={blok.gallery?.length}
+                    current={index + 2}
+                    max={blok.gallery?.length + 1}
                   />
                 </div>
               );
@@ -123,7 +132,9 @@ const Tag = isLink ? "a" : "div";
 </div>
 
 <script>
-  const videos = document.querySelectorAll("[data-grid-category-item-thumbnail-video]");
+  const videos = document.querySelectorAll(
+    "[data-grid-category-item-thumbnail-video]"
+  );
 
   videos.forEach((video) => {
     video.addEventListener("mouseenter", function () {
