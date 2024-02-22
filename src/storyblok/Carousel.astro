@@ -225,6 +225,16 @@ if (blok) {
 
   [data-auto-scroll="true"] :global(img){
     filter: grayscale(100%);
+    max-height: 100px;
+    object-fit: contain;
+  }
+
+  [data-auto-scroll="true"] :global(.carousel-slide){
+    padding-right: 10px;
+  }
+
+  [data-auto-scroll="true"] :global(.carousel-container){
+    align-items: center;
   }
 
   .carousel-navigation-prev-wrapper,
