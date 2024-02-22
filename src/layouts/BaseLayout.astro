@@ -3,6 +3,7 @@ import { useStoryblokApi } from "@storyblok/astro";
 import Header from "../components/Header.astro";
 import HeroAnimation from "../components/HeroAnimation.astro";
 import lynnWhite from "../assets/lynnWhite.svg";
+import lynnWhiteLogo from "../assets/lynn_reworked-white.svg";
 import CookieBanner from "../components/CookieBanner.astro";
 
 const { updateHeaderLinks } = Astro.props;
@@ -32,6 +33,7 @@ const cookiesAccepted = cookies?.includes("cookiesAccepted=true");
       crossorigin
     />
     <link rel="preload" href={lynnWhite?.src} as="image" />
+    <link rel="preload" href={lynnWhiteLogo?.src} as="image" />
     <title>{content?.meta?.title || "Lynn Grütter"}</title>
     <meta
       name="description"
