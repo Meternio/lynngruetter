@@ -12,6 +12,11 @@
 
 <script>
     const cookieBanner = document.querySelector('[data-cookie-banner]');
+
+    if(!cookieBanner) {
+        return;
+    }
+
     const cookieBannerAccept = document.querySelector('[data-cookie-banner-accept]');
 
     cookieBanner.classList.remove("opacity-0", "blur-sm");
