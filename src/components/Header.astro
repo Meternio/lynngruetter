@@ -14,7 +14,7 @@ const content = data.story.content;
 ---
 
 <header
-  class="header absolute w-full z-40 px-4 sm lg:py-6 py-4 mix-blend-difference text-white text-sm lg:text-md"
+  class="header absolute w-full z-40 px-4 sm lg:py-6 py-4 mix-blend-difference text-white text-sm lg:text-md lg:h-[72px]"
   data-header
 >
   <nav
@@ -22,14 +22,14 @@ const content = data.story.content;
   >
     <a
       href="/"
-      class="uppercase order-1 w-[54px] lg:w-[82px] h-4 lg:h-6 flex-shrink-0"
+      class="uppercase order-1 w-[54px] lg:w-[82px] h-4 lg:h-5 flex-shrink-0"
     >
       <Image
         src={lynnWhite}
         alt="Lynn Gruetter's signature"
         width="82"
         height="24"
-        class="header-nav-logo-white absolute w-auto h-3.5 lg:h-6"
+        class="header-nav-logo-white absolute w-auto h-3.5 lg:h-5"
         data-header-nav-logo-white
       />
       <Image
@@ -38,12 +38,12 @@ const content = data.story.content;
         width="82"
         height="24"
         loading="lazy"
-        class="header-nav-logo absolute w-auto h-3.5 lg:h-6 opacity-0"
+        class="header-nav-logo absolute w-auto h-3.5 lg:h-5 opacity-0"
         data-header-nav-logo
       />
     </a>
     <div
-      class="header-nav-content-menu order-2 flex flex-row justify-center relative px-2 gap-2 flex-grow lg:flex-grow-0 lg:justify-start lg:px-0 lg:gap-4 lg:self-auto lg:top-0 lg:order-1 lg:w-2/5"
+      class="header-nav-content-menu order-2 flex flex-row justify-center relative px-2 gap-2 flex-grow lg:leading-4 lg:flex-grow-0 lg:justify-start lg:px-0 lg:gap-4 lg:self-auto lg:top-0 lg:order-1 lg:w-2/5"
       data-header-nav-content-menu
     >
       {
