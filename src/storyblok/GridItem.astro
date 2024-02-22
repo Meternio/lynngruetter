@@ -24,7 +24,9 @@ if (thumbnailUrl) {
   isVideo = thumbnailUrl.match(/\.(mp4|mov|webm)$/i);
 }
 
-const Tag = blok?.link ? "a" : "div";
+const isLink = blok?.link && blok?.link?.url;
+
+const Tag = isLink ? "a" : "div";
 ---
 
 <div
@@ -38,9 +40,9 @@ const Tag = blok?.link ? "a" : "div";
 >
   <Tag
     {...{
-      href: blok?.link ? blok?.link?.url : false,
-      target: blok?.link ? "_blank" : false,
-      "data-grid-category-item-content": blok?.link ? false : true,
+      href: isLink ? blok?.link?.url : false,
+      target: isLink ? "_blank" : false,
+      "data-grid-category-item-content": isLink ? false : true,
     }}
     class="cursor-pointer"
   >
