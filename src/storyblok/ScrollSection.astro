@@ -268,6 +268,9 @@ if (blok._uid === content.body[content.body.length - 1]._uid) {
     previousWidth = window.innerWidth;
 
     videos.forEach((video) => {
+      if(!video.parentElement.classList.contains('isIntersecting')){
+        return;
+      }
       updatePosition({
         target: video,
       });
@@ -286,6 +289,7 @@ if (blok._uid === content.body[content.body.length - 1]._uid) {
           );
           if (entry.isIntersecting) {
             if (videoWrapper) {
+              videoWrapper.classList.add("isIntersecting");
               videoWrapper.style.position = "fixed";
               videoWrapper.style.opacity = 1;
               window.setTimeout(() => {
@@ -294,6 +298,7 @@ if (blok._uid === content.body[content.body.length - 1]._uid) {
             }
           } else {
             if (videoWrapper) {
+              videoWrapper.classList.remove("isIntersecting");
               window.setTimeout(() => {
                 videoWrapper.style.position = "absolute";
               }, 750);
