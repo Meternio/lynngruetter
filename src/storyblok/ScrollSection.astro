@@ -352,6 +352,17 @@ if (blok._uid === content.body[content.body.length - 1]._uid) {
     .sentinel-snap + :global(.scroll-section-signature) {
       padding-top: 8rem;
     }
+
+    .scroll-section-video-wrapper.isZoomed:not(.isSnapped) .scroll-section-video {
+      width: 100%;
+      transform: translate(0, 50%) !important;
+    }
+
+    .scroll-section-video-wrapper.isZoomed.isSnapped .scroll-section-video {
+      width: 100%;
+      transform: translate(0, 50%) !important;
+      padding: 15px;
+    }
   }
 
   .scroll-section-video {

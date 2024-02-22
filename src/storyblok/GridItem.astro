@@ -7,12 +7,22 @@ import Carousel from "./Carousel.astro";
 const { blok, masonry } = Astro.props;
 
 const thumbnailUrl = blok.thumbnail?.filename;
+
 let dimensions = {
-  width: thumbnailUrl.split("/")[5].split("x")[0],
-  height: thumbnailUrl.split("/")[5].split("x")[1],
+  width: 0,
+  height: 0,
 };
 
-const isVideo = thumbnailUrl.match(/\.(mp4|mov|webm)$/i);
+let isVideo = false;
+
+if (thumbnailUrl) {
+  dimensions = {
+    width: thumbnailUrl.split("/")[5].split("x")[0],
+    height: thumbnailUrl.split("/")[5].split("x")[1],
+  };
+
+  isVideo = thumbnailUrl.match(/\.(mp4|mov|webm)$/i);
+}
 
 const Tag = blok?.link ? "a" : "div";
 ---
