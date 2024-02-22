@@ -69,6 +69,7 @@ import { Image } from "astro:assets";
       body.classList.remove("overflow-hidden");
       heroAnimationBackground.classList.add("opacity-0");
       main.classList.remove("opacity-0", "bg-gray");
+      header.classList.remove("pointer-events-none");
 
       if (window.innerWidth >= 1024) {
         header.classList.remove("mix-blend-difference", "text-white");
