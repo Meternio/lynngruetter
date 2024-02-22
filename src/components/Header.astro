@@ -123,7 +123,11 @@ const content = data.story.content;
       el.setAttribute("data-transform", operation);
 
       // get current translate X value
-      const translateX = parseInt(transform.match(/translate\((-?\d+)px, /)[1]);
+      let translateX = transform.match(/translate\((-?\d+)px, /);
+
+      if(translateX) {
+        translateX = parseInt(translateX[1]);
+      }
 
       // get current screen position of element
       const rect = el.getBoundingClientRect();
