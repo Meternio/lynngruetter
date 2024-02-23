@@ -10,7 +10,15 @@ const { blok } = Astro.props;
   class=`text-section container py-32 mx-auto ${blok.textAlign !== "left" ? 'w-3/4' : 'w-full'} `
   {...storyblokEditable(blok)}
 >
-  {blok.title && <h2 class="text-section-title text-xl font-bold">{blok.title}</h2>}
+  {
+    blok.title && (
+      <h2
+        class={`text-section-title ${blok.smallTitle ? "isSmall text-sm" : "text-xl"} font-bold`}
+      >
+        {blok.title}
+      </h2>
+    )
+  }
   {blok.content.map((contentBlok) => <StoryblokComponent blok={contentBlok} />)}
 </div>
 
@@ -19,11 +27,24 @@ const { blok } = Astro.props;
     @apply mt-0;
   }
 
-  .text-section-title + :global(.text-section-content) {
+  .text-section-title:not(.isSmall) + :global(.text-section-content) {
     @apply mt-16;
   }
 
-  @media screen and (max-width: 1023px){
+  .text-section-title.isSmall + :global(.text-section-content) {
+    @apply mt-0;
+  }
+
+  .text-section-title.isSmall ~ :global(.text-section-content h1),
+  .text-section-title.isSmall ~ :global(.text-section-content h2),
+  .text-section-title.isSmall ~ :global(.text-section-content h3),
+  .text-section-title.isSmall ~ :global(.text-section-content h4),
+  .text-section-title.isSmall ~ :global(.text-section-content h5),
+  .text-section-title.isSmall ~ :global(.text-section-content h6) {
+    @apply uppercase;
+  }
+
+  @media screen and (max-width: 1023px) {
     .text-section {
       text-align: left !important;
       width: 100%;
