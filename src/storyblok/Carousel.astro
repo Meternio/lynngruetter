@@ -141,14 +141,18 @@ if (blok) {
       emblaNodeIndex.toString()
     );
 
-    if (!prevButtonNode && !nextButtonNode) {
-      return;
-    }
-
     // check if the current slide is a video. If so, remove data-carousel-next and data-carousel-prev
     function checkIfCurrentSlideIsVideo(node) {
       const video = node.querySelector("video");
       if (video) {
+        video.muted = true;
+        video.play().then(() => {
+          video.pause();
+          video.muted = false;
+        });
+      }
+
+      if (video && prevButtonNode && nextButtonNode) {
         video.muted = true;
         video.play().then(() => {
           video.pause();
@@ -170,6 +174,10 @@ if (blok) {
     }
 
     checkIfCurrentSlideIsVideo(node);
+
+    if (!prevButtonNode && !nextButtonNode) {
+      return;
+    }
 
     if (
       typeof node.getAttribute("data-auto-scroll") !== "string" &&
