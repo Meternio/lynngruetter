@@ -6,12 +6,20 @@ const { blok, current, max } = Astro.props;
 
 let filename;
 let isVideo;
+let dimensions;
 
 if (blok?.image?.filename) {
   const regex = /\/([^\/]+)(?=\.\w+$)/;
   filename = blok.image?.filename.match(regex);
 
   isVideo = blok.image?.filename.match(/\.(mp4|mov|webm)$/i);
+
+  if (!isVideo) {
+    dimensions = {
+      width: blok.image?.filename.split("/")[5].split("x")[0],
+      height: blok.image?.filename.split("/")[5].split("x")[1],
+    };
+  }
 }
 
 const isPropEmpty = (prop) => {
@@ -53,9 +61,11 @@ const isPropEmpty = (prop) => {
             blok.image?.filename +
             "/m/1920x0/smart/filters:format(webp):quality(80)"
           }
+          height={dimensions?.height}
+          width={dimensions?.width}
           alt={blok.image?.alt || "Grid Item Gallery"}
           loading="lazy"
-          class="grid-category-item-gallery-image relative top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-h-full"
+          class="grid-category-item-gallery-image object-contain relative top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-h-full"
           data-grid-category-item-gallery-image
         />
       ) : (
@@ -73,7 +83,7 @@ const isPropEmpty = (prop) => {
   <div
     class="grid-category-item-gallery-footer flex justify-between items-center flex-grow relative text-sm"
   >
-    <div class="absolute left-0 top-1/2 -translate-y-1/2">
+    <div class=`absolute left-0 top-1/2 -translate-y-1/2 ${isPropEmpty(blok.description) ? 'max-w-[30%] sm:max-w-[40%]' : ''}`>
       {current && max ? `${current}/${max}` : ""}
       {filename && filename[1]}
     </div>
@@ -106,7 +116,7 @@ const isPropEmpty = (prop) => {
 
 <script>
   const triggers = document.querySelectorAll(
-    "[data-grid-category-item-gallery-footer-trigger]"
+    "[data-grid-category-item-gallery-footer-trigger]",
   );
 
   triggers.forEach((trigger) => {

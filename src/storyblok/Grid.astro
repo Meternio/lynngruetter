@@ -66,23 +66,41 @@ const { blok } = Astro.props;
 
 <script>
   import Masonry from "masonry-layout";
-  import imagesLoaded from "imagesloaded";
 
   var grid = document.querySelectorAll("[data-grid]");
+
+  function imagesLoaded(elements, onProgress) {
+    let imagesToLoad = elements.length;
+
+    elements.forEach((img) => {
+      if (img.complete) {
+        imagesToLoad--;
+        onProgress(img, img.complete);
+      } else {
+        img.addEventListener("load", () => imageLoaded(img, true));
+        img.addEventListener("error", () => imageLoaded(img, false)); // consider image loaded on error
+      }
+    });
+
+    function imageLoaded(img, isLoaded) {
+      imagesToLoad--;
+      onProgress(img, isLoaded);
+    }
+  }
 
   grid.forEach((grid) => {
     // init mobile trigger data-grid-categories-titles-trigger
     var categoryTitlesTrigger = grid.querySelector(
-      "[data-grid-categories-titles-trigger]"
+      "[data-grid-categories-titles-trigger]",
     );
     const masonry = typeof grid.dataset.carouselMasonry === "string";
 
     categoryTitlesTrigger.addEventListener("click", function () {
       categoryTitlesTrigger.parentElement.classList.toggle(
-        "grid-categories-titles-active"
+        "grid-categories-titles-active",
       );
       categoryTitlesTrigger.parentElement.classList.add(
-        "grid-categories-titles-active-animation"
+        "grid-categories-titles-active-animation",
       );
       window.setTimeout(() => {
         categoryTitlesTrigger.parentElement
@@ -90,7 +108,7 @@ const { blok } = Astro.props;
           .forEach((categoryTitle) => {
             categoryTitle.classList.toggle("invisible");
             categoryTitle.parentElement.classList.remove(
-              "grid-categories-titles-active-animation"
+              "grid-categories-titles-active-animation",
             );
           });
       }, 750);
@@ -125,11 +143,11 @@ const { blok } = Astro.props;
     });
 
     var thumbnails = grid.querySelectorAll(
-      "[data-grid-category-content='0'] [data-grid-category-item-thumbnail]"
+      "[data-grid-category-content='0'] [data-grid-category-item-thumbnail]",
     );
 
     const videoThumbnails = grid.querySelectorAll(
-      "[data-grid-category-content='0'] [data-grid-category-item-thumbnail-video]"
+      "[data-grid-category-content='0'] [data-grid-category-item-thumbnail-video]",
     );
 
     const gridContent = grid.querySelector("[data-grid-category-content='0']");
@@ -143,7 +161,7 @@ const { blok } = Astro.props;
             "[data-grid-category-content='0'] [data-grid-category-item-sizer]",
           gutter: 16,
           percentPosition: true,
-        })
+        }),
       );
     }
 
@@ -163,20 +181,20 @@ const { blok } = Astro.props;
       });
     }, 1);
 
-    const imgLoad = imagesLoaded(thumbnails);
-
-    imgLoad.on("progress", function (instance, image) {
-      image.img
-        .closest("[data-grid-category-item]")
-        .classList.remove("opacity-0", "translate-y-3");
-      if (masonry) {
-        msnry[0].layout();
-      }
-      window.setTimeout(() => {
-        image.img
+    imagesLoaded(thumbnails, function (img, isLoaded) {
+      if (img) {
+        img
           .closest("[data-grid-category-item]")
-          .classList.remove("custom-transition");
-      }, 750);
+          .classList.remove("opacity-0", "translate-y-3");
+        if (masonry) {
+          msnry[0].layout();
+        }
+        window.setTimeout(() => {
+          img
+            .closest("[data-grid-category-item]")
+            .classList.remove("custom-transition");
+        }, 750);
+      }
     });
 
     // add on click event to category title to show the content
@@ -186,7 +204,7 @@ const { blok } = Astro.props;
         // set text of mobile trigger
         categoryTitlesTrigger.textContent = categoryTitle.textContent;
         categoryTitlesTrigger.parentElement.classList.remove(
-          "grid-categories-titles-active"
+          "grid-categories-titles-active",
         );
 
         // scroll to the top of the grid
@@ -200,10 +218,10 @@ const { blok } = Astro.props;
 
         // hide all category contents
         var categoryContents = grid.querySelectorAll(
-          "[data-grid-category-content]"
+          "[data-grid-category-content]",
         );
         var categoryTitles = grid.querySelectorAll(
-          "[data-grid-category-title]"
+          "[data-grid-category-title]",
         );
         categoryContents.forEach((categoryContent) => {
           categoryContent.classList.add("opacity-0", "!h-0");
@@ -214,7 +232,7 @@ const { blok } = Astro.props;
               item.classList.add(
                 "opacity-0",
                 "translate-y-3",
-                "custom-transition"
+                "custom-transition",
               );
             });
         });
@@ -246,17 +264,17 @@ const { blok } = Astro.props;
                 columnWidth: `[data-grid-category-content="${index}"] [data-grid-category-item-sizer]`,
                 gutter: 16,
                 percentPosition: true,
-              })
+              }),
             );
           }
         }
 
         var thumbnails = grid.querySelectorAll(
-          `[data-grid-category-content="${index}"] [data-grid-category-item-thumbnail]`
+          `[data-grid-category-content="${index}"] [data-grid-category-item-thumbnail]`,
         );
 
         const videoThumbnails = grid.querySelectorAll(
-          `[data-grid-category-content="${index}"] [data-grid-category-item-thumbnail-video]`
+          `[data-grid-category-content="${index}"] [data-grid-category-item-thumbnail-video]`,
         );
 
         window.setTimeout(() => {
@@ -273,23 +291,23 @@ const { blok } = Astro.props;
           });
         }, 1);
 
-        const imgLoad = imagesLoaded(thumbnails);
-
-        imgLoad.on("progress", function (instance, image) {
-          image.img
-            .closest("[data-grid-category-item]")
-            .classList.remove("opacity-0", "translate-y-3");
-          if (masonry) msnry[index].layout();
-          window.setTimeout(() => {
-            image.img
+        imagesLoaded(thumbnails, function (image, isLoaded) {
+          if (image) {
+            image
               .closest("[data-grid-category-item]")
-              .classList.remove("custom-transition");
-          }, 750);
+              .classList.remove("opacity-0", "translate-y-3");
+            if (masonry) msnry[index].layout();
+            window.setTimeout(() => {
+              image
+                .closest("[data-grid-category-item]")
+                .classList.remove("custom-transition");
+            }, 750);
+          }
         });
 
         // remove active class from all category titles
         var categoryTitles = grid.querySelectorAll(
-          "[data-grid-category-title]"
+          "[data-grid-category-title]",
         );
         categoryTitles.forEach((categoryTitle) => {
           categoryTitle.classList.remove("grid-category-title-active");
