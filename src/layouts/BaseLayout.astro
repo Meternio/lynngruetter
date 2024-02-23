@@ -72,6 +72,15 @@ const isBot =
   const videoObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
+        // if video already loaded
+        if (entry.target.readyState > 3) {
+          entry.target.classList.remove("loading");
+          entry.target.removeAttribute("data-autoplay");
+          entry.target.setAttribute("autoplay", "true");
+          videoObserver.unobserve(entry.target);
+          return;
+        }
+
         // show a loader until the video is ready to play
         entry.target.classList.add("loading");
 
@@ -96,9 +105,10 @@ const isBot =
   images.forEach((image) => {
     //check if image is already loaded
     if (image.complete) {
+      image.classList.remove("loading");
       return;
     }
-    
+
     image.classList.add("loading");
     image.addEventListener('load', () => {
       image.classList.remove("loading");
