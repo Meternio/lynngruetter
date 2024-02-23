@@ -18,6 +18,14 @@ let lastSection = false;
 if (blok._uid === content.body[content.body.length - 1]._uid) {
   lastSection = true;
 }
+
+let filenameMedium;
+let filenameSmall;
+
+if (blok?.video && blok?.video?.filename) {
+  filenameMedium = blok.asset2?.filename;
+  filenameSmall = blok.asset3?.filename;
+}
 ---
 
 <section
@@ -44,13 +52,25 @@ if (blok._uid === content.body[content.body.length - 1]._uid) {
         >
           <video
             data-scroll-section-video
-            src={blok.video.filename}
             muted
             loop
             playsinline
             preload="none"
             class="scroll-section-video object-cover w-48 h-auto rounded-xl absolute bottom-0 right-0 touch-none pointer-events-auto"
           >
+            {filenameMedium ? (
+              <>
+                <source src={blok.video.filename} media="(min-width: 800px)" />
+                <source src={filenameMedium} media="(min-width: 500px)" />
+                {filenameSmall ? (
+                  <source src={filenameSmall} />
+                ) : (
+                  <source src={filenameMedium} />
+                )}
+              </>
+            ) : (
+              <source src={blok.video.filename} />
+            )}
             Sorry, dein Browser unterstüzt keine Videos.
           </video>
         </div>
@@ -95,15 +115,15 @@ if (blok._uid === content.body[content.body.length - 1]._uid) {
       "top-left": Math.sqrt(centerX * centerX + centerY * centerY),
       "top-right": Math.sqrt(
         (viewportWidth - centerX) * (viewportWidth - centerX) +
-          centerY * centerY,
+          centerY * centerY
       ),
       "bottom-left": Math.sqrt(
         centerX * centerX +
-          (viewportHeight - centerY) * (viewportHeight - centerY),
+          (viewportHeight - centerY) * (viewportHeight - centerY)
       ),
       "bottom-right": Math.sqrt(
         (viewportWidth - centerX) * (viewportWidth - centerX) +
-          (viewportHeight - centerY) * (viewportHeight - centerY),
+          (viewportHeight - centerY) * (viewportHeight - centerY)
       ),
     };
 
@@ -245,7 +265,8 @@ if (blok._uid === content.body[content.body.length - 1]._uid) {
       if (video.parentElement.classList.contains("isSnapped")) {
         const offsetTop = video.parentElement.nextElementSibling.offsetTop;
         video.parentElement.style.position = "absolute";
-        video.parentElement.style.height = "clamp(8rem, calc(75vw - 8rem), 100vh)";
+        video.parentElement.style.height =
+          "clamp(8rem, calc(75vw - 8rem), 100vh)";
         video.parentElement.style.top = `${offsetTop}px`;
         video.parentElement.style.margin = 0;
         video.parentElement.style.width = "100%";
@@ -261,24 +282,27 @@ if (blok._uid === content.body[content.body.length - 1]._uid) {
     });
   });
 
-  window.addEventListener("resize", debounce((event) => {
-    // Check if screen size has changed and reset the video size and position if necessary
-    if (window.innerWidth === previousWidth) {
-      return;
-    }
-
-    previousWidth = window.innerWidth;
-
-    videos.forEach((video) => {
-      if(!video.parentElement.classList.contains('isIntersecting')){
+  window.addEventListener(
+    "resize",
+    debounce((event) => {
+      // Check if screen size has changed and reset the video size and position if necessary
+      if (window.innerWidth === previousWidth) {
         return;
       }
-      updatePosition({
-        target: video,
+
+      previousWidth = window.innerWidth;
+
+      videos.forEach((video) => {
+        if (!video.parentElement.classList.contains("isIntersecting")) {
+          return;
+        }
+        updatePosition({
+          target: video,
+        });
+        resetVideoSize({ target: video.parentElement });
       });
-      resetVideoSize({ target: video.parentElement });
-    });
-  }, 400));
+    }, 400)
+  );
 
   // observe all scroll sections and if they are in view, make the video div fixed
   const scrollSectionsObserver = new IntersectionObserver(
@@ -287,12 +311,15 @@ if (blok._uid === content.body[content.body.length - 1]._uid) {
         // Check if the target is data-sentinel-snap
         if (!entry.target.classList.contains("sentinel-snap")) {
           const videoWrapper = entry.target.parentElement.querySelector(
-            "[data-scroll-section-video-wrapper]",
+            "[data-scroll-section-video-wrapper]"
           );
           if (entry.isIntersecting) {
             if (videoWrapper) {
               // if the video is ready to be played, play it
-              if (videoWrapper.querySelector("video").readyState > 3 || videoWrapper.querySelector("video").readyState === 0){
+              if (
+                videoWrapper.querySelector("video").readyState > 3 ||
+                videoWrapper.querySelector("video").readyState === 0
+              ) {
                 videoWrapper.querySelector("video").play();
               }
               videoWrapper.classList.add("isIntersecting");
@@ -318,7 +345,7 @@ if (blok._uid === content.body[content.body.length - 1]._uid) {
           }
         } else {
           const videoWrapper = entry.target.parentElement.querySelector(
-            "[data-scroll-section-video-wrapper]",
+            "[data-scroll-section-video-wrapper]"
           );
           if (entry.isIntersecting) {
             videoWrapper.classList.add("isSnapped");
@@ -340,7 +367,7 @@ if (blok._uid === content.body[content.body.length - 1]._uid) {
     },
     {
       threshold: 0.2,
-    },
+    }
   );
 
   document.querySelectorAll("[data-sentinel]").forEach((el) => {
@@ -368,7 +395,8 @@ if (blok._uid === content.body[content.body.length - 1]._uid) {
       padding-top: 8rem;
     }
 
-    .scroll-section-video-wrapper.isZoomed:not(.isSnapped) .scroll-section-video {
+    .scroll-section-video-wrapper.isZoomed:not(.isSnapped)
+      .scroll-section-video {
       width: 100%;
       transform: translate(0, 50%) !important;
     }

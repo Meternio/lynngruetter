@@ -34,6 +34,7 @@ import { Image } from "astro:assets";
   const heroAnimationText = document.querySelector(
     "[data-hero-animation-text]"
   );
+  let isIntersecting = false;
   if (heroAnimationText) {
     const body = document.querySelector("[data-body]");
     const main = document.querySelector("[data-main]");
@@ -80,7 +81,11 @@ import { Image } from "astro:assets";
           const observer = new IntersectionObserver(
             (entries) => {
               entries.forEach((entry) => {
-                if (!entry.isIntersecting) {
+                if (entry.isIntersecting && !isIntersecting) {
+                  heroVideo.play().then(() => {
+                    isIntersecting = true;
+                  })
+                } else if(isIntersecting) {
                   heroVideo.pause();
                   observer.unobserve(heroVideo);
                 }

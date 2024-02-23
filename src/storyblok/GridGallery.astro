@@ -6,6 +6,8 @@ const { blok, current, max } = Astro.props;
 
 let filename;
 let isVideo;
+let filenameMedium;
+let filenameSmall;
 let dimensions;
 
 if (blok?.image?.filename) {
@@ -19,6 +21,9 @@ if (blok?.image?.filename) {
       width: blok.image?.filename.split("/")[5].split("x")[0],
       height: blok.image?.filename.split("/")[5].split("x")[1],
     };
+  } else {
+    filenameMedium = blok.asset2?.filename;
+    filenameSmall = blok.asset3?.filename;
   }
 }
 
@@ -70,8 +75,6 @@ const isPropEmpty = (prop) => {
         />
       ) : (
         <video
-          src={blok.image?.filename}
-          alt={blok.image?.alt || "Grid Item Gallery"}
           class="grid-category-item-gallery-image relative top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-h-full"
           data-grid-category-item-gallery-image
           data-autoplay
@@ -79,14 +82,31 @@ const isPropEmpty = (prop) => {
           muted
           preload="none"
           controls
-        />
+        >
+          {filenameMedium ? (
+            <>
+              <source src={blok.image?.filename} media="(min-width: 800px)" />
+              <source src={filenameMedium} media="(min-width: 500px)" />
+              {filenameSmall ? (
+                <source src={filenameSmall} />
+              ) : (
+                <source src={filenameMedium} />
+              )}
+            </>
+          ) : (
+            <source src={blok.image?.filename} />
+          )}
+          Sorry, dein Browser unterstüzt keine Videos.
+        </video>
       )
     }
   </div>
   <div
     class="grid-category-item-gallery-footer flex justify-between items-center flex-grow relative text-sm"
   >
-    <div class=`absolute left-0 top-1/2 -translate-y-1/2 line-clamp-2 ${isPropEmpty(blok.description) ? 'max-w-[30%] sm:max-w-[40%]' : ''}`>
+    <div
+      class=`absolute left-0 top-1/2 -translate-y-1/2 line-clamp-2 ${isPropEmpty(blok.description) ? 'max-w-[30%] sm:max-w-[40%]' : ''}`
+    >
       {current && max ? `${current}/${max}` : ""}
       {filename && filename[1]}
     </div>
@@ -119,7 +139,7 @@ const isPropEmpty = (prop) => {
 
 <script>
   const triggers = document.querySelectorAll(
-    "[data-grid-category-item-gallery-footer-trigger]",
+    "[data-grid-category-item-gallery-footer-trigger]"
   );
 
   triggers.forEach((trigger) => {
