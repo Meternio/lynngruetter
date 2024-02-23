@@ -49,19 +49,27 @@ const { blok, lastSection } = Astro.props;
   }
 
   <div
-    class="scroll-section-signature-footer mt-4 flex items-center relative justify-between z-10 text-sm lg:text-md gap-2"
+    class="scroll-section-signature-footer mt-1 flex items-center relative justify-between z-10 text-sm lg:text-md gap-4 sm:gap-12"
   >
     {
       lastSection && (
         <>
-          <span>Moderation und Content Produktion</span>
-          <a target="_blank" href="https://www.instagram.com/lynngruetter">
-            @lynngruetter
-          </a>
-          <a target="_blank" href="https://www.linkedin.com/in/lynn-gr%C3%BCtter-3b7834204/">
-            LinkedIn
-          </a>
-          <span>©2024</span>
+          <div class="flex-grow sm:flex-grow-0 sm:w-[calc(60%-3rem)] flex justify-between gap-4 items-center">
+            <span>Moderation und Content Produktion</span>
+            <a target="_blank" href="https://www.instagram.com/lynngruetter">
+              @lynngruetter
+            </a>
+          </div>
+          <div class="sm:flex-grow flex justify-end sm:justify-between">
+            <a
+              target="_blank"
+              class="hidden sm:block"
+              href="https://www.linkedin.com/in/lynn-gr%C3%BCtter-3b7834204/"
+            >
+              LinkedIn
+            </a>
+            <span>©2024</span>
+          </div>
         </>
       )
     }
