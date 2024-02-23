@@ -98,6 +98,11 @@ const isBot = Astro.request.headers.get("user-agent")?.match(/bot/i) || Astro.re
     max-width: 1920px;
   }
 
+  .row-container:not(.container) {
+    max-width: 1920px;
+    margin: auto;
+  }
+
   .dev {
     overflow: auto;
   }
