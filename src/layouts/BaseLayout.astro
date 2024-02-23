@@ -94,10 +94,15 @@ const isBot =
   const images = document.querySelectorAll("img[loading='lazy']");
 
   images.forEach((image) => {
+    //check if image is already loaded
+    if (image.complete) {
+      return;
+    }
+    
     image.classList.add("loading");
-    image.onload = () => {
+    image.addEventListener('load', () => {
       image.classList.remove("loading");
-    };
+    });
   });
 </script>
 
