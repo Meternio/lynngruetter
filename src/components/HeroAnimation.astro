@@ -4,7 +4,7 @@ import { Image } from "astro:assets";
 ---
 
 <div
-  class="hero-animation-background h-svh w-svw fixed hero-animation z-10"
+  class="hero-animation-background h-svh w-full fixed hero-animation z-10"
   data-hero-animation-background
 >
   <a
@@ -17,7 +17,7 @@ import { Image } from "astro:assets";
 </div>
 
 <div
-  class="overflow-hidden fixed z-30 top-4 w-full h-fit mix-blend-difference hero-animation-text-wrapper"
+  class="overflow-hidden fixed z-30 top-4 w-full h-fit mix-blend-difference hero-animation-text-wrapper min-w-[375px]"
   data-hero-animation-text
 >
   <h1 class="visually-hidden">Lynn Grütter</h1>

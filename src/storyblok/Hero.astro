@@ -10,6 +10,14 @@ const isVideo =
 // Optimze the image for the hero
 const optimzedImageUrl =
   blok.asset?.filename + "/m/1920x0/smart/filters:format(webp):quality(80)";
+
+let filenameMedium;
+let filenameSmall;
+
+if (isVideo) {
+  filenameMedium = blok.asset2?.filename;
+  filenameSmall = blok.asset3?.filename;
+}
 ---
 
 <div
@@ -21,31 +29,47 @@ const optimzedImageUrl =
     blok.asset?.filename && !isVideo && (
       <img
         srcset={`
-            ${blok.asset?.filename+'/m/1920x0/smart/filters:format(webp):quality(80)'} 1200w,
-            ${blok.asset?.filename+'/m/992x0/smart/filters:format(webp):quality(80)'} 992w,
-            ${blok.asset?.filename+'/m/768x0/smart/filters:format(webp):quality(80)'} 768w,
-            ${blok.asset?.filename+'/m/576x0/smart/filters:format(webp):quality(80)'} 576w`}
-        src={blok.asset?.filename+'/m/1920x0/smart/filters:format(webp):quality(80)'}
+            ${blok.asset?.filename + "/m/1920x0/smart/filters:format(webp):quality(80)"} 1200w,
+            ${blok.asset?.filename + "/m/992x0/smart/filters:format(webp):quality(80)"} 992w,
+            ${blok.asset?.filename + "/m/768x0/smart/filters:format(webp):quality(80)"} 768w,
+            ${blok.asset?.filename + "/m/576x0/smart/filters:format(webp):quality(80)"} 576w`}
+        src={
+          blok.asset?.filename +
+          "/m/1920x0/smart/filters:format(webp):quality(80)"
+        }
         alt={blok.asset?.alt || "Hero Image"}
-        //loading="lazy"
+        loading="lazy"
         class="hero-image w-full h-full top-1/2 left-1/2 absolute -translate-x-1/2 -translate-y-1/2 object-cover"
       />
     )
   }
   {
     isVideo && (
-      <video
-        data-hero-video
-        src={blok.asset.filename}
-        muted
-        loop
-        controls
-        playsinline
-        preload="auto"
-        class="hero-video w-full h-full top-1/2 left-1/2 absolute -translate-x-1/2 -translate-y-1/2 object-cover"
-      >
-        Sorry, dein Browser unterstüzt keine Videos.
-      </video>
+      <>
+        <video
+          data-hero-video
+          muted
+          loop
+          controls
+          playsinline
+          preload="auto"
+          class="hero-video w-full h-full top-1/2 left-1/2 absolute -translate-x-1/2 -translate-y-1/2 object-cover"
+        >
+          {filenameMedium ? (
+            <>
+              <source src={blok.asset.filename} media="(min-width: 800px)" />
+              <source
+                src={filenameMedium}
+                media="(min-width: 500px)"
+              />
+              {filenameSmall ? <source src={filenameSmall} /> : <source src={filenameMedium} />}
+            </>
+          ) : (
+            <source src={blok.asset.filename} />
+          )}
+          Sorry, dein Browser unterstüzt keine Videos.
+        </video>
+      </>
     )
   }
   {
@@ -57,7 +81,7 @@ const optimzedImageUrl =
         class="hero-iframe w-full h-full top-1/2 left-1/2 absolute -translate-x-1/2 -translate-y-1/2"
         allow="autoplay; fullscreen; picture-in-picture"
         title={blok.vimeo.vimeo_oembed.response.title}
-        //loading="lazy"
+        loading="lazy"
       />
     )
   }
