@@ -10,7 +10,7 @@ const { blok } = Astro.props;
   class=`text-section container py-32 mx-auto ${blok.textAlign !== "left" ? 'w-3/4' : 'w-full'} `
   {...storyblokEditable(blok)}
 >
-  {blok.title && <h2 class="text-section-title text-sm font-bold">{blok.title}</h2>}
+  {blok.title && <h2 class="text-section-title text-xl font-bold">{blok.title}</h2>}
   {blok.content.map((contentBlok) => <StoryblokComponent blok={contentBlok} />)}
 </div>
 
