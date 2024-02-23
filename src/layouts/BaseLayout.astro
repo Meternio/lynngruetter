@@ -69,17 +69,29 @@ const isBot =
 
   // if video has attribute data-autoplay, play it if near the viewport
   const videos = document.querySelectorAll("video[data-autoplay]");
+  const playedVideos = new Set();
   const videoObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         // if video already loaded
         if (entry.target.readyState > 3) {
-          entry.target.play();
+          playedVideos.add(entry.target);
+          entry.target.play().then(() => {
+            entry.target.classList.remove("loading");
+          });
+
+          if (playedVideos.size > 2) {
+            // delete the first video in the set
+            const firstVideo = playedVideos.values().next().value;
+            playedVideos.delete(firstVideo);
+            firstVideo.pause();
+          }
           return;
         }
 
         // show a loader until the video is ready to play
         entry.target.classList.add("loading");
+        playedVideos.add(entry.target);
 
         // on play callback remove the observer and the attribute
         entry.target.play().then(() => {
@@ -112,11 +124,21 @@ const isBot =
                 entry.target.play();
               }
             });
+
+            if (playedVideos.size > 2) {
+              // delete the first video in the set
+              const firstVideo = playedVideos.values().next().value;
+              playedVideos.delete(firstVideo);
+              firstVideo.pause();
+            }
           }
         });
       } else {
-        if (entry.target.readyState > 3) {
-          entry.target.pause();
+        if (entry.target.readyState > 3 && playedVideos.has(entry.target)) {
+          // delete the first video in the set
+          const firstVideo = playedVideos.values().next().value;
+          playedVideos.delete(firstVideo);
+          firstVideo.pause();
         }
       }
     });
