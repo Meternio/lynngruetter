@@ -137,7 +137,9 @@ const Tag = isLink ? "a" : "div";
             <div class="carousel-slide" data-carousel-slide>
               <GridGallery
                 blok={{
-                  image: { filename: thumbnailUrl, asset2: blok?.asset2, asset3: blok?.asset3 },
+                  image: { filename: thumbnailUrl },
+                  asset2: blok?.asset2,
+                  asset3: blok?.asset3,
                   description: blok?.description,
                 }}
                 current={1}
