@@ -64,6 +64,29 @@ const isBot = Astro.request.headers.get("user-agent")?.match(/bot/i) || Astro.re
       history.scrollRestoration = "manual";
     }
   }
+
+  // if video has attribute data-autoplay, play it if near the viewport
+  const videos = document.querySelectorAll("video[data-autoplay]");
+  const videoObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        // show a loader until the video is ready to play
+        entry.target.classList.add("loading");
+        
+        // on play callback remove the observer and the attribute
+        entry.target.play().then(() => {
+          entry.target.classList.remove("loading");
+          entry.target.removeAttribute("data-autoplay");
+          entry.target.setAttribute("autoplay", "true");
+          videoObserver.unobserve(entry.target);
+        });
+      }
+    });
+  });
+
+  videos.forEach((video) => {
+    videoObserver.observe(video);
+  });
 </script>
 
 <style is:global>
@@ -90,6 +113,11 @@ const isBot = Astro.request.headers.get("user-agent")?.match(/bot/i) || Astro.re
   a {
     z-index: 50;
     position: relative;
+  }
+
+  .loading {
+    filter: blur(5px);
+    background-color: rgba(0,0,0,0.5);
   }
 
   .container {

@@ -83,7 +83,7 @@ const isPropEmpty = (prop) => {
   <div
     class="grid-category-item-gallery-footer flex justify-between items-center flex-grow relative text-sm"
   >
-    <div class=`absolute left-0 top-1/2 -translate-y-1/2 ${isPropEmpty(blok.description) ? 'max-w-[30%] sm:max-w-[40%]' : ''}`>
+    <div class=`absolute left-0 top-1/2 -translate-y-1/2 line-clamp-2 ${isPropEmpty(blok.description) ? 'max-w-[30%] sm:max-w-[40%]' : ''}`>
       {current && max ? `${current}/${max}` : ""}
       {filename && filename[1]}
     </div>
