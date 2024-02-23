@@ -19,7 +19,9 @@ const cookies = Astro.request.headers.get("cookie");
 
 const cookiesAccepted = cookies?.includes("cookiesAccepted=true");
 
-const isBot = Astro.request.headers.get("user-agent")?.match(/bot/i) || Astro.request.headers.get("sec-ch-ua")?.match(/lighthouse/i);
+const isBot =
+  Astro.request.headers.get("user-agent")?.match(/bot/i) ||
+  Astro.request.headers.get("sec-ch-ua")?.match(/lighthouse/i);
 ---
 
 <html lang="de">
@@ -47,7 +49,7 @@ const isBot = Astro.request.headers.get("user-agent")?.match(/bot/i) || Astro.re
     data-body
     class=`font-montrealMedium overflow-hidden ${(dev || isFrontendEditor) && 'dev'}`
   >
-    <Header updateHeaderLinks={updateHeaderLinks}/>
+    <Header updateHeaderLinks={updateHeaderLinks} />
     {!dev && !isFrontendEditor && <HeroAnimation />}
     <main class="relative opacity-0 bg-gray" data-main>
       <div>
@@ -72,7 +74,7 @@ const isBot = Astro.request.headers.get("user-agent")?.match(/bot/i) || Astro.re
       if (entry.isIntersecting) {
         // show a loader until the video is ready to play
         entry.target.classList.add("loading");
-        
+
         // on play callback remove the observer and the attribute
         entry.target.play().then(() => {
           entry.target.classList.remove("loading");
@@ -86,6 +88,16 @@ const isBot = Astro.request.headers.get("user-agent")?.match(/bot/i) || Astro.re
 
   videos.forEach((video) => {
     videoObserver.observe(video);
+  });
+
+  // if img has attribute loding="lazy", add a loader until the image is ready to load
+  const images = document.querySelectorAll("img[loading='lazy']");
+
+  images.forEach((image) => {
+    image.classList.add("loading");
+    image.onload = () => {
+      image.classList.remove("loading");
+    };
   });
 </script>
 
@@ -117,7 +129,7 @@ const isBot = Astro.request.headers.get("user-agent")?.match(/bot/i) || Astro.re
 
   .loading {
     filter: blur(5px);
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0, 0, 0, 0.5);
   }
 
   .container {
