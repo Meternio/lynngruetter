@@ -52,7 +52,10 @@ const Tag = isLink ? "a" : "div";
         <img
           srcset={`
             ${
-              thumbnailUrl + "/m/1920x0/smart/filters:format(webp):quality(80)"
+              thumbnailUrl + "/m/950x0/smart/filters:format(webp):quality(80)"
+            } 1600w,
+            ${
+              thumbnailUrl + "/m/600x0/smart/filters:format(webp):quality(80)"
             } 1200w,
             ${
               thumbnailUrl + "/m/992x0/smart/filters:format(webp):quality(80)"
@@ -62,9 +65,12 @@ const Tag = isLink ? "a" : "div";
             } 768w,
             ${
               thumbnailUrl + "/m/576x0/smart/filters:format(webp):quality(80)"
-            } 576w`}
+            } 576w,
+            ${
+              thumbnailUrl + "/m/425x0/smart/filters:format(webp):quality(80)"
+            } 425w`}
           src={
-            thumbnailUrl + "/m/1920x0/smart/filters:format(webp):quality(80)"
+            thumbnailUrl + "/m/600x0/smart/filters:format(webp):quality(80)"
           }
           alt={blok.thumbnail?.alt || "Grid Item"}
           loading="lazy"
