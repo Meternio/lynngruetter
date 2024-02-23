@@ -68,6 +68,8 @@ const content = data.story.content;
   </nav>
 
   <script>
+    import { debounce, throttle } from "../assets/main.js";
+
     // only show header when scrolling up
     let lastScrollTop = 0;
     const header = document.querySelector("[data-header]");
@@ -81,18 +83,6 @@ const content = data.story.content;
     );
     let headerHeight = window.innerWidth >= 1024 ? 52 : 48;
     let adjustTransformTimeout = null;
-
-    function throttle(func, wait) {
-      let timeout = null;
-      return function (...args) {
-        if (!timeout) {
-          timeout = setTimeout(() => {
-            func.apply(this, args);
-            timeout = null;
-          }, wait);
-        }
-      };
-    }
 
     function scrollTo(offset, callback) {
       const fixedOffset = offset.toFixed();
@@ -178,11 +168,7 @@ const content = data.story.content;
       });
     });
 
-    window.setTimeout(() => {
-      // throttle scroll event
-      window.addEventListener(
-        "scroll",
-        throttle(() => {
+    const throttleScroll = throttle(() => {
           if (
             document.querySelector(".grid-categories-titles-active-animation")
           ) {
@@ -266,13 +252,20 @@ const content = data.story.content;
           }
 
           lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
-        }, 300)
+        }, 400);
+
+    window.setTimeout(() => {
+      // throttle scroll event
+      window.addEventListener(
+        "scroll",
+        throttleScroll
       );
     }, 3000);
 
-    window.addEventListener("resize", () => {
+    window.addEventListener("resize", debounce(() => {
       headerHeight = window.innerWidth >= 1024 ? 52 : 48;
-    });
+      throttleScroll();
+    }, 400));
 
     /*const headerNavContentMenu = document.querySelector(
       "[data-header-nav-content-menu]"

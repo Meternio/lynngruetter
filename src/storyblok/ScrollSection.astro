@@ -72,6 +72,7 @@ if (blok._uid === content.body[content.body.length - 1]._uid) {
 
 <script>
   import interact from "interactjs";
+  import { debounce } from "../assets/main.js";
 
   const position = { x: 0, y: 0 };
   let isDragging = false;
@@ -259,7 +260,7 @@ if (blok._uid === content.body[content.body.length - 1]._uid) {
     });
   });
 
-  window.addEventListener("resize", (event) => {
+  window.addEventListener("resize", debounce((event) => {
     // Check if screen size has changed and reset the video size and position if necessary
     if (window.innerWidth === previousWidth) {
       return;
@@ -276,7 +277,7 @@ if (blok._uid === content.body[content.body.length - 1]._uid) {
       });
       resetVideoSize({ target: video.parentElement });
     });
-  });
+  }, 400));
 
   // observe all scroll sections and if they are in view, make the video div fixed
   const scrollSectionsObserver = new IntersectionObserver(

@@ -18,6 +18,8 @@ const isFrontendEditor = Astro.url.searchParams.get("_storyblok")! || "";
 const cookies = Astro.request.headers.get("cookie");
 
 const cookiesAccepted = cookies?.includes("cookiesAccepted=true");
+
+const isBot = Astro.request.headers.get("user-agent")?.match(/bot/i) || Astro.request.headers.get("sec-ch-ua")?.match(/lighthouse/i);
 ---
 
 <html lang="de">
@@ -52,7 +54,7 @@ const cookiesAccepted = cookies?.includes("cookiesAccepted=true");
         <slot />
       </div>
     </main>
-    {!cookiesAccepted && <CookieBanner />}
+    {!cookiesAccepted && !isBot && <CookieBanner />}
   </body>
 </html>
 
