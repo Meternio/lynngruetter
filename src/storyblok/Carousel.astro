@@ -48,32 +48,34 @@ if (blok) {
     </div>
   </div>
   {
-    !blok?.autoScroll && !blok?.autoPlay && (blok?.items.lenght > 1 || !noPagination) && (
-      <>
-        <div
-          data-carousel-prev
-          class={`carousel-navigation-prev-wrapper hidden lg:block z-30 absolute w-1/2 ${blok?.items ? "h-full" : "h-[calc(100%-60px)]"} top-0`}
-        >
-          <button
-            class={`carousel-prev absolute left-0 ${
-              blok?.items ? "top-[calc(50%-18px)] " : "top-1/2"
-            } -translate-y-1/2`}
-            aria-label="Button to slide backwards in the carousel"
-          />
-        </div>
-        <div
-          data-carousel-next
-          class={`carousel-navigation-next-wrapper hidden lg:block z-30 absolute w-1/2 ${blok?.items ? "h-full" : "h-[calc(100%-60px)]"} top-0 right-0`}
-        >
-          <button
-            class={`carousel-next absolute right-0 ${
-              blok?.items ? "top-[calc(50%-18px)] " : "top-1/2"
-            } -translate-y-1/2`}
-            aria-label="Button to slide forward in the carousel"
-          />
-        </div>
-      </>
-    )
+    !blok?.autoScroll &&
+      !blok?.autoPlay &&
+      (blok?.items.lenght > 1 || !noPagination) && (
+        <>
+          <div
+            data-carousel-prev
+            class={`carousel-navigation-prev-wrapper hidden lg:block z-30 absolute w-1/2 ${blok?.items ? "h-full" : "h-[calc(100%-60px)]"} top-0`}
+          >
+            <button
+              class={`carousel-prev absolute left-0 ${
+                blok?.items ? "top-[calc(50%-18px)] " : "top-1/2"
+              } -translate-y-1/2`}
+              aria-label="Button to slide backwards in the carousel"
+            />
+          </div>
+          <div
+            data-carousel-next
+            class={`carousel-navigation-next-wrapper hidden lg:block z-30 absolute w-1/2 ${blok?.items ? "h-full" : "h-[calc(100%-60px)]"} top-0 right-0`}
+          >
+            <button
+              class={`carousel-next absolute right-0 ${
+                blok?.items ? "top-[calc(50%-18px)] " : "top-1/2"
+              } -translate-y-1/2`}
+              aria-label="Button to slide forward in the carousel"
+            />
+          </div>
+        </>
+      )
   }
   {blok?.signature && <Signature blok={blok} />}
 </div>
@@ -147,6 +149,11 @@ if (blok) {
     function checkIfCurrentSlideIsVideo(node) {
       const video = node.querySelector("video");
       if (video) {
+        video.muted = true;
+        video.play().then(() => {
+          video.pause();
+          video.muted = false;
+        });
         prevButtonNode.parentElement.classList.add("isVideo");
         prevButtonNode.classList.remove("w-1/2");
         nextButtonNode.classList.remove("w-1/2");
@@ -223,17 +230,17 @@ if (blok) {
     height: calc(100% - 32px);
   }
 
-  [data-auto-scroll="true"] :global(img){
+  [data-auto-scroll="true"] :global(img) {
     filter: grayscale(100%);
     max-height: 100px;
     object-fit: contain;
   }
 
-  [data-auto-scroll="true"] :global(.carousel-slide){
+  [data-auto-scroll="true"] :global(.carousel-slide) {
     padding-right: 10px;
   }
 
-  [data-auto-scroll="true"] :global(.carousel-container){
+  [data-auto-scroll="true"] :global(.carousel-container) {
     align-items: center;
   }
 
