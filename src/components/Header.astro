@@ -16,7 +16,7 @@ const content = data.story.content;
 ---
 
 <header
-  class="header absolute w-full z-40 px-4 sm lg:py-6 py-4 mix-blend-difference text-white text-sm lg:text-md lg:h-[72px] pointer-events-none"
+  class="header absolute w-full z-40 px-4 sm py-4 mix-blend-difference text-white text-sm lg:text-md pointer-events-none"
   data-header
 >
   <nav
@@ -79,7 +79,7 @@ const content = data.story.content;
     const headerNavLogoWhite = document.querySelector(
       "[data-header-nav-logo-white]"
     );
-    let headerHeight = window.innerWidth >= 1024 ? 72 : 48;
+    let headerHeight = window.innerWidth >= 1024 ? 52 : 48;
     let adjustTransformTimeout = null;
 
     function throttle(func, wait) {
@@ -135,7 +135,7 @@ const content = data.story.content;
       const rect = el.getBoundingClientRect();
       if(rect.top > (headerHeight + 16)) return;
 
-      // add or subtract 72px to the current translateY value based on the operation
+      // add or subtract 52px to the current translateY value based on the operation
       let newTranslateY = `calc(-100dvh + 32px + 100%)`;
 
       if (
@@ -271,7 +271,7 @@ const content = data.story.content;
     }, 3000);
 
     window.addEventListener("resize", () => {
-      headerHeight = window.innerWidth >= 1024 ? 72 : 48;
+      headerHeight = window.innerWidth >= 1024 ? 52 : 48;
     });
 
     /*const headerNavContentMenu = document.querySelector(
