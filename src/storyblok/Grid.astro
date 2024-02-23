@@ -30,7 +30,7 @@ const { blok } = Astro.props;
       blok.categories.map((category, index) => {
         return (
           <button
-            class={`grid-category-title lg:p-4 uppercase invisible lg:visible text-black/40 cursor-pointer last:pb-2 lg:last:pb-4${
+            class={`grid-category-title lg:p-4 uppercase invisible lg:visible text-black/40 cursor-pointer last:pb-2 lg:last:pb-4 ${
               index === 0 ? "grid-category-title-active" : ""
             }`}
             role="tab"
