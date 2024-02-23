@@ -111,7 +111,7 @@ const Tag = isLink ? "a" : "div";
             noPagination={blok.gallery.length <= 1 ? true : false}
           >
             <div class="carousel-slide" data-carousel-slide>
-              <GridGallery blok={{image: {filename: thumbnailUrl}, description: null}} current={1} max={blok.gallery?.length + 1} />
+              <GridGallery blok={{image: {filename: thumbnailUrl}, description: blok?.description}} current={1} max={blok.gallery?.length + 1} />
             </div>
             {blok?.gallery && blok?.gallery.length > 0 && blok.gallery?.map((gallery, index) => {
               return (
