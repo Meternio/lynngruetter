@@ -91,28 +91,31 @@ const isBot =
           entry.target.setAttribute("autoplay", "true");
           videoObserver.unobserve(entry.target);
 
-          entry.target.addEventListener("mouseenter", function () {
-            // check if video can be paused
-            if (entry.target.readyState > 3) {
-              entry.target.pause();
-            }
-          });
-          entry.target.addEventListener("mouseleave", function () {
-            // check if video can be played
-            if (entry.target.readyState > 3) {
-              entry.target.play();
-            }
-          });
-          entry.target.addEventListener("touchstart", function () {
-            if (entry.target.readyState > 3) {
-              entry.target.pause();
-            }
-          });
-          entry.target.addEventListener("touchend", function () {
-            if (entry.target.readyState > 3) {
-              entry.target.play();
-            }
-          });
+          // if video is [data-test]
+          if (!entry.target.hasAttribute("[data-scroll-section-video]")) {
+            entry.target.addEventListener("mouseenter", function () {
+              // check if video can be paused
+              if (entry.target.readyState > 3) {
+                entry.target.pause();
+              }
+            });
+            entry.target.addEventListener("mouseleave", function () {
+              // check if video can be played
+              if (entry.target.readyState > 3) {
+                entry.target.play();
+              }
+            });
+            entry.target.addEventListener("touchstart", function () {
+              if (entry.target.readyState > 3) {
+                entry.target.pause();
+              }
+            });
+            entry.target.addEventListener("touchend", function () {
+              if (entry.target.readyState > 3) {
+                entry.target.play();
+              }
+            });
+          }
         });
       }
     });
