@@ -75,7 +75,22 @@ import { Image } from "astro:assets";
       }
 
       if (heroVideo) {
-        heroVideo.play();
+        // on play callback for video
+        heroVideo.play().then(() => {
+          const observer = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (!entry.isIntersecting) {
+                  heroVideo.pause();
+                  observer.unobserve(heroVideo);
+                }
+              });
+            },
+            { threshold: 0.5 }
+          );
+
+          observer.observe(heroVideo);
+        });
       }
       //header.classList.add("bg-white", "text-black");
     }, 3750);
