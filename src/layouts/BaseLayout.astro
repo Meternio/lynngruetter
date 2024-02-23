@@ -74,10 +74,7 @@ const isBot =
       if (entry.isIntersecting) {
         // if video already loaded
         if (entry.target.readyState > 3) {
-          entry.target.classList.remove("loading");
-          entry.target.removeAttribute("data-autoplay");
-          entry.target.setAttribute("autoplay", "true");
-          videoObserver.unobserve(entry.target);
+          entry.target.play();
           return;
         }
 
@@ -87,12 +84,12 @@ const isBot =
         // on play callback remove the observer and the attribute
         entry.target.play().then(() => {
           entry.target.classList.remove("loading");
-          entry.target.removeAttribute("data-autoplay");
-          entry.target.setAttribute("autoplay", "true");
-          videoObserver.unobserve(entry.target);
 
           // if video is [data-test]
-          if (!entry.target.hasAttribute("data-scroll-section-video") && !entry.target.hasAttribute("data-grid-category-item-gallery-image")) {
+          if (
+            !entry.target.hasAttribute("data-scroll-section-video") &&
+            !entry.target.hasAttribute("data-grid-category-item-gallery-image")
+          ) {
             entry.target.addEventListener("mouseenter", function () {
               // check if video can be paused
               if (entry.target.readyState > 3) {
@@ -117,6 +114,10 @@ const isBot =
             });
           }
         });
+      } else {
+        if (entry.target.readyState > 3) {
+          entry.target.pause();
+        }
       }
     });
   });
@@ -152,6 +153,7 @@ const isBot =
 <style is:global>
   html {
     scroll-behavior: smooth;
+    min-width: 375px;
   }
 
   body {

@@ -49,7 +49,6 @@ if (blok._uid === content.body[content.body.length - 1]._uid) {
             loop
             playsinline
             preload="none"
-            data-autoplay
             class="scroll-section-video object-cover w-48 h-auto rounded-xl absolute bottom-0 right-0 touch-none pointer-events-auto"
           >
             Sorry, dein Browser unterstüzt keine Videos.
@@ -292,6 +291,10 @@ if (blok._uid === content.body[content.body.length - 1]._uid) {
           );
           if (entry.isIntersecting) {
             if (videoWrapper) {
+              // if the video is ready to be played, play it
+              if (videoWrapper.querySelector("video").readyState > 3 || videoWrapper.querySelector("video").readyState === 0){
+                videoWrapper.querySelector("video").play();
+              }
               videoWrapper.classList.add("isIntersecting");
               videoWrapper.style.position = "fixed";
               videoWrapper.style.opacity = 1;
@@ -301,6 +304,10 @@ if (blok._uid === content.body[content.body.length - 1]._uid) {
             }
           } else {
             if (videoWrapper) {
+              // if the video is ready to be played, play it
+              if (videoWrapper.querySelector("video").readyState > 3) {
+                videoWrapper.querySelector("video").pause();
+              }
               videoWrapper.classList.remove("isIntersecting");
               window.setTimeout(() => {
                 videoWrapper.style.position = "absolute";
