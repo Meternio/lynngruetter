@@ -104,14 +104,21 @@ const isBot =
 
   images.forEach((image) => {
     //check if image is already loaded
+    const isInDialog = image.closest("dialog");
+    let parent;
+    if (!isInDialog) {
+      parent = image.closest("[data-grid-category-item]");
+    }
+
+    const selector = parent ? parent : image;
     if (image.complete) {
-      image.classList.remove("loading");
+      selector.classList.remove("loading");
       return;
     }
 
-    image.classList.add("loading");
-    image.addEventListener('load', () => {
-      image.classList.remove("loading");
+    selector.classList.add("loading");
+    image.addEventListener("load", () => {
+      selector.classList.remove("loading");
     });
   });
 </script>
@@ -143,6 +150,8 @@ const isBot =
   }
 
   .loading {
+    opacity: 1;
+    visibility: visible;
     filter: blur(5px);
     background-color: rgba(0, 0, 0, 0.5);
   }
