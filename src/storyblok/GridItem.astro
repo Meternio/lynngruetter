@@ -98,7 +98,6 @@ const Tag = isLink ? "a" : "div";
         >
           {filenameMedium ? (
             <>
-              <source src={thumbnailUrl} media="(min-width: 800px)" />
               <source src={filenameMedium} media="(min-width: 500px)" />
               {filenameSmall ? (
                 <source src={filenameSmall} />
@@ -138,7 +137,7 @@ const Tag = isLink ? "a" : "div";
             <div class="carousel-slide" data-carousel-slide>
               <GridGallery
                 blok={{
-                  image: { filename: thumbnailUrl },
+                  image: { filename: thumbnailUrl, asset2: blok?.asset2, asset3: blok?.asset3 },
                   description: blok?.description,
                 }}
                 current={1}
