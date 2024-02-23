@@ -1,7 +1,7 @@
 ---
 import { storyblokEditable } from "@storyblok/astro";
 
-const { blok } = Astro.props;
+const { blok, isCarousel } = Astro.props;
 
 const assetUrl = blok.asset?.filename;
 let dimensions = {
@@ -12,17 +12,9 @@ let dimensions = {
 
 <div {...storyblokEditable(blok)} class="" data-image>
   <img
-    srcset={`
-            ${
-              assetUrl + "/m/1000x0/smart/filters:format(webp):quality(80)"
-            } 1000w,
-            ${
-              assetUrl + "/m/500x0/smart/filters:format(webp):quality(80)"
-            } 500w,
-            ${
-              assetUrl + "/m/375x0/smart/filters:format(webp):quality(80)"
-            } 375w`}
-    src={assetUrl + "/m/500x0/smart/filters:format(webp):quality(80)"}
+    {...{'srcset': !isCarousel ? `${assetUrl}/m/900x0/smart/filters:format(webp):quality(80) 900w,${assetUrl}/m/500x0/smart/filters:format(webp):quality(80) 500w,
+         ${assetUrl}/m/375x0/smart/filters:format(webp):quality(80) 375w` : false}}
+    src={assetUrl + "/m/200x0/smart/filters:format(webp):quality(80)"}
     alt={blok.asset?.alt || "Image"}
     loading="lazy"
     class=""
