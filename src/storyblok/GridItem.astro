@@ -138,25 +138,6 @@ const Tag = isLink ? "a" : "div";
 </div>
 
 <script>
-  const videos = document.querySelectorAll(
-    "[data-grid-category-item-thumbnail-video]"
-  );
-
-  videos.forEach((video) => {
-    video.addEventListener("mouseenter", function () {
-      video.pause();
-    });
-    video.addEventListener("mouseleave", function () {
-      video.play();
-    });
-    video.addEventListener("touchstart", function () {
-      video.pause();
-    });
-    video.addEventListener("touchend", function () {
-      video.play();
-    });
-  });
-
   const gridItems = document.querySelectorAll(
     "[data-grid-category-item-content]"
   );
