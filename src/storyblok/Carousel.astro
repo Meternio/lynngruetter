@@ -144,20 +144,8 @@ if (blok) {
     // check if the current slide is a video. If so, remove data-carousel-next and data-carousel-prev
     function checkIfCurrentSlideIsVideo(node) {
       const video = node.querySelector("video");
-      if (video) {
-        video.muted = true;
-        video.play().then(() => {
-          video.pause();
-          video.muted = false;
-        });
-      }
 
       if (video && prevButtonNode && nextButtonNode) {
-        video.muted = true;
-        video.play().then(() => {
-          video.pause();
-          video.muted = false;
-        });
         prevButtonNode.parentElement.classList.add("isVideo");
         prevButtonNode.classList.remove("w-1/2");
         nextButtonNode.classList.remove("w-1/2");

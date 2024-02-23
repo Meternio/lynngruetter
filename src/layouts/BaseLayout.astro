@@ -92,7 +92,7 @@ const isBot =
           videoObserver.unobserve(entry.target);
 
           // if video is [data-test]
-          if (!entry.target.hasAttribute("[data-scroll-section-video]")) {
+          if (!entry.target.hasAttribute("data-scroll-section-video") && !entry.target.hasAttribute("data-grid-category-item-gallery-image")) {
             entry.target.addEventListener("mouseenter", function () {
               // check if video can be paused
               if (entry.target.readyState > 3) {
