@@ -32,19 +32,21 @@
   const cookieBanner = document.querySelector("[data-cookie-banner]");
 
   if (cookieBanner) {
-    const cookieBannerAccept = document.querySelector(
-      "[data-cookie-banner-accept]"
-    );
+    window.setTimeout(() => {
+      const cookieBannerAccept = document.querySelector(
+        "[data-cookie-banner-accept]",
+      );
 
-    cookieBanner.classList.remove("opacity-0", "blur-sm");
+      cookieBanner.classList.remove("opacity-0", "blur-sm");
 
-    cookieBannerAccept.addEventListener("click", () => {
-      document.cookie = "cookiesAccepted=true; max-age=31536000; path=/";
-      document.querySelector(".cookie-banner").style.opacity = 0;
-      document.querySelector(".cookie-banner").style.filter = "blur(5px)";
-      setTimeout(() => {
-        document.querySelector(".cookie-banner").remove();
-      }, 750);
-    });
+      cookieBannerAccept.addEventListener("click", () => {
+        document.cookie = "cookiesAccepted=true; max-age=31536000; path=/";
+        document.querySelector(".cookie-banner").style.opacity = 0;
+        document.querySelector(".cookie-banner").style.filter = "blur(5px)";
+        setTimeout(() => {
+          document.querySelector(".cookie-banner").remove();
+        }, 750);
+      });
+    }, 6000);
   }
 </script>
