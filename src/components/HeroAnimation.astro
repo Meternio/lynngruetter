@@ -7,6 +7,26 @@ import { Image } from "astro:assets";
   class="hero-animation-background h-svh w-full fixed hero-animation z-10"
   data-hero-animation-background
 >
+  <div
+    data-hero-animation-background-color
+    class="hero-animation-background-color hero-animation-background-color-1 bg-violet absolute left-0 top-0 w-full h-full z-40"
+  >
+  </div>
+  <div
+    data-hero-animation-background-color
+    class="hero-animation-background-color hero-animation-background-color-2 bg-green absolute left-0 top-0 w-full h-full z-30"
+  >
+  </div>
+  <div
+    data-hero-animation-background-color
+    class="hero-animation-background-color hero-animation-background-color-3 bg-petrol absolute left-0 top-0 w-full h-full z-20"
+  >
+  </div>
+  <div
+    data-hero-animation-background-color
+    class="hero-animation-background-color hero-animation-background-color-4 bg-blue absolute left-0 top-0 w-full h-full z-10"
+  >
+  </div>
   <a
     class="absolute left-4 bottom-4 mix-blend-difference text-white"
     target="_blank"
@@ -35,7 +55,7 @@ import { Image } from "astro:assets";
 
 <script is:inline>
   const headerNavContentLynn = document.querySelector(
-    "[data-hero-animation-text-image]"
+    "[data-hero-animation-text-image]",
   );
 
   if (headerNavContentLynn.complete) {
@@ -51,25 +71,25 @@ import { Image } from "astro:assets";
 
 <script>
   const heroAnimationText = document.querySelector(
-    "[data-hero-animation-text]"
+    "[data-hero-animation-text]",
   );
   let isIntersecting = false;
   if (heroAnimationText) {
     const body = document.querySelector("[data-body]");
     const main = document.querySelector("[data-main]");
     const heroAnimationBackground = document.querySelector(
-      "[data-hero-animation-background]"
+      "[data-hero-animation-background]",
     );
     const heroVideo = document.querySelector(
-      "[data-storyblok] > [data-hero]:first-child [data-hero-video], [data-storyblok] > [data-scroll-section]:first-child [data-hero] [data-hero-video]"
+      "[data-storyblok] > [data-hero]:first-child [data-hero-video], [data-storyblok] > [data-scroll-section]:first-child [data-hero] [data-hero-video]",
     );
     const headerNavContentMenu = document.querySelector(
-      "[data-header-nav-content-menu]"
+      "[data-header-nav-content-menu]",
     );
     const header = document.querySelector("[data-header]");
     const headerNavLogo = document.querySelector("[data-header-nav-logo]");
     const headerNavLogoWhite = document.querySelector(
-      "[data-header-nav-logo-white]"
+      "[data-header-nav-logo-white]",
     );
 
     /*let bottomPosition = heroAnimationText.getBoundingClientRect();
@@ -109,7 +129,7 @@ import { Image } from "astro:assets";
                 }
               });
             },
-            { threshold: 0.5 }
+            { threshold: 0.5 },
           );
 
           observer.observe(heroVideo);
@@ -152,10 +172,33 @@ import { Image } from "astro:assets";
   }
 
   .hero-animation-background {
-    will-change: background-color;
+    /*will-change: background-color;
     animation: 3s linear colorChangeBackground forwards;
-    @apply bg-violet;
+    @apply bg-violet;*/
     transition: opacity 0.75s ease-in-out;
+  }
+
+  .hero-animation-background-color {
+    will-change: opacity;
+    transform: translateZ(0);
+  }
+
+  .hero-animation-background-color-1 {
+    opacity: 1;
+    animation: 0.4s ease-in-out 1s forwards fadeOutOpacity;
+  }
+
+  .hero-animation-background-color-2 {
+    animation: 0.4s ease-in-out 0.8s forwards fadeInOpacity, 0.4s ease-in-out 2.2s forwards fadeOutOpacity;
+  }
+
+  .hero-animation-background-color-3 {
+    animation: 0.4s ease-in-out 2s forwards fadeInOpacity, 0.4s ease-in-out 3s forwards fadeOutOpacity;
+  }
+
+  .hero-animation-background-color-4 {
+    transition: opacity 0.75s ease-in-out;
+    animation: 0.4s ease-in-out 2.8s forwards fadeInOpacity;
   }
 
   .hero-animation-text {
@@ -172,6 +215,24 @@ import { Image } from "astro:assets";
 
   .slideFromLeftToRight {
     animation: 10s linear slideFromLeftToRight infinite;
+  }
+
+  @keyframes fadeInOpacity {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOutOpacity {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
   }
 
   @keyframes slideFromLeftToRight {
