@@ -7,6 +7,10 @@ import { Image } from "astro:assets";
   class="hero-animation-background h-svh w-full fixed hero-animation z-10"
   data-hero-animation-background
 >
+  <div data-hero-animation-background-color class="hero-animation-background-color hero-animation-background-color-1 bg-violet absolute left-0 top-0 w-full h-full z-40"></div>
+  <div data-hero-animation-background-color class="hero-animation-background-color hero-animation-background-color-2 bg-green absolute left-0 top-0 w-full h-full z-30"></div>
+  <div data-hero-animation-background-color class="hero-animation-background-color hero-animation-background-color-3 bg-petrol absolute left-0 top-0 w-full h-full z-20"></div>
+  <div data-hero-animation-background-color class="hero-animation-background-color hero-animation-background-color-4 bg-blue absolute left-0 top-0 w-full h-full z-10"></div>
   <a
     class="absolute left-4 bottom-4 mix-blend-difference text-white"
     target="_blank"
@@ -152,10 +156,31 @@ import { Image } from "astro:assets";
   }
 
   .hero-animation-background {
-    will-change: background-color;
+    /*will-change: background-color;
     animation: 3s linear colorChangeBackground forwards;
-    @apply bg-violet;
+    @apply bg-violet;*/
     transition: opacity 0.75s ease-in-out;
+  }
+
+  .hero-animation-background-color {
+    transition: opacity 0.75s ease-in-out;
+  }
+
+  .hero-animation-background-color-1 {
+    opacity: 1;
+    animation: 0.4s ease-in-out 1s forwards fadeOutOpacity;
+  }
+
+  .hero-animation-background-color-2 {
+    animation: 0.4s ease-in-out 0.8s forwards fadeInOpacity, 0.4s ease-in-out 2.2s forwards fadeOutOpacity;
+  }
+
+  .hero-animation-background-color-3 {
+    animation: 0.4s ease-in-out 2s forwards fadeInOpacity, 0.4s ease-in-out 3s forwards fadeOutOpacity;
+  }
+
+  .hero-animation-background-color-4 {
+    animation: 0.4s ease-in-out 2.8s forwards fadeInOpacity;
   }
 
   .hero-animation-text {
@@ -172,6 +197,24 @@ import { Image } from "astro:assets";
 
   .slideFromLeftToRight {
     animation: 10s linear slideFromLeftToRight infinite;
+  }
+
+  @keyframes fadeInOpacity {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOutOpacity {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
   }
 
   @keyframes slideFromLeftToRight {
