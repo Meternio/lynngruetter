@@ -185,6 +185,8 @@ const isBot =
 
         if (image.dataset.srcset) {
           image.srcset = image.dataset.srcset;
+        } else {
+          image.removeAttribute("srcset");
         }
         image.addEventListener("load", () => {
           image.classList.remove("loading");
