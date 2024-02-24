@@ -27,9 +27,27 @@ import { Image } from "astro:assets";
     alt="Lynn Gruetter's signature"
     width="984"
     height="302"
-    class="hero-animation-text mx-4"
+    class="hero-animation-text mx-4 opacity-0 blur-sm"
+    data-hero-animation-text-image
+    loading="eager"
   />
 </div>
+
+<script is:inline>
+  const headerNavContentLynn = document.querySelector(
+    "[data-hero-animation-text-image]"
+  );
+
+  if (headerNavContentLynn.complete) {
+    headerNavContentLynn.classList.remove("opacity-0", "blur-sm");
+    headerNavContentLynn.classList.add("slideFromLeftToRight");
+  } else {
+    headerNavContentLynn.addEventListener("load", (e) => {
+      headerNavContentLynn.classList.remove("opacity-0", "blur-sm");
+      headerNavContentLynn.classList.add("slideFromLeftToRight");
+    });
+  }
+</script>
 
 <script>
   const heroAnimationText = document.querySelector(
@@ -57,7 +75,6 @@ import { Image } from "astro:assets";
     /*let bottomPosition = heroAnimationText.getBoundingClientRect();
     headerNavContentMenu.style.transform = `translateY(${bottomPosition.bottom}px)`;
     headerNavContentMenu.classList.remove("opacity-0");*/
-
     setTimeout(function () {
       headerNavContentMenu.style.transition = `transform 0.75s ease-in-out`;
       headerNavContentMenu.classList.add("header-nav-content-menu-animation");
@@ -85,8 +102,8 @@ import { Image } from "astro:assets";
                 if (entry.isIntersecting && !isIntersecting) {
                   heroVideo.play().then(() => {
                     isIntersecting = true;
-                  })
-                } else if(isIntersecting) {
+                  });
+                } else if (isIntersecting) {
                   heroVideo.pause();
                   observer.unobserve(heroVideo);
                 }
@@ -143,12 +160,18 @@ import { Image } from "astro:assets";
 
   .hero-animation-text {
     will-change: transform;
-    animation: 10s linear slideFromLeftToRight infinite;
+    transition:
+      opacity 0.4s ease-in-out,
+      filter 0.2s ease-in-out;
     min-width: 1408px;
   }
 
   .hero-animation-text-wrapper {
     transition: opacity 0.75s ease-in-out;
+  }
+
+  .slideFromLeftToRight {
+    animation: 10s linear slideFromLeftToRight infinite;
   }
 
   @keyframes slideFromLeftToRight {
