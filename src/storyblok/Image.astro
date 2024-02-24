@@ -12,12 +12,12 @@ let dimensions = {
 
 <div {...storyblokEditable(blok)} class="" data-image>
   <img
-    {...{'srcset': !isCarousel ? `${assetUrl}/m/900x0/smart/filters:format(webp):quality(80) 900w,${assetUrl}/m/500x0/smart/filters:format(webp):quality(80) 500w,
+    {...{'data-srcset': !isCarousel ? `${assetUrl}/m/900x0/smart/filters:format(webp):quality(80) 900w,${assetUrl}/m/500x0/smart/filters:format(webp):quality(80) 500w,
          ${assetUrl}/m/375x0/smart/filters:format(webp):quality(80) 375w` : false}}
-    src={assetUrl + "/m/200x0/smart/filters:format(webp):quality(80)"}
+    data-src={assetUrl + "/m/200x0/smart/filters:format(webp):quality(80)"}
     alt={blok.asset?.alt || "Image"}
-    loading="lazy"
-    class=""
+    data-loading="lazy"
+    class="loading"
     height={dimensions?.height}
     width={dimensions?.width}
   />
