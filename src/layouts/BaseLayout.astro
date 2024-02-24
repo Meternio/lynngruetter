@@ -63,90 +63,18 @@ const isBot =
     }
   }
 
-  // if video has attribute data-autoplay, play it if near the viewport
-  const videos = document.querySelectorAll("video[data-autoplay]");
-  const playedVideos = new Set();
-  const videoObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        // if video already loaded
-        if (
-          entry.target.readyState > 3 &&
-          entry.target.hasAttribute("data-initialized")
-        ) {
-          playedVideos.add(entry.target);
-          entry.target.play().then(() => {
-            entry.target.classList.remove("loading");
-          });
-
-          if (playedVideos.size > 2) {
-            // delete the first video in the set
-            const firstVideo = playedVideos.values().next().value;
-            playedVideos.delete(firstVideo);
-            firstVideo.pause();
-          }
-          return;
-        }
-
-        // show a loader until the video is ready to play
-        entry.target.classList.add("loading");
-        entry.target.setAttribute("data-initialized", "true");
-        playedVideos.add(entry.target);
-
-        // on play callback remove the observer and the attribute
-        entry.target.play().then(() => {
-          entry.target.classList.remove("loading");
-
-          // if video is [data-test]
-          if (
-            !entry.target.hasAttribute("data-scroll-section-video") &&
-            !entry.target.hasAttribute("data-grid-category-item-gallery-image")
-          ) {
-            entry.target.addEventListener("mouseenter", function () {
-              // check if video can be paused
-              if (
-                entry.target.readyState > 3 &&
-                entry.target.paused === false
-              ) {
-                entry.target.pause();
-                playedVideos.delete(entry.target);
-              }
-            });
-            entry.target.addEventListener("mouseleave", function () {
-              // check if video can be played
-              if (entry.target.readyState > 3 && entry.target.paused === true) {
-                playedVideos.add(entry.target);
-                entry.target.play().then(() => {
-                  if (playedVideos.size > 2) {
-                    // delete the first video in the set
-                    const firstVideo = playedVideos.values().next().value;
-                    playedVideos.delete(firstVideo);
-                    firstVideo.pause();
-                  }
-                });
-              }
-            });
-            entry.target.addEventListener("touchstart", function () {
-              if (
-                entry.target.readyState > 3 &&
-                entry.target.paused === false
-              ) {
-                entry.target.pause();
-                playedVideos.delete(entry.target);
-              }
-            });
-            entry.target.addEventListener("touchend", function () {
-              if (entry.target.readyState > 3 && entry.target.paused === true) {
-                playedVideos.add(entry.target);
-                entry.target.play().then(() => {
-                  if (playedVideos.size > 2) {
-                    // delete the first video in the set
-                    const firstVideo = playedVideos.values().next().value;
-                    playedVideos.delete(firstVideo);
-                    firstVideo.pause();
-                  }
-                });
-              }
+  window.setTimeout(() => {
+    // if video has attribute data-autoplay, play it if near the viewport
+    const videos = document.querySelectorAll("video[data-autoplay]");
+    const playedVideos = new Set();
+    const videoObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          // if video already loaded
+          if (entry.target.readyState > 3) {
+            playedVideos.add(entry.target);
+            entry.target.play().then(() => {
+              entry.target.classList.remove("loading");
             });
 
             if (playedVideos.size > 2) {
@@ -155,61 +83,93 @@ const isBot =
               playedVideos.delete(firstVideo);
               firstVideo.pause();
             }
+            return;
           }
-        });
-      } else {
-        if (entry.target.readyState > 3 && playedVideos.has(entry.target)) {
-          // delete the first video in the set
-          const firstVideo = playedVideos.values().next().value;
-          playedVideos.delete(firstVideo);
-          firstVideo.pause();
+
+          // show a loader until the video is ready to play
+          entry.target.classList.add("loading");
+          playedVideos.add(entry.target);
+
+          // on play callback remove the observer and the attribute
+          entry.target.play().then(() => {
+            entry.target.classList.remove("loading");
+
+            // if video is [data-test]
+            if (
+              !entry.target.hasAttribute("data-scroll-section-video") &&
+              !entry.target.hasAttribute(
+                "data-grid-category-item-gallery-image",
+              )
+            ) {
+              entry.target.addEventListener("mouseenter", function () {
+                // check if video can be paused
+                if (entry.target.readyState > 3) {
+                  entry.target.pause();
+                }
+              });
+              entry.target.addEventListener("mouseleave", function () {
+                // check if video can be played
+                if (entry.target.readyState > 3) {
+                  entry.target.play();
+                }
+              });
+              entry.target.addEventListener("touchstart", function () {
+                if (entry.target.readyState > 3) {
+                  entry.target.pause();
+                }
+              });
+              entry.target.addEventListener("touchend", function () {
+                if (entry.target.readyState > 3) {
+                  entry.target.play();
+                }
+              });
+
+              if (playedVideos.size > 2) {
+                // delete the first video in the set
+                const firstVideo = playedVideos.values().next().value;
+                playedVideos.delete(firstVideo);
+                firstVideo.pause();
+              }
+            }
+          });
+        } else {
+          if (entry.target.readyState > 3 && playedVideos.has(entry.target)) {
+            // delete the first video in the set
+            const firstVideo = playedVideos.values().next().value;
+            playedVideos.delete(firstVideo);
+            firstVideo.pause();
+          }
         }
-      }
-    });
-  });
-
-  videos.forEach((video) => {
-    videoObserver.observe(video);
-  });
-
-  const images = document.querySelectorAll("img[data-loading='lazy']");
-  const observer = new IntersectionObserver(
-    (entries, observer) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) {
-          return;
-        }
-
-        const image = entry.target;
-        const isInDialog = image.closest("dialog");
-        let parent;
-        if (!isInDialog) {
-          parent = image.closest("[data-grid-category-item]");
-        }
-
-        const selector = parent ? parent : image;
-        selector.classList.add("loading");
-
-        image.src = image.dataset.src;
-        if (image.dataset.srcset) {
-          image.srcset = image.dataset.srcset;
-        }
-        image.addEventListener("load", () => {
-          selector.classList.remove("loading");
-          image.classList.add("loaded");
-          image.removeAttribute("data-loading");
-          image.removeAttribute("data-src");
-          image.removeAttribute("data-srcset");
-          observer.unobserve(image);
-        });
       });
-    },
-    { rootMargin: "0px 0px 200px 0px" },
-  ); // Adjust this value to control when the image starts loading
+    });
 
-  images.forEach((image) => {
-    observer.observe(image);
-  });
+    videos.forEach((video) => {
+      videoObserver.observe(video);
+    });
+
+    // if img has attribute loding="lazy", add a loader until the image is ready to load
+    const images = document.querySelectorAll("img[loading='lazy']");
+
+    images.forEach((image) => {
+      //check if image is already loaded
+      const isInDialog = image.closest("dialog");
+      let parent;
+      if (!isInDialog) {
+        parent = image.closest("[data-grid-category-item]");
+      }
+
+      const selector = parent ? parent : image;
+      if (image.complete) {
+        selector.classList.remove("loading");
+        return;
+      }
+
+      selector.classList.add("loading");
+      image.addEventListener("load", () => {
+        selector.classList.remove("loading");
+      });
+    });
+  }, 3750);
 </script>
 
 <style is:global>
@@ -237,14 +197,6 @@ const isBot =
   a {
     z-index: 50;
     position: relative;
-  }
-
-  img[data-loading="lazy"] {
-    font-size: 0;
-  }
-
-  img.loaded[data-loading="lazy"] {
-    font-size: 16px;
   }
 
   .loading.grid-category-item {

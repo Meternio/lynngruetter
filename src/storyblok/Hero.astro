@@ -38,7 +38,7 @@ if (isVideo) {
           "/m/1920x0/smart/filters:format(webp):quality(80)"
         }
         alt={blok.asset?.alt || "Hero Image"}
-        loading="eager"
+        loading="lazy"
         class="hero-image w-full h-full top-1/2 left-1/2 absolute -translate-x-1/2 -translate-y-1/2 object-cover"
       />
     )
@@ -81,6 +81,7 @@ if (isVideo) {
         class="hero-iframe w-full h-full top-1/2 left-1/2 absolute -translate-x-1/2 -translate-y-1/2"
         allow="autoplay; fullscreen; picture-in-picture"
         title={blok.vimeo.vimeo_oembed.response.title}
+        loading="lazy"
       />
     )
   }
