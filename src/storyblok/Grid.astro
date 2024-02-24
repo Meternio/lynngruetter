@@ -9,6 +9,9 @@ const { blok } = Astro.props;
   {...storyblokEditable(blok)}
   class="grid-container py-32 container mx-auto"
   data-grid
+  {...{
+    "data-carousel-masonry": blok?.masonry ? true : false,
+  }}
 >
   <div
     class="grid-categories-titles flex flex-col lg:flex-row items-center gap-1 lg:gap-0 lg:justify-center sticky top-[52px] z-30 bg-white text-sm lg:text-md"
@@ -53,6 +56,7 @@ const { blok } = Astro.props;
             blok={category}
             index={index}
             uid={blok._uid}
+            masonry={blok.masonry}
           />
         );
       })
@@ -61,113 +65,261 @@ const { blok } = Astro.props;
 </div>
 
 <script>
-  var grid = document.querySelectorAll("[data-grid]");
+  import Masonry from "masonry-layout";
 
-  grid.forEach((grid) => {
-    // init mobile trigger data-grid-categories-titles-trigger
-    var categoryTitlesTrigger = grid.querySelector(
-      "[data-grid-categories-titles-trigger]",
-    );
+  window.setTimeout(() => {
+    var grid = document.querySelectorAll("[data-grid]");
 
-    categoryTitlesTrigger.addEventListener("click", function () {
-      categoryTitlesTrigger.parentElement.classList.toggle(
-        "grid-categories-titles-active",
+    function imagesLoaded(elements, onProgress) {
+      let imagesToLoad = elements.length;
+
+      elements.forEach((img) => {
+        if (img.complete) {
+          imagesToLoad--;
+          onProgress(img, img.complete);
+        } else {
+          img.addEventListener("load", () => imageLoaded(img, true));
+          img.addEventListener("error", () => imageLoaded(img, false)); // consider image loaded on error
+        }
+      });
+
+      function imageLoaded(img, isLoaded) {
+        imagesToLoad--;
+        onProgress(img, isLoaded);
+      }
+    }
+
+    grid.forEach((grid) => {
+      // init mobile trigger data-grid-categories-titles-trigger
+      var categoryTitlesTrigger = grid.querySelector(
+        "[data-grid-categories-titles-trigger]",
       );
-      categoryTitlesTrigger.parentElement.classList.add(
-        "grid-categories-titles-active-animation",
-      );
-      window.setTimeout(() => {
-        categoryTitlesTrigger.parentElement
-          .querySelectorAll("[data-grid-category-title]")
-          .forEach((categoryTitle) => {
-            categoryTitle.classList.toggle("invisible");
-            categoryTitle.parentElement.classList.remove(
-              "grid-categories-titles-active-animation",
-            );
-          });
-      }, 750);
-    });
+      const masonry = typeof grid.dataset.carouselMasonry === "string";
 
-    const tabLists = grid.querySelectorAll('[role="tablist"]');
-    let tabFocus = 0;
-    tabLists.forEach((tabList) => {
-      tabList.addEventListener("keydown", (e) => {
-        const tabs = tabList.querySelectorAll('[role="tab"]');
-        if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
-          tabs[tabFocus].setAttribute("tabindex", -1);
-          if (e.key === "ArrowRight") {
-            tabFocus++;
-            // If we're at the end, go to the start
-            if (tabFocus >= tabs.length) {
-              tabFocus = 0;
+      categoryTitlesTrigger.addEventListener("click", function () {
+        categoryTitlesTrigger.parentElement.classList.toggle(
+          "grid-categories-titles-active",
+        );
+        categoryTitlesTrigger.parentElement.classList.add(
+          "grid-categories-titles-active-animation",
+        );
+        window.setTimeout(() => {
+          categoryTitlesTrigger.parentElement
+            .querySelectorAll("[data-grid-category-title]")
+            .forEach((categoryTitle) => {
+              categoryTitle.classList.toggle("invisible");
+              categoryTitle.parentElement.classList.remove(
+                "grid-categories-titles-active-animation",
+              );
+            });
+        }, 750);
+      });
+
+      const tabLists = grid.querySelectorAll('[role="tablist"]');
+      let tabFocus = 0;
+      tabLists.forEach((tabList) => {
+        tabList.addEventListener("keydown", (e) => {
+          const tabs = tabList.querySelectorAll('[role="tab"]');
+          if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+            tabs[tabFocus].setAttribute("tabindex", -1);
+            if (e.key === "ArrowRight") {
+              tabFocus++;
+              // If we're at the end, go to the start
+              if (tabFocus >= tabs.length) {
+                tabFocus = 0;
+              }
+              // Move left
+            } else if (e.key === "ArrowLeft") {
+              tabFocus--;
+              // If we're at the start, move to the end
+              if (tabFocus < 0) {
+                tabFocus = tabs.length - 1;
+              }
             }
-            // Move left
-          } else if (e.key === "ArrowLeft") {
-            tabFocus--;
-            // If we're at the start, move to the end
-            if (tabFocus < 0) {
-              tabFocus = tabs.length - 1;
+
+            tabs[tabFocus].setAttribute("tabindex", 0);
+            tabs[tabFocus].focus();
+          }
+        });
+      });
+
+      var thumbnails = grid.querySelectorAll(
+        "[data-grid-category-content='0'] [data-grid-category-item-thumbnail]",
+      );
+
+      const videoThumbnails = grid.querySelectorAll(
+        "[data-grid-category-content='0'] [data-grid-category-item-thumbnail-video]",
+      );
+
+      const gridContent = grid.querySelector(
+        "[data-grid-category-content='0']",
+      );
+      let msnry = [];
+      if (masonry) {
+        msnry.push(
+          new Masonry(gridContent, {
+            itemSelector:
+              "[data-grid-category-content='0'] [data-grid-category-item]",
+            columnWidth:
+              "[data-grid-category-content='0'] [data-grid-category-item-sizer]",
+            gutter: 16,
+            percentPosition: true,
+          }),
+        );
+      }
+
+      window.setTimeout(() => {
+        videoThumbnails.forEach((videoThumbnail) => {
+          videoThumbnail
+            .closest("[data-grid-category-item]")
+            .classList.remove("opacity-0", "translate-y-3");
+          if (masonry) {
+            msnry[0].layout();
+          }
+          window.setTimeout(() => {
+            videoThumbnail
+              .closest("[data-grid-category-item]")
+              .classList.remove("custom-transition");
+          }, 750);
+        });
+      }, 1);
+
+      imagesLoaded(thumbnails, function (img, isLoaded) {
+        if (img) {
+          img
+            .closest("[data-grid-category-item]")
+            .classList.remove("opacity-0", "translate-y-3");
+          if (masonry) {
+            msnry[0].layout();
+          }
+          window.setTimeout(() => {
+            img
+              .closest("[data-grid-category-item]")
+              .classList.remove("custom-transition");
+          }, 750);
+        }
+      });
+
+      // add on click event to category title to show the content
+      var categoryTitles = grid.querySelectorAll("[data-grid-category-title]");
+      categoryTitles.forEach((categoryTitle, index) => {
+        categoryTitle.addEventListener("click", function () {
+          // set text of mobile trigger
+          categoryTitlesTrigger.textContent = categoryTitle.textContent;
+          categoryTitlesTrigger.parentElement.classList.remove(
+            "grid-categories-titles-active",
+          );
+
+          // scroll to the top of the grid
+          const gridTop = grid.getBoundingClientRect().top + window.scrollY;
+          const offset = 76;
+          const offsetPosition = gridTop - offset;
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth",
+          });
+
+          // hide all category contents
+          var categoryContents = grid.querySelectorAll(
+            "[data-grid-category-content]",
+          );
+          var categoryTitles = grid.querySelectorAll(
+            "[data-grid-category-title]",
+          );
+          categoryContents.forEach((categoryContent) => {
+            categoryContent.classList.add("opacity-0", "!h-0");
+            categoryContent.setAttribute("hidden", "");
+            categoryContent
+              .querySelectorAll("[data-grid-category-item]")
+              .forEach((item) => {
+                item.classList.add(
+                  "opacity-0",
+                  "translate-y-3",
+                  "custom-transition",
+                );
+              });
+          });
+          categoryTitles.forEach((categoryTitle) => {
+            categoryTitle.setAttribute("aria-selected", "false");
+            categoryTitle.setAttribute("tabindex", "-1");
+          });
+
+          // show the selected category content
+          categoryContents[index].classList.remove("opacity-0", "!h-0");
+          categoryContents[index].removeAttribute("hidden");
+          categoryTitle.setAttribute("aria-selected", "true");
+          categoryTitle.setAttribute("tabindex", "0");
+
+          // init masonry
+          if (masonry) {
+            if (msnry[index]) {
+              msnry[index].layout();
+
+              categoryContents[index]
+                .querySelectorAll("[data-grid-category-item]")
+                .forEach((item) => {
+                  item.classList.remove("opacity-0", "translate-y-3");
+                });
+            } else {
+              msnry.push(
+                new Masonry(categoryContents[index], {
+                  itemSelector: `[data-grid-category-content="${index}"] [data-grid-category-item]`,
+                  columnWidth: `[data-grid-category-content="${index}"] [data-grid-category-item-sizer]`,
+                  gutter: 16,
+                  percentPosition: true,
+                }),
+              );
             }
           }
 
-          tabs[tabFocus].setAttribute("tabindex", 0);
-          tabs[tabFocus].focus();
-        }
+          var thumbnails = grid.querySelectorAll(
+            `[data-grid-category-content="${index}"] [data-grid-category-item-thumbnail]`,
+          );
+
+          const videoThumbnails = grid.querySelectorAll(
+            `[data-grid-category-content="${index}"] [data-grid-category-item-thumbnail-video]`,
+          );
+
+          window.setTimeout(() => {
+            videoThumbnails.forEach((videoThumbnail) => {
+              videoThumbnail
+                .closest("[data-grid-category-item]")
+                .classList.remove("opacity-0", "translate-y-3");
+              if (masonry) msnry[index].layout();
+              window.setTimeout(() => {
+                videoThumbnail
+                  .closest("[data-grid-category-item]")
+                  .classList.remove("custom-transition");
+              }, 750);
+            });
+          }, 1);
+
+          imagesLoaded(thumbnails, function (image, isLoaded) {
+            if (image) {
+              image
+                .closest("[data-grid-category-item]")
+                .classList.remove("opacity-0", "translate-y-3");
+              if (masonry) msnry[index].layout();
+              window.setTimeout(() => {
+                image
+                  .closest("[data-grid-category-item]")
+                  .classList.remove("custom-transition");
+              }, 750);
+            }
+          });
+
+          // remove active class from all category titles
+          var categoryTitles = grid.querySelectorAll(
+            "[data-grid-category-title]",
+          );
+          categoryTitles.forEach((categoryTitle) => {
+            categoryTitle.classList.remove("grid-category-title-active");
+          });
+          categoryTitles[index].classList.add("grid-category-title-active");
+        });
       });
     });
-
-    // add on click event to category title to show the content
-    var categoryTitles = grid.querySelectorAll("[data-grid-category-title]");
-    categoryTitles.forEach((categoryTitle, index) => {
-      categoryTitle.addEventListener("click", function () {
-        // set text of mobile trigger
-        categoryTitlesTrigger.textContent = categoryTitle.textContent;
-        categoryTitlesTrigger.parentElement.classList.remove(
-          "grid-categories-titles-active",
-        );
-
-        // scroll to the top of the grid
-        const gridTop = grid.getBoundingClientRect().top + window.scrollY;
-        const offset = 76;
-        const offsetPosition = gridTop - offset;
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: "smooth",
-        });
-
-        // hide all category contents
-        var categoryContents = grid.querySelectorAll(
-          "[data-grid-category-content]",
-        );
-        var categoryTitles = grid.querySelectorAll(
-          "[data-grid-category-title]",
-        );
-        categoryContents.forEach((categoryContent) => {
-          categoryContent.classList.add("opacity-0", "!h-0");
-          categoryContent.setAttribute("hidden", "");
-        });
-        categoryTitles.forEach((categoryTitle) => {
-          categoryTitle.setAttribute("aria-selected", "false");
-          categoryTitle.setAttribute("tabindex", "-1");
-        });
-
-        // show the selected category content
-        categoryContents[index].classList.remove("opacity-0", "!h-0");
-        categoryContents[index].removeAttribute("hidden");
-        categoryTitle.setAttribute("aria-selected", "true");
-        categoryTitle.setAttribute("tabindex", "0");
-
-        // remove active class from all category titles
-        var categoryTitles = grid.querySelectorAll(
-          "[data-grid-category-title]",
-        );
-        categoryTitles.forEach((categoryTitle) => {
-          categoryTitle.classList.remove("grid-category-title-active");
-        });
-        categoryTitles[index].classList.add("grid-category-title-active");
-      });
-    });
-  });
+  }, 3750);
 </script>
 
 <style>

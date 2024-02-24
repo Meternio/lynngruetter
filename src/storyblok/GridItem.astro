@@ -5,7 +5,7 @@ import Dialog from "../components/Dialog.astro";
 import Carousel from "./Carousel.astro";
 import GridGallery from "./GridGallery.astro";
 
-const { blok } = Astro.props;
+const { blok, masonry } = Astro.props;
 
 const thumbnailUrl = blok.thumbnail?.filename;
 
@@ -39,7 +39,7 @@ const Tag = isLink ? "a" : "div";
 
 <div
   {...storyblokEditable(blok)}
-  class={`grid-category-item custom-transition loading ${
+  class={`grid-category-item custom-transition ${masonry && "mb-4"} opacity-0 translate-y-3 ${
     blok.doubleWidth
       ? "w-full lg:w-[calc(50%-8px)]"
       : "w-[calc(50%-4px)] lg:w-[calc(25%-12px)]"
@@ -57,7 +57,7 @@ const Tag = isLink ? "a" : "div";
     {
       !isVideo ? (
         <img
-          data-srcset={`
+          srcset={`
             ${
               thumbnailUrl + "/m/950x0/smart/filters:format(webp):quality(80)"
             } 1600w,
@@ -76,9 +76,9 @@ const Tag = isLink ? "a" : "div";
             ${
               thumbnailUrl + "/m/425x0/smart/filters:format(webp):quality(80)"
             } 425w`}
-          data-src={thumbnailUrl + "/m/600x0/smart/filters:format(webp):quality(80)"}
+          src={thumbnailUrl + "/m/600x0/smart/filters:format(webp):quality(80)"}
           alt={blok.thumbnail?.alt || "Grid Item"}
-          data-loading="lazy"
+          loading="lazy"
           class="grid-category-item-thumbnail min-h-56 w-full object-cover"
           height={dimensions?.height}
           width={dimensions?.width}
