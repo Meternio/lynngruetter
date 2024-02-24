@@ -39,7 +39,7 @@ const Tag = isLink ? "a" : "div";
 
 <div
   {...storyblokEditable(blok)}
-  class={`grid-category-item custom-transition loading ${
+  class={`grid-category-item custom-transition ${
     blok.doubleWidth
       ? "w-full lg:w-[calc(50%-8px)]"
       : "w-[calc(50%-4px)] lg:w-[calc(25%-12px)]"
@@ -76,17 +76,18 @@ const Tag = isLink ? "a" : "div";
             ${
               thumbnailUrl + "/m/425x0/smart/filters:format(webp):quality(80)"
             } 425w`}
-          data-src={thumbnailUrl + "/m/600x0/smart/filters:format(webp):quality(80)"}
+          src={thumbnailUrl + "/m/600x0/smart/filters:format(webp):quality(80)"}
+          srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
           alt={blok.thumbnail?.alt || "Grid Item"}
           data-loading="lazy"
-          class="grid-category-item-thumbnail min-h-56 w-full object-cover"
+          class="grid-category-item-thumbnail loading min-h-56 w-full object-cover"
           height={dimensions?.height}
           width={dimensions?.width}
           data-grid-category-item-thumbnail
         />
       ) : (
         <video
-          class="grid-category-item-thumbnail min-h-56 w-full object-cover"
+          class="grid-category-item-thumbnail loading min-h-56 w-full object-cover"
           height={dimensions?.height}
           width={dimensions?.width}
           data-grid-category-item-thumbnail-video

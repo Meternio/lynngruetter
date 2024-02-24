@@ -181,21 +181,13 @@ const isBot =
         }
 
         const image = entry.target;
-        const isInDialog = image.closest("dialog");
-        let parent;
-        if (!isInDialog) {
-          parent = image.closest("[data-grid-category-item]");
-        }
+        image.classList.add("loading");
 
-        const selector = parent ? parent : image;
-        selector.classList.add("loading");
-
-        image.src = image.dataset.src;
         if (image.dataset.srcset) {
           image.srcset = image.dataset.srcset;
         }
         image.addEventListener("load", () => {
-          selector.classList.remove("loading");
+          image.classList.remove("loading");
           image.classList.add("loaded");
           image.removeAttribute("data-loading");
           image.removeAttribute("data-src");
@@ -239,25 +231,7 @@ const isBot =
     position: relative;
   }
 
-  img[data-loading="lazy"] {
-    font-size: 0;
-  }
-
-  img.loaded[data-loading="lazy"] {
-    font-size: 16px;
-  }
-
-  .loading.grid-category-item {
-    opacity: 1;
-    visibility: visible;
-  }
-
-  .loading.grid-category-item img {
-    filter: blur(5px);
-    background-color: rgba(0, 0, 0, 0.5);
-  }
-
-  .loading:not(.grid-category-item) {
+  .loading {
     filter: blur(5px);
     background-color: rgba(0, 0, 0, 0.5);
   }

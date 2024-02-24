@@ -14,7 +14,8 @@ let dimensions = {
   <img
     {...{'data-srcset': !isCarousel ? `${assetUrl}/m/900x0/smart/filters:format(webp):quality(80) 900w,${assetUrl}/m/500x0/smart/filters:format(webp):quality(80) 500w,
          ${assetUrl}/m/375x0/smart/filters:format(webp):quality(80) 375w` : false}}
-    data-src={assetUrl + "/m/200x0/smart/filters:format(webp):quality(80)"}
+    src={assetUrl + "/m/200x0/smart/filters:format(webp):quality(80)"}
+    srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
     alt={blok.asset?.alt || "Image"}
     data-loading="lazy"
     class="loading"

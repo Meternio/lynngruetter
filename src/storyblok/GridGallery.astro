@@ -62,10 +62,11 @@ const isPropEmpty = (prop) => {
                   blok.image?.filename +
                   "/m/576x0/smart/filters:format(webp):quality(80)"
                 } 576w`}
-          data-src={
+          src={
             blok.image?.filename +
             "/m/1920x0/smart/filters:format(webp):quality(80)"
           }
+          srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
           height={dimensions?.height}
           width={dimensions?.width}
           alt={blok.image?.alt || "Grid Item Gallery"}
