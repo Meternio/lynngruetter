@@ -22,6 +22,7 @@ import { Image } from "astro:assets";
 >
   <h1 class="visually-hidden">Lynn Grütter</h1>
   <Image
+    fetchpriority="high"
     src={lynnWhite}
     alt="Lynn Gruetter's signature"
     width="984"
@@ -140,6 +141,7 @@ import { Image } from "astro:assets";
   }
 
   .hero-animation-text {
+    will-change: transform;
     animation: 10s linear slideFromLeftToRight infinite;
     min-width: 1408px;
   }
