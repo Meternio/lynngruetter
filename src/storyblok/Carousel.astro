@@ -167,6 +167,23 @@ if (blok) {
       return;
     }
 
+    emblaInstances[emblaNodeIndex].on("settle", () => {
+      // except for the current slide, pause all videos
+      node
+        .querySelectorAll("video")
+        .forEach((video) => {
+          const instanceIndex = node
+            .querySelector("[data-carousel-instance-index]")
+            .getAttribute("data-carousel-instance-index");
+          const test = node.querySelectorAll("[data-carousel-slide]")[
+              emblaInstances[instanceIndex].selectedScrollSnap()
+            ];
+          if (video.closest('[data-carousel-slide]') !== test) {
+            video.pause();
+          }
+        });
+    });
+
     if (
       typeof node.getAttribute("data-auto-scroll") !== "string" &&
       typeof node.getAttribute("data-auto-play") !== "string"

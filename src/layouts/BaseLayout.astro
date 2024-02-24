@@ -66,6 +66,8 @@ const isBot =
   // if video has attribute data-autoplay, play it if near the viewport
   const videos = document.querySelectorAll("video[data-autoplay]");
   const playedVideos = new Set();
+  let videosToPlay = new Set();
+  let isDialogOpen = false;
   const videoObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
@@ -74,17 +76,18 @@ const isBot =
           entry.target.readyState > 3 &&
           entry.target.hasAttribute("data-initialized")
         ) {
-          playedVideos.add(entry.target);
           entry.target.play().then(() => {
+            playedVideos.add(entry.target);
             entry.target.classList.remove("loading");
+
+            if (playedVideos.size > 2) {
+              // delete the first video in the set
+              const firstVideo = playedVideos.values().next().value;
+              playedVideos.delete(firstVideo);
+              firstVideo.pause();
+            }
           });
 
-          if (playedVideos.size > 2) {
-            // delete the first video in the set
-            const firstVideo = playedVideos.values().next().value;
-            playedVideos.delete(firstVideo);
-            firstVideo.pause();
-          }
           return;
         }
 
@@ -92,10 +95,10 @@ const isBot =
         entry.target.classList.add("loading");
         const loadVideo = setTimeout(() => {
           entry.target.setAttribute("data-initialized", "true");
-          playedVideos.add(entry.target);
 
           // on play callback remove the observer and the attribute
           entry.target.play().then(() => {
+            playedVideos.add(entry.target);
             entry.target.classList.remove("loading");
 
             // if video is [data-test]
@@ -112,24 +115,16 @@ const isBot =
                   entry.target.paused === false
                 ) {
                   entry.target.pause();
-                  playedVideos.delete(entry.target);
                 }
               });
               entry.target.addEventListener("mouseleave", function () {
                 // check if video can be played
                 if (
                   entry.target.readyState > 3 &&
-                  entry.target.paused === true
+                  entry.target.paused === true &&
+                  !isDialogOpen
                 ) {
-                  playedVideos.add(entry.target);
-                  entry.target.play().then(() => {
-                    if (playedVideos.size > 2) {
-                      // delete the first video in the set
-                      const firstVideo = playedVideos.values().next().value;
-                      playedVideos.delete(firstVideo);
-                      firstVideo.pause();
-                    }
-                  });
+                  entry.target.play();
                 }
               });
               entry.target.addEventListener("touchstart", function () {
@@ -138,23 +133,15 @@ const isBot =
                   entry.target.paused === false
                 ) {
                   entry.target.pause();
-                  playedVideos.delete(entry.target);
                 }
               });
               entry.target.addEventListener("touchend", function () {
                 if (
                   entry.target.readyState > 3 &&
-                  entry.target.paused === true
+                  entry.target.paused === true &&
+                  !isDialogOpen
                 ) {
-                  playedVideos.add(entry.target);
-                  entry.target.play().then(() => {
-                    if (playedVideos.size > 2) {
-                      // delete the first video in the set
-                      const firstVideo = playedVideos.values().next().value;
-                      playedVideos.delete(firstVideo);
-                      firstVideo.pause();
-                    }
-                  });
+                  entry.target.play();
                 }
               });
 
@@ -219,6 +206,54 @@ const isBot =
 
   images.forEach((image) => {
     observer.observe(image);
+  });
+
+  const gridItems = document.querySelectorAll(
+    "[data-grid-category-item-content]",
+  );
+
+  gridItems.forEach((item) => {
+    item.addEventListener("click", function (e) {
+      e.preventDefault();
+      const dialog = item.nextElementSibling;
+      if (dialog && dialog.matches("[data-grid-gallery-dialog]")) {
+        isDialogOpen = true;
+        // pause all videos
+        playedVideos.forEach((video) => {
+          video.pause();
+        });
+
+        videosToPlay = new Set(playedVideos);
+        playedVideos.clear();
+      }
+    });
+  });
+
+  const dialogCloseButtons = document.querySelectorAll(
+    "[data-dialog-close]",
+  );
+
+  dialogCloseButtons.forEach((button) => {
+    button.addEventListener("click", function () {
+      playedVideos.forEach((video) => {
+        video.pause();
+      });
+
+      playedVideos.clear();
+
+      videosToPlay.forEach((video) => {
+        video.play().then(() => {
+          playedVideos.add(video);
+          if (playedVideos.size > 2) {
+            // delete the first video in the set
+            const firstVideo = playedVideos.values().next().value;
+            playedVideos.delete(firstVideo);
+            firstVideo.pause();
+          }
+          isDialogOpen = false;
+        });
+      });
+    });
   });
 </script>
 
