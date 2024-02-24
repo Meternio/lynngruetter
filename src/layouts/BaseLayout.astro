@@ -90,74 +90,86 @@ const isBot =
 
         // show a loader until the video is ready to play
         entry.target.classList.add("loading");
-        entry.target.setAttribute("data-initialized", "true");
-        playedVideos.add(entry.target);
+        const loadVideo = setTimeout(() => {
+          entry.target.setAttribute("data-initialized", "true");
+          playedVideos.add(entry.target);
 
-        // on play callback remove the observer and the attribute
-        entry.target.play().then(() => {
-          entry.target.classList.remove("loading");
+          // on play callback remove the observer and the attribute
+          entry.target.play().then(() => {
+            entry.target.classList.remove("loading");
 
-          // if video is [data-test]
-          if (
-            !entry.target.hasAttribute("data-scroll-section-video") &&
-            !entry.target.hasAttribute("data-grid-category-item-gallery-image")
-          ) {
-            entry.target.addEventListener("mouseenter", function () {
-              // check if video can be paused
-              if (
-                entry.target.readyState > 3 &&
-                entry.target.paused === false
-              ) {
-                entry.target.pause();
-                playedVideos.delete(entry.target);
-              }
-            });
-            entry.target.addEventListener("mouseleave", function () {
-              // check if video can be played
-              if (entry.target.readyState > 3 && entry.target.paused === true) {
-                playedVideos.add(entry.target);
-                entry.target.play().then(() => {
-                  if (playedVideos.size > 2) {
-                    // delete the first video in the set
-                    const firstVideo = playedVideos.values().next().value;
-                    playedVideos.delete(firstVideo);
-                    firstVideo.pause();
-                  }
-                });
-              }
-            });
-            entry.target.addEventListener("touchstart", function () {
-              if (
-                entry.target.readyState > 3 &&
-                entry.target.paused === false
-              ) {
-                entry.target.pause();
-                playedVideos.delete(entry.target);
-              }
-            });
-            entry.target.addEventListener("touchend", function () {
-              if (entry.target.readyState > 3 && entry.target.paused === true) {
-                playedVideos.add(entry.target);
-                entry.target.play().then(() => {
-                  if (playedVideos.size > 2) {
-                    // delete the first video in the set
-                    const firstVideo = playedVideos.values().next().value;
-                    playedVideos.delete(firstVideo);
-                    firstVideo.pause();
-                  }
-                });
-              }
-            });
+            // if video is [data-test]
+            if (
+              !entry.target.hasAttribute("data-scroll-section-video") &&
+              !entry.target.hasAttribute(
+                "data-grid-category-item-gallery-image",
+              )
+            ) {
+              entry.target.addEventListener("mouseenter", function () {
+                // check if video can be paused
+                if (
+                  entry.target.readyState > 3 &&
+                  entry.target.paused === false
+                ) {
+                  entry.target.pause();
+                  playedVideos.delete(entry.target);
+                }
+              });
+              entry.target.addEventListener("mouseleave", function () {
+                // check if video can be played
+                if (
+                  entry.target.readyState > 3 &&
+                  entry.target.paused === true
+                ) {
+                  playedVideos.add(entry.target);
+                  entry.target.play().then(() => {
+                    if (playedVideos.size > 2) {
+                      // delete the first video in the set
+                      const firstVideo = playedVideos.values().next().value;
+                      playedVideos.delete(firstVideo);
+                      firstVideo.pause();
+                    }
+                  });
+                }
+              });
+              entry.target.addEventListener("touchstart", function () {
+                if (
+                  entry.target.readyState > 3 &&
+                  entry.target.paused === false
+                ) {
+                  entry.target.pause();
+                  playedVideos.delete(entry.target);
+                }
+              });
+              entry.target.addEventListener("touchend", function () {
+                if (
+                  entry.target.readyState > 3 &&
+                  entry.target.paused === true
+                ) {
+                  playedVideos.add(entry.target);
+                  entry.target.play().then(() => {
+                    if (playedVideos.size > 2) {
+                      // delete the first video in the set
+                      const firstVideo = playedVideos.values().next().value;
+                      playedVideos.delete(firstVideo);
+                      firstVideo.pause();
+                    }
+                  });
+                }
+              });
 
-            if (playedVideos.size > 2) {
-              // delete the first video in the set
-              const firstVideo = playedVideos.values().next().value;
-              playedVideos.delete(firstVideo);
-              firstVideo.pause();
+              if (playedVideos.size > 2) {
+                // delete the first video in the set
+                const firstVideo = playedVideos.values().next().value;
+                playedVideos.delete(firstVideo);
+                firstVideo.pause();
+              }
             }
-          }
-        });
+          });
+        }, 200);
+        entry.target.dataset.loadVideo = loadVideo;
       } else {
+        clearTimeout(entry.target.dataset.loadVideo);
         if (entry.target.readyState > 3 && playedVideos.has(entry.target)) {
           // delete the first video in the set
           const firstVideo = playedVideos.values().next().value;
@@ -177,25 +189,29 @@ const isBot =
     (entries, observer) => {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) {
+          clearTimeout(entry.target.dataset.loadImage);
           return;
         }
 
         const image = entry.target;
         image.classList.add("loading");
 
-        if (image.dataset.srcset) {
-          image.srcset = image.dataset.srcset;
-        } else {
-          image.removeAttribute("srcset");
-        }
-        image.addEventListener("load", () => {
-          image.classList.remove("loading");
-          image.classList.add("loaded");
-          image.removeAttribute("data-loading");
-          image.removeAttribute("data-src");
-          image.removeAttribute("data-srcset");
-          observer.unobserve(image);
-        });
+        const loadImage = setTimeout(() => {
+          if (image.dataset.srcset) {
+            image.srcset = image.dataset.srcset;
+          } else {
+            image.removeAttribute("srcset");
+          }
+          image.addEventListener("load", () => {
+            image.classList.remove("loading");
+            image.classList.add("loaded");
+            image.removeAttribute("data-loading");
+            image.removeAttribute("data-src");
+            image.removeAttribute("data-srcset");
+            observer.unobserve(image);
+          });
+        }, 200);
+        image.dataset.loadImage = loadImage;
       });
     },
     { rootMargin: "0px 0px 200px 0px" },
