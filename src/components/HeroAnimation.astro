@@ -27,7 +27,7 @@ import { Image } from "astro:assets";
     alt="Lynn Gruetter's signature"
     width="984"
     height="302"
-    class="hero-animation-text mx-4 opacity-0 blur-sm"
+    class="hero-animation-text mx-4 opacity-0"
     data-hero-animation-text-image
     loading="eager"
   />
@@ -39,11 +39,11 @@ import { Image } from "astro:assets";
   );
 
   if (headerNavContentLynn.complete) {
-    headerNavContentLynn.classList.remove("opacity-0", "blur-sm");
+    headerNavContentLynn.classList.remove("opacity-0");
     headerNavContentLynn.classList.add("slideFromLeftToRight");
   } else {
     headerNavContentLynn.addEventListener("load", (e) => {
-      headerNavContentLynn.classList.remove("opacity-0", "blur-sm");
+      headerNavContentLynn.classList.remove("opacity-0");
       headerNavContentLynn.classList.add("slideFromLeftToRight");
     });
   }
