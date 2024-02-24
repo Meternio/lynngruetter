@@ -147,6 +147,10 @@ const { blok } = Astro.props;
         categoryContents.forEach((categoryContent) => {
           categoryContent.classList.add("opacity-0", "!h-0");
           categoryContent.setAttribute("hidden", "");
+
+          categoryContent.querySelectorAll("video").forEach((video) => {
+            video.pause();
+          });
         });
         categoryTitles.forEach((categoryTitle) => {
           categoryTitle.setAttribute("aria-selected", "false");
