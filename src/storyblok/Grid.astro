@@ -149,7 +149,9 @@ const { blok } = Astro.props;
           categoryContent.setAttribute("hidden", "");
 
           categoryContent.querySelectorAll("video").forEach((video) => {
-            video.pause();
+            if(!video.paused){
+              video.pause();
+            }
           });
         });
         categoryTitles.forEach((categoryTitle) => {
