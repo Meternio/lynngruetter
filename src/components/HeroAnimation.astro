@@ -106,13 +106,6 @@ import { Image } from "astro:assets";
       main.classList.remove("opacity-0", "bg-gray");
       header.classList.remove("pointer-events-none");
 
-      if (window.innerWidth >= 1024) {
-        header.classList.remove("mix-blend-difference", "text-white");
-        header.classList.add("text-black");
-        headerNavLogo.classList.remove("opacity-0");
-        headerNavLogoWhite.classList.add("opacity-0");
-      }
-
       if (heroVideo) {
         // on play callback for video
         heroVideo.play().then(() => {

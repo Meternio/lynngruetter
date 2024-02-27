@@ -90,13 +90,10 @@ const content = data.story.content;
     let adjustTransformTimeout = null;
 
     function scrollTo(offset, callback) {
-      const fixedOffset = offset.toFixed();
+      const fixedOffset = parseInt(offset, 10);
       const onScroll = function () {
-        const threshold = 80;
-        if (
-          Math.abs(window.scrollY - fixedOffset) <= threshold ||
-          Math.abs(window.scrollY) <= threshold
-        ) {
+        const threshold = 90;
+        if (Math.abs(window.scrollY - fixedOffset) <= threshold) {
           window.removeEventListener("scroll", onScroll);
           callback();
         }
@@ -147,7 +144,7 @@ const content = data.story.content;
 
     headerNav.forEach((el, index) => {
       el.addEventListener("click", (e) => {
-        if(e.currentTarget.getAttribute("data-redirect")) return;
+        if (e.currentTarget.getAttribute("data-redirect")) return;
 
         e.preventDefault();
 
@@ -161,14 +158,34 @@ const content = data.story.content;
         const offsetTop = headerHeight;
 
         // Add a class to the header to make it always visible
-        header.classList.remove('-translate-y-full');
+        header.classList.remove("-translate-y-full", "absolute");
+        header.classList.add("fixed");
 
         body.classList.add("opacity-0", "blur-sm");
 
         window.setTimeout(() => {
+          window.removeEventListener("scroll", throttleScroll);
           scrollTo(targetScrollPosition - offsetTop, () => {
             body.classList.remove("blur-sm", "opacity-0");
-            header.classList.remove('-translate-y-full');
+            header.classList.remove("-translate-y-full", "absolute");
+            header.classList.add("fixed");
+
+            // if current Scroll is less than header height, add mix-blend-difference
+            if (window.scrollY <= headerHeight) {
+              header.classList.add("mix-blend-difference", "text-white");
+              header.classList.remove("text-black", "bg-white");
+              headerNavLogo.classList.add("opacity-0");
+              headerNavLogoWhite.classList.remove("opacity-0");
+            } else {
+              header.classList.remove("mix-blend-difference", "text-white");
+              header.classList.add("text-black", "bg-white");
+              headerNavLogo.classList.remove("opacity-0");
+              headerNavLogoWhite.classList.add("opacity-0");
+            }
+
+            window.setTimeout(() => {
+              window.addEventListener("scroll", throttleScroll);
+            }, 500);
           });
         }, 500);
       });
@@ -192,22 +209,17 @@ const content = data.story.content;
         headerNavLogo.classList.remove("opacity-0");
         headerNavLogoWhite.classList.add("opacity-0");
       } else if (
-        currentScroll <= headerHeight &&
-        header.classList.contains("bg-white")
+        currentScroll === 0
       ) {
         header.classList.remove("bg-white");
 
         window.setTimeout(() => {
-          if (window.innerWidth < 1024) {
-            header.classList.add("mix-blend-difference", "text-white");
-            header.classList.remove("text-black");
-          }
+          header.classList.add("mix-blend-difference", "text-white");
+          header.classList.remove("text-black");
         }, 600);
 
-        if (window.innerWidth < 1024) {
-          headerNavLogo.classList.add("opacity-0");
-          headerNavLogoWhite.classList.remove("opacity-0");
-        }
+        headerNavLogo.classList.add("opacity-0");
+        headerNavLogoWhite.classList.remove("opacity-0");
       }
 
       if (currentScroll > lastScrollTop && currentScroll > headerHeight) {
@@ -256,7 +268,7 @@ const content = data.story.content;
       }
 
       lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
-    }, 400);
+    }, 0);
 
     window.setTimeout(() => {
       // throttle scroll event
