@@ -133,7 +133,7 @@ const Tag = isLink ? "a" : "div";
           </h2>
           <Carousel
             classes="h-[calc(100%-88px)] sm:h-[calc(100%-60px)]"
-            noPagination={blok.gallery.length <= 1 ? true : false}
+            noPagination={blok.gallery.length === 0 ? true : false}
           >
             <div class="carousel-slide" data-carousel-slide>
               <GridGallery

@@ -161,7 +161,7 @@ if (blok) {
       }
     }
 
-    checkIfCurrentSlideIsVideo(node);
+    checkIfCurrentSlideIsVideo(node.querySelectorAll("[data-carousel-slide]")[0]);
 
     if (!prevButtonNode && !nextButtonNode) {
       return;
@@ -172,13 +172,14 @@ if (blok) {
       node
         .querySelectorAll("video")
         .forEach((video) => {
-          const instanceIndex = node
-            .querySelector("[data-carousel-instance-index]")
+          const parent = node
+            .querySelector("[data-carousel-instance-index]") || node;
+          const instanceIndex = parent
             .getAttribute("data-carousel-instance-index");
-          const test = node.querySelectorAll("[data-carousel-slide]")[
+          const currentSlide = node.querySelectorAll("[data-carousel-slide]")[
               emblaInstances[instanceIndex].selectedScrollSnap()
             ];
-          if (video.closest('[data-carousel-slide]') !== test) {
+          if (video.closest('[data-carousel-slide]') !== currentSlide) {
             video.pause();
           }
         });
