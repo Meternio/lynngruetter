@@ -9,9 +9,6 @@ const { blok } = Astro.props;
   {...storyblokEditable(blok)}
   class="grid-container py-32 container mx-auto"
   data-grid
-  {...{
-    "data-carousel-masonry": blok?.masonry ? true : false,
-  }}
 >
   <div
     class="grid-categories-titles flex flex-col lg:flex-row items-center gap-1 lg:gap-0 lg:justify-center sticky top-[52px] z-30 bg-white text-sm lg:text-md"
@@ -22,6 +19,7 @@ const { blok } = Astro.props;
     <button
       class="grid-category-title grid-category-title-trigger lg:p-4 uppercase text-black cursor-pointer lg:hidden min-h-10"
       role="tab"
+      aria-label={"show Tab "+ blok?.categories[0]?.title}
       data-grid-categories-titles-trigger
     >
       {blok?.categories[0]?.title}
@@ -36,6 +34,7 @@ const { blok } = Astro.props;
             role="tab"
             aria-controls={`panel-${blok._uid}-${index}`}
             aria-selected={index === 0 ? "true" : "false"}
+            aria-label={"show Tab "+ category.title}
             tabindex={index === 0 ? "0" : "-1"}
             data-grid-category-title={index}
           >
@@ -56,7 +55,6 @@ const { blok } = Astro.props;
             blok={category}
             index={index}
             uid={blok._uid}
-            masonry={blok.masonry}
           />
         );
       })
@@ -65,35 +63,13 @@ const { blok } = Astro.props;
 </div>
 
 <script>
-  import Masonry from "masonry-layout";
-
   var grid = document.querySelectorAll("[data-grid]");
-
-  function imagesLoaded(elements, onProgress) {
-    let imagesToLoad = elements.length;
-
-    elements.forEach((img) => {
-      if (img.complete) {
-        imagesToLoad--;
-        onProgress(img, img.complete);
-      } else {
-        img.addEventListener("load", () => imageLoaded(img, true));
-        img.addEventListener("error", () => imageLoaded(img, false)); // consider image loaded on error
-      }
-    });
-
-    function imageLoaded(img, isLoaded) {
-      imagesToLoad--;
-      onProgress(img, isLoaded);
-    }
-  }
 
   grid.forEach((grid) => {
     // init mobile trigger data-grid-categories-titles-trigger
     var categoryTitlesTrigger = grid.querySelector(
       "[data-grid-categories-titles-trigger]",
     );
-    const masonry = typeof grid.dataset.carouselMasonry === "string";
 
     categoryTitlesTrigger.addEventListener("click", function () {
       categoryTitlesTrigger.parentElement.classList.toggle(
@@ -142,61 +118,6 @@ const { blok } = Astro.props;
       });
     });
 
-    var thumbnails = grid.querySelectorAll(
-      "[data-grid-category-content='0'] [data-grid-category-item-thumbnail]",
-    );
-
-    const videoThumbnails = grid.querySelectorAll(
-      "[data-grid-category-content='0'] [data-grid-category-item-thumbnail-video]",
-    );
-
-    const gridContent = grid.querySelector("[data-grid-category-content='0']");
-    let msnry = [];
-    if (masonry) {
-      msnry.push(
-        new Masonry(gridContent, {
-          itemSelector:
-            "[data-grid-category-content='0'] [data-grid-category-item]",
-          columnWidth:
-            "[data-grid-category-content='0'] [data-grid-category-item-sizer]",
-          gutter: 16,
-          percentPosition: true,
-        }),
-      );
-    }
-
-    window.setTimeout(() => {
-      videoThumbnails.forEach((videoThumbnail) => {
-        videoThumbnail
-          .closest("[data-grid-category-item]")
-          .classList.remove("opacity-0", "translate-y-3");
-        if (masonry) {
-          msnry[0].layout();
-        }
-        window.setTimeout(() => {
-          videoThumbnail
-            .closest("[data-grid-category-item]")
-            .classList.remove("custom-transition");
-        }, 750);
-      });
-    }, 1);
-
-    imagesLoaded(thumbnails, function (img, isLoaded) {
-      if (img) {
-        img
-          .closest("[data-grid-category-item]")
-          .classList.remove("opacity-0", "translate-y-3");
-        if (masonry) {
-          msnry[0].layout();
-        }
-        window.setTimeout(() => {
-          img
-            .closest("[data-grid-category-item]")
-            .classList.remove("custom-transition");
-        }, 750);
-      }
-    });
-
     // add on click event to category title to show the content
     var categoryTitles = grid.querySelectorAll("[data-grid-category-title]");
     categoryTitles.forEach((categoryTitle, index) => {
@@ -226,15 +147,12 @@ const { blok } = Astro.props;
         categoryContents.forEach((categoryContent) => {
           categoryContent.classList.add("opacity-0", "!h-0");
           categoryContent.setAttribute("hidden", "");
-          categoryContent
-            .querySelectorAll("[data-grid-category-item]")
-            .forEach((item) => {
-              item.classList.add(
-                "opacity-0",
-                "translate-y-3",
-                "custom-transition",
-              );
-            });
+
+          categoryContent.querySelectorAll("video").forEach((video) => {
+            if(!video.paused){
+              video.pause();
+            }
+          });
         });
         categoryTitles.forEach((categoryTitle) => {
           categoryTitle.setAttribute("aria-selected", "false");
@@ -246,64 +164,6 @@ const { blok } = Astro.props;
         categoryContents[index].removeAttribute("hidden");
         categoryTitle.setAttribute("aria-selected", "true");
         categoryTitle.setAttribute("tabindex", "0");
-
-        // init masonry
-        if (masonry) {
-          if (msnry[index]) {
-            msnry[index].layout();
-
-            categoryContents[index]
-              .querySelectorAll("[data-grid-category-item]")
-              .forEach((item) => {
-                item.classList.remove("opacity-0", "translate-y-3");
-              });
-          } else {
-            msnry.push(
-              new Masonry(categoryContents[index], {
-                itemSelector: `[data-grid-category-content="${index}"] [data-grid-category-item]`,
-                columnWidth: `[data-grid-category-content="${index}"] [data-grid-category-item-sizer]`,
-                gutter: 16,
-                percentPosition: true,
-              }),
-            );
-          }
-        }
-
-        var thumbnails = grid.querySelectorAll(
-          `[data-grid-category-content="${index}"] [data-grid-category-item-thumbnail]`,
-        );
-
-        const videoThumbnails = grid.querySelectorAll(
-          `[data-grid-category-content="${index}"] [data-grid-category-item-thumbnail-video]`,
-        );
-
-        window.setTimeout(() => {
-          videoThumbnails.forEach((videoThumbnail) => {
-            videoThumbnail
-              .closest("[data-grid-category-item]")
-              .classList.remove("opacity-0", "translate-y-3");
-            if (masonry) msnry[index].layout();
-            window.setTimeout(() => {
-              videoThumbnail
-                .closest("[data-grid-category-item]")
-                .classList.remove("custom-transition");
-            }, 750);
-          });
-        }, 1);
-
-        imagesLoaded(thumbnails, function (image, isLoaded) {
-          if (image) {
-            image
-              .closest("[data-grid-category-item]")
-              .classList.remove("opacity-0", "translate-y-3");
-            if (masonry) msnry[index].layout();
-            window.setTimeout(() => {
-              image
-                .closest("[data-grid-category-item]")
-                .classList.remove("custom-transition");
-            }, 750);
-          }
-        });
 
         // remove active class from all category titles
         var categoryTitles = grid.querySelectorAll(

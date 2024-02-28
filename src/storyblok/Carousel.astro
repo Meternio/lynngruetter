@@ -161,11 +161,29 @@ if (blok) {
       }
     }
 
-    checkIfCurrentSlideIsVideo(node);
+    checkIfCurrentSlideIsVideo(node.querySelectorAll("[data-carousel-slide]")[0]);
 
     if (!prevButtonNode && !nextButtonNode) {
       return;
     }
+
+    emblaInstances[emblaNodeIndex].on("settle", () => {
+      // except for the current slide, pause all videos
+      node
+        .querySelectorAll("video")
+        .forEach((video) => {
+          const parent = node
+            .querySelector("[data-carousel-instance-index]") || node;
+          const instanceIndex = parent
+            .getAttribute("data-carousel-instance-index");
+          const currentSlide = node.querySelectorAll("[data-carousel-slide]")[
+              emblaInstances[instanceIndex].selectedScrollSnap()
+            ];
+          if (video.closest('[data-carousel-slide]') !== currentSlide) {
+            video.pause();
+          }
+        });
+    });
 
     if (
       typeof node.getAttribute("data-auto-scroll") !== "string" &&

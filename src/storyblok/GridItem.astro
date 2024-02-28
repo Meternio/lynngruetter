@@ -5,7 +5,7 @@ import Dialog from "../components/Dialog.astro";
 import Carousel from "./Carousel.astro";
 import GridGallery from "./GridGallery.astro";
 
-const { blok, masonry } = Astro.props;
+const { blok } = Astro.props;
 
 const thumbnailUrl = blok.thumbnail?.filename;
 
@@ -39,7 +39,7 @@ const Tag = isLink ? "a" : "div";
 
 <div
   {...storyblokEditable(blok)}
-  class={`grid-category-item custom-transition ${masonry && "mb-4"} opacity-0 translate-y-3 ${
+  class={`grid-category-item custom-transition ${
     blok.doubleWidth
       ? "w-full lg:w-[calc(50%-8px)]"
       : "w-[calc(50%-4px)] lg:w-[calc(25%-12px)]"
@@ -57,7 +57,7 @@ const Tag = isLink ? "a" : "div";
     {
       !isVideo ? (
         <img
-          srcset={`
+          data-srcset={`
             ${
               thumbnailUrl + "/m/950x0/smart/filters:format(webp):quality(80)"
             } 1600w,
@@ -77,22 +77,23 @@ const Tag = isLink ? "a" : "div";
               thumbnailUrl + "/m/425x0/smart/filters:format(webp):quality(80)"
             } 425w`}
           src={thumbnailUrl + "/m/600x0/smart/filters:format(webp):quality(80)"}
+          srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
           alt={blok.thumbnail?.alt || "Grid Item"}
-          loading="lazy"
-          class="grid-category-item-thumbnail min-h-56 w-full object-cover"
+          data-loading="lazy"
+          class="grid-category-item-thumbnail loading min-h-56 w-full object-cover"
           height={dimensions?.height}
           width={dimensions?.width}
           data-grid-category-item-thumbnail
         />
       ) : (
         <video
-          class="grid-category-item-thumbnail min-h-56 w-full object-cover"
+          class="grid-category-item-thumbnail loading min-h-56 w-full object-cover"
           height={dimensions?.height}
           width={dimensions?.width}
           data-grid-category-item-thumbnail-video
           loop
           muted
-          preload="metadata"
+          preload="none"
           data-autoplay
           playsinline
         >
@@ -132,7 +133,7 @@ const Tag = isLink ? "a" : "div";
           </h2>
           <Carousel
             classes="h-[calc(100%-88px)] sm:h-[calc(100%-60px)]"
-            noPagination={blok.gallery.length <= 1 ? true : false}
+            noPagination={blok.gallery.length === 0 ? true : false}
           >
             <div class="carousel-slide" data-carousel-slide>
               <GridGallery

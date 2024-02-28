@@ -51,7 +51,11 @@ const content = data.story.content;
     >
       {
         content.body.map((item, index) => (
-          <a {...{'data-redirect': updateHeaderLinks ? "true" : false}} href={updateHeaderLinks ? `/#${item.id}` : `#${item.id}`} class={`lg:text-center`}>
+          <a
+            {...{ "data-redirect": updateHeaderLinks ? "true" : false }}
+            href={updateHeaderLinks ? `/#${item.id}` : `#${item.id}`}
+            class={`lg:text-center`}
+          >
             {item.name}
           </a>
         ))
@@ -75,24 +79,21 @@ const content = data.story.content;
     let lastScrollTop = 0;
     const header = document.querySelector("[data-header]");
     const headerNav = document.querySelectorAll(
-      "[data-header-nav-content-menu] > a"
+      "[data-header-nav-content-menu] > a",
     );
     const body = document.querySelector("body");
     const headerNavLogo = document.querySelector("[data-header-nav-logo]");
     const headerNavLogoWhite = document.querySelector(
-      "[data-header-nav-logo-white]"
+      "[data-header-nav-logo-white]",
     );
     let headerHeight = window.innerWidth >= 1024 ? 52 : 48;
     let adjustTransformTimeout = null;
 
     function scrollTo(offset, callback) {
-      const fixedOffset = offset.toFixed();
+      const fixedOffset = parseInt(offset, 10);
       const onScroll = function () {
-        const threshold = 80;
-        if (
-          Math.abs(window.scrollY - fixedOffset) <= threshold ||
-          Math.abs(window.scrollY) <= threshold
-        ) {
+        const threshold = 90;
+        if (Math.abs(window.scrollY - fixedOffset) <= threshold) {
           window.removeEventListener("scroll", onScroll);
           callback();
         }
@@ -118,13 +119,13 @@ const content = data.story.content;
       // get current translate X value
       let translateX = transform.match(/translate\((-?\d+)px, /);
 
-      if(translateX) {
+      if (translateX) {
         translateX = parseInt(translateX[1]);
       }
 
       // get current screen position of element
       const rect = el.getBoundingClientRect();
-      if(rect.top > (headerHeight + 16)) return;
+      if (rect.top > headerHeight + 16) return;
 
       // add or subtract 52px to the current translateY value based on the operation
       let newTranslateY = `calc(-100dvh + 32px + 100%)`;
@@ -143,7 +144,7 @@ const content = data.story.content;
 
     headerNav.forEach((el, index) => {
       el.addEventListener("click", (e) => {
-        if(e.currentTarget.getAttribute("data-redirect")) return;
+        if (e.currentTarget.getAttribute("data-redirect")) return;
 
         e.preventDefault();
 
@@ -152,121 +153,135 @@ const content = data.story.content;
         const rect = targetEl.getBoundingClientRect();
         const scrollTop = window.scrollY || document.documentElement.scrollTop;
         const targetScrollPosition = rect.top + scrollTop;
-        const offsetTop =
-          lastScrollTop > targetEl.getBoundingClientRect()?.top + lastScrollTop
-            ? headerHeight
-            : index === 0
-              ? headerHeight * -1
-              : 0;
+
+        // Always subtract the header height from the offset
+        const offsetTop = headerHeight;
+
+        // Add a class to the header to make it always visible
+        header.classList.remove("-translate-y-full", "absolute");
+        header.classList.add("fixed");
 
         body.classList.add("opacity-0", "blur-sm");
 
         window.setTimeout(() => {
+          window.removeEventListener("scroll", throttleScroll);
           scrollTo(targetScrollPosition - offsetTop, () => {
             body.classList.remove("blur-sm", "opacity-0");
+            header.classList.remove("-translate-y-full", "absolute");
+            header.classList.add("fixed");
+
+            // if current Scroll is less than header height, add mix-blend-difference
+            if (window.scrollY <= headerHeight) {
+              header.classList.add("mix-blend-difference", "text-white");
+              header.classList.remove("text-black", "bg-white");
+              headerNavLogo.classList.add("opacity-0");
+              headerNavLogoWhite.classList.remove("opacity-0");
+            } else {
+              header.classList.remove("mix-blend-difference", "text-white");
+              header.classList.add("text-black", "bg-white");
+              headerNavLogo.classList.remove("opacity-0");
+              headerNavLogoWhite.classList.add("opacity-0");
+            }
+
+            window.setTimeout(() => {
+              window.addEventListener("scroll", throttleScroll);
+            }, 500);
           });
         }, 500);
       });
     });
 
     const throttleScroll = throttle(() => {
-          if (
-            document.querySelector(".grid-categories-titles-active-animation")
-          ) {
-            return;
-          }
+      if (document.querySelector(".grid-categories-titles-active-animation")) {
+        return;
+      }
 
-          const currentScroll =
-            window.scrollY || document.documentElement.scrollTop;
+      const currentScroll =
+        window.scrollY || document.documentElement.scrollTop;
 
-          if (
-            currentScroll > headerHeight &&
-            !header.classList.contains("bg-white")
-          ) {
-            window.setTimeout(() => {
-              header.classList.add("bg-white");
-            }, 750);
-            headerNavLogo.classList.remove("opacity-0");
-            headerNavLogoWhite.classList.add("opacity-0");
-          } else if (
-            currentScroll <= headerHeight &&
-            header.classList.contains("bg-white")
-          ) {
-            header.classList.remove("bg-white");
+      if (
+        currentScroll > headerHeight &&
+        !header.classList.contains("bg-white")
+      ) {
+        window.setTimeout(() => {
+          header.classList.add("bg-white");
+        }, 750);
+        headerNavLogo.classList.remove("opacity-0");
+        headerNavLogoWhite.classList.add("opacity-0");
+      } else if (
+        currentScroll === 0
+      ) {
+        header.classList.remove("bg-white");
 
-            window.setTimeout(() => {
-              if (window.innerWidth < 1024) {
-                header.classList.add("mix-blend-difference", "text-white");
-                header.classList.remove("text-black");
-              }
-            }, 600);
+        window.setTimeout(() => {
+          header.classList.add("mix-blend-difference", "text-white");
+          header.classList.remove("text-black");
+        }, 600);
 
-            if (window.innerWidth < 1024) {
-              headerNavLogo.classList.add("opacity-0");
-              headerNavLogoWhite.classList.remove("opacity-0");
-            }
-          }
+        headerNavLogo.classList.add("opacity-0");
+        headerNavLogoWhite.classList.remove("opacity-0");
+      }
 
-          if (currentScroll > lastScrollTop && currentScroll > headerHeight) {
-            header.classList.add("-translate-y-full");
-            document
-              .querySelectorAll("[data-grid-categories-titles]")
-              .forEach((el) => {
-                el.style.transition =
-                  "max-height 0.75s ease-in-out, top 0.30s ease-out";
-                el.style.top = "0";
-              });
-            window.clearTimeout(adjustTransformTimeout);
-            adjustTransformTimeout = window.setTimeout(() => {
-              document
-                .querySelectorAll("[data-scroll-section-video]")
-                .forEach((el) => {
-                  adjustTransform(el, "added");
-                });
-            }, 400);
-            header.classList.remove("mix-blend-difference", "text-white");
-            header.classList.add("text-black");
-          } else if (currentScroll > headerHeight) {
-            header.classList.remove("-translate-y-full", "absolute");
-            header.classList.add("fixed");
-            document
-              .querySelectorAll("[data-grid-categories-titles]")
-              .forEach((el) => {
-                el.style.transition =
-                  "max-height 0.75s ease-in-out, top 0.35s ease-in-out";
-                el.style.top = `${headerHeight}px`;
-              });
-            window.clearTimeout(adjustTransformTimeout);
-            adjustTransformTimeout = window.setTimeout(() => {
-              document
-                .querySelectorAll("[data-scroll-section-video]")
-                .forEach((el) => {
-                  adjustTransform(el, "subtracted");
-                });
-            }, 400);
-          } else if (
-            currentScroll > lastScrollTop &&
-            currentScroll < headerHeight
-          ) {
-            header.classList.remove("fixed");
-            header.classList.add("absolute");
-          }
-
-          lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+      if (currentScroll > lastScrollTop && currentScroll > headerHeight) {
+        header.classList.add("-translate-y-full");
+        document
+          .querySelectorAll("[data-grid-categories-titles]")
+          .forEach((el) => {
+            el.style.transition =
+              "max-height 0.75s ease-in-out, top 0.30s ease-out";
+            el.style.top = "0";
+          });
+        window.clearTimeout(adjustTransformTimeout);
+        adjustTransformTimeout = window.setTimeout(() => {
+          document
+            .querySelectorAll("[data-scroll-section-video]")
+            .forEach((el) => {
+              adjustTransform(el, "added");
+            });
         }, 400);
+        header.classList.remove("mix-blend-difference", "text-white");
+        header.classList.add("text-black");
+      } else if (currentScroll > headerHeight) {
+        header.classList.remove("-translate-y-full", "absolute");
+        header.classList.add("fixed");
+        document
+          .querySelectorAll("[data-grid-categories-titles]")
+          .forEach((el) => {
+            el.style.transition =
+              "max-height 0.75s ease-in-out, top 0.35s ease-in-out";
+            el.style.top = `${headerHeight}px`;
+          });
+        window.clearTimeout(adjustTransformTimeout);
+        adjustTransformTimeout = window.setTimeout(() => {
+          document
+            .querySelectorAll("[data-scroll-section-video]")
+            .forEach((el) => {
+              adjustTransform(el, "subtracted");
+            });
+        }, 400);
+      } else if (
+        currentScroll > lastScrollTop &&
+        currentScroll < headerHeight
+      ) {
+        header.classList.remove("fixed");
+        header.classList.add("absolute");
+      }
+
+      lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+    }, 0);
 
     window.setTimeout(() => {
       // throttle scroll event
-      window.addEventListener(
-        "scroll",
-        throttleScroll
-      );
+      window.addEventListener("scroll", throttleScroll);
     }, 3000);
 
-    window.addEventListener("resize", debounce(() => {
-      headerHeight = window.innerWidth >= 1024 ? 52 : 48;
-      throttleScroll();
-    }, 400));
+    window.addEventListener(
+      "resize",
+      debounce(() => {
+        headerHeight = window.innerWidth >= 1024 ? 52 : 48;
+        throttleScroll();
+      }, 400),
+    );
 
     /*const headerNavContentMenu = document.querySelector(
       "[data-header-nav-content-menu]"

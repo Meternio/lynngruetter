@@ -45,7 +45,7 @@ const isPropEmpty = (prop) => {
     {
       !isVideo ? (
         <img
-          srcset={`
+          data-srcset={`
                 ${
                   blok.image?.filename +
                   "/m/1920x0/smart/filters:format(webp):quality(80)"
@@ -66,16 +66,17 @@ const isPropEmpty = (prop) => {
             blok.image?.filename +
             "/m/1920x0/smart/filters:format(webp):quality(80)"
           }
+          srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
           height={dimensions?.height}
           width={dimensions?.width}
           alt={blok.image?.alt || "Grid Item Gallery"}
-          loading="lazy"
-          class="grid-category-item-gallery-image object-contain relative top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-h-full"
+          data-loading="lazy"
+          class="grid-category-item-gallery-image loading object-contain relative top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-h-full"
           data-grid-category-item-gallery-image
         />
       ) : (
         <video
-          class="grid-category-item-gallery-image relative top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-h-full"
+          class="grid-category-item-gallery-image loading relative top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-h-full"
           data-grid-category-item-gallery-image
           data-autoplay
           playsinline
