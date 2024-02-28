@@ -26,7 +26,7 @@ const isBot =
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="shortcut icon" type="image/png" href="/favicon/favicon_1.png" />
     <link
       rel="preload"
       href="/fonts/PPNeueMontreal-Medium.woff2"
@@ -62,6 +62,16 @@ const isBot =
       history.scrollRestoration = "manual";
     }
   }
+
+  // udpate the favicon all 2 seconds
+  const favicon = document.querySelector("link[rel='shortcut icon']");
+  const favicons = ["/favicon/favicon_2.png",  "/favicon/favicon_3.png", "/favicon/favicon_1.png"];
+  let i = 0;
+  setInterval(() => {
+    favicon.href = favicons[i];
+    i = (i + 1) % favicons.length;
+  }, 2000);
+
 
   // if video has attribute data-autoplay, play it if near the viewport
   const videos = document.querySelectorAll("video[data-autoplay]");
