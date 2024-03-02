@@ -155,7 +155,11 @@ const content = data.story.content;
         const targetScrollPosition = rect.top + scrollTop;
 
         // Always subtract the header height from the offset
-        const offsetTop = headerHeight;
+        let offsetTop = headerHeight;
+
+        if (window.innerWidth >= 1024 && targetScrollPosition === 0) {
+          offsetTop = window.innerHeight;
+        }
 
         // Add a class to the header to make it always visible
         header.classList.remove("-translate-y-full", "absolute");
@@ -165,7 +169,7 @@ const content = data.story.content;
 
         window.setTimeout(() => {
           window.removeEventListener("scroll", throttleScroll);
-          scrollTo(targetScrollPosition - offsetTop, () => {
+          scrollTo(Math.abs(targetScrollPosition - offsetTop), () => {
             body.classList.remove("blur-sm", "opacity-0");
             header.classList.remove("-translate-y-full", "absolute");
             header.classList.add("fixed");
