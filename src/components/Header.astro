@@ -88,11 +88,11 @@ const content = data.story.content;
     );
     let headerHeight = window.innerWidth >= 1024 ? 52 : 48;
     let adjustTransformTimeout = null;
+    const threshold = 90;
 
     function scrollTo(offset, callback) {
       const fixedOffset = parseInt(offset, 10);
       const onScroll = function () {
-        const threshold = 90;
         if (Math.abs(window.scrollY - fixedOffset) <= threshold) {
           window.removeEventListener("scroll", onScroll);
           callback();
@@ -169,31 +169,51 @@ const content = data.story.content;
 
         window.setTimeout(() => {
           window.removeEventListener("scroll", throttleScroll);
-          scrollTo(Math.abs(targetScrollPosition - offsetTop), () => {
-            body.classList.remove("blur-sm", "opacity-0");
-            header.classList.remove("-translate-y-full", "absolute");
-            header.classList.add("fixed");
-
-            // if current Scroll is less than header height, add mix-blend-difference
-            if (window.scrollY <= headerHeight) {
-              header.classList.add("mix-blend-difference", "text-white");
-              header.classList.remove("text-black", "bg-white");
-              headerNavLogo.classList.add("opacity-0");
-              headerNavLogoWhite.classList.remove("opacity-0");
-            } else {
-              header.classList.remove("mix-blend-difference", "text-white");
-              header.classList.add("text-black", "bg-white");
-              headerNavLogo.classList.remove("opacity-0");
-              headerNavLogoWhite.classList.add("opacity-0");
-            }
-
-            window.setTimeout(() => {
-              window.addEventListener("scroll", throttleScroll);
-            }, 500);
-          });
+          scrollTo(Math.abs(targetScrollPosition - offsetTop), () => scrollToSection(targetEl));
         }, 500);
       });
     });
+
+    const scrollToSection = (targetEl) => {
+      const rect = targetEl.getBoundingClientRect();
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const targetScrollPosition = rect.top + scrollTop;
+
+      // Always subtract the header height from the offset
+      let offsetTop = headerHeight;
+
+      if (window.innerWidth >= 1024 && targetScrollPosition < threshold) {
+        offsetTop = window.innerHeight;
+      }
+
+      // Check if the scroll position is at the right position with the treshold
+      if (Math.abs(window.scrollY - targetScrollPosition) > threshold && offsetTop === headerHeight) {
+        window.setTimeout(() => {
+          scrollTo(Math.abs(targetScrollPosition - offsetTop), () => scrollToSection(targetEl));
+        }, 500);
+        return;
+      }
+      body.classList.remove("blur-sm", "opacity-0");
+      header.classList.remove("-translate-y-full", "absolute");
+      header.classList.add("fixed");
+
+      // if current Scroll is less than header height, add mix-blend-difference
+      if (window.scrollY <= headerHeight) {
+        header.classList.add("mix-blend-difference", "text-white");
+        header.classList.remove("text-black", "bg-white");
+        headerNavLogo.classList.add("opacity-0");
+        headerNavLogoWhite.classList.remove("opacity-0");
+      } else {
+        header.classList.remove("mix-blend-difference", "text-white");
+        header.classList.add("text-black", "bg-white");
+        headerNavLogo.classList.remove("opacity-0");
+        headerNavLogoWhite.classList.add("opacity-0");
+      }
+
+      window.setTimeout(() => {
+        window.addEventListener("scroll", throttleScroll);
+      }, 500);
+    };
 
     const throttleScroll = throttle(() => {
       if (document.querySelector(".grid-categories-titles-active-animation")) {
@@ -212,9 +232,7 @@ const content = data.story.content;
         }, 750);
         headerNavLogo.classList.remove("opacity-0");
         headerNavLogoWhite.classList.add("opacity-0");
-      } else if (
-        currentScroll === 0
-      ) {
+      } else if (currentScroll === 0) {
         header.classList.remove("bg-white");
 
         window.setTimeout(() => {
