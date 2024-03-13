@@ -48,13 +48,13 @@ const { blok, lastSection } = Astro.props;
   }
 
   <div
-    class="scroll-section-signature-footer mt-1 flex items-center relative justify-between z-10 text-sm lg:text-md gap-4 sm:gap-12"
+    class="scroll-section-signature-footer !mt-1 flex items-center relative justify-between z-10 text-sm text-[16px] lg:text-md gap-4 sm:gap-12"
   >
     {
       lastSection && (
         <>
           <div class="flex-grow sm:flex-grow-0 sm:w-[calc(60%-3rem)] flex gap-4 sm:gap-12 items-center">
-            <span>Moderation und Content Produktion</span>
+            <span class="hidden sm:block">Moderation und Content Produktion</span>
             <a target="_blank" href="https://www.instagram.com/lynngruetter">
               @lynngruetter
             </a>

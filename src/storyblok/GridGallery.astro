@@ -4,16 +4,12 @@ import RichTextRenderer from "@storyblok/astro/RichTextRenderer.astro";
 
 const { blok, current, max } = Astro.props;
 
-let filename;
 let isVideo;
 let filenameMedium;
 let filenameSmall;
 let dimensions;
 
 if (blok?.image?.filename) {
-  const regex = /\/([^\/]+)(?=\.\w+$)/;
-  filename = blok.image?.filename.match(regex);
-
   isVideo = blok.image?.filename.match(/\.(mp4|mov|webm)$/i);
 
   if (!isVideo) {
@@ -109,7 +105,6 @@ const isPropEmpty = (prop) => {
       class=`absolute left-0 top-1/2 -translate-y-1/2 line-clamp-2 ${isPropEmpty(blok.description) ? 'max-w-[30%] sm:max-w-[40%]' : ''}`
     >
       {current && max ? `${current}/${max}` : ""}
-      {filename && filename[1]}
     </div>
     {
       isPropEmpty(blok.description) && (
