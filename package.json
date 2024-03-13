@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@astrojs/vercel": "^7.0.1",
+    "@vimeo/player": "^2.22.0",
     "embla-carousel": "^8.0.0-rc21",
     "embla-carousel-auto-height": "^8.0.0-rc22",
     "embla-carousel-auto-scroll": "^8.0.0-rc22",
