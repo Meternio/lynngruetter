@@ -156,6 +156,7 @@ function formatSeconds(seconds) {
 
 <script>
   import Vimeo from "@vimeo/player";
+  import { debounce } from "../assets/main.js";
 
   const vidoes = document.querySelectorAll("[data-vimeo-video]");
   let mouseIsDown = false;
@@ -164,18 +165,23 @@ function formatSeconds(seconds) {
   const playedVideos = new Set();
   const videoInstances = [];
 
+  window.addEventListener(
+    "resize",
+    debounce(() => {
+      vidoes.forEach((video) => {
+        const controls = video.nextElementSibling;
+        positionControls(controls, video);
+      });
+    }, 400)
+  );
+
   const videoObserver = new IntersectionObserver((entries) => {
     entries.forEach(async (entry) => {
       const player = videoInstances[entry.target.dataset.videoId];
       if (entry.isIntersecting) {
         const controls = entry.target.nextElementSibling;
 
-        if (controls && !entry.target.style.maxWidth) {
-          const height = entry.target.offsetHeight;
-          const aspectRation = 16 / 9;
-          const newWidth = height * aspectRation;
-          controls.style.maxWidth = `${newWidth}px`;
-        }
+        positionControls(controls, entry.target);
 
         if (entry.target.dataset.autoPlay) {
           await player.play();
@@ -200,6 +206,31 @@ function formatSeconds(seconds) {
       }
     });
   });
+
+  function positionControls(controls, video) {
+    if (!controls) return;
+    const height = video.offsetHeight;
+    const width = video.offsetWidth;
+    let scaledHeight = height;
+    let scaledWidth = width;
+    const videoAspectRatio = width / height;
+    const aspectRatio = 16 / 9;
+    let bottom = 0;
+
+    if (videoAspectRatio < aspectRatio) {
+      // Video is scaled by width
+      scaledHeight = width / aspectRatio;
+      bottom = (height - scaledHeight) / 2;
+      controls.style.maxWidth = `${width}px`;
+      controls.style.bottom = `${bottom}px`;
+    } else {
+      // Video is scaled by height
+      scaledWidth = height * aspectRatio;
+      bottom = (height - scaledHeight) / 2;
+      controls.style.maxWidth = `${height * aspectRatio}px`;
+      controls.style.bottom = `${bottom}px`;
+    }
+  }
 
   function formatSeconds(seconds) {
     // Calculate the minutes and seconds from the total seconds
