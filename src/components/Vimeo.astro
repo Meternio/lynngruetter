@@ -59,7 +59,7 @@ function formatSeconds(seconds) {
     src={`https://player.vimeo.com/video/${videoId}?controls=0&loop=1${additionalVimeoProps}`}
     width={localVideoData.width || 426}
     height={localVideoData.height || 240}
-    class={`vimeo-video pointer-events-none`}
+    class={`vimeo-video pointer-events-none ${isScrollSection && "rounded-xl"}`}
     allow="autoplay; fullscreen;"
     title={localVideoData.title || "Vimeo Video"}
     id={videoId}

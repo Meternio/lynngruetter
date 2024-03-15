@@ -43,7 +43,7 @@ const isVimeo = blok?.vimeo?.vimeo_raw;
     })
   }
   {
-    blok.video && blok.video.filename && (
+    (blok.video && blok.video.filename || isVimeo) && (
       <>
         <div
           data-sentinel
@@ -54,7 +54,13 @@ const isVimeo = blok?.vimeo?.vimeo_raw;
           data-scroll-section-video-wrapper
         >
           {isVimeo ? (
-            <Vimeo videoData={blok.vimeo} autoplay={true} isScrollSection={true}/>
+            <div data-scroll-section-video class="scroll-section-video object-cover w-48 h-auto rounded-xl absolute bottom-0 right-0 touch-none pointer-events-auto">
+              <Vimeo
+                videoData={blok.vimeo}
+                autoplay={true}
+                isScrollSection={true}
+              />
+            </div>
           ) : (
             <video
               data-scroll-section-video
@@ -244,11 +250,9 @@ const isVimeo = blok?.vimeo?.vimeo_raw;
       video.parentElement.style.position = "fixed";
       video.parentElement.style.opacity = 1;
       video.parentElement.style.filter = "blur(0px)";
-      video.muted = true;
       video.classList.remove("w-4/5", "bottom-1/2");
       video.classList.add("w-48", "bottom-0");
       video.style.transform = `translate(${position.x}px, ${position.y}px)`;
-      video.controls = false;
       window.setTimeout(() => {
         video.closest("[data-scroll-section]").classList.remove("z-10");
       }, 175);
@@ -325,13 +329,6 @@ const isVimeo = blok?.vimeo?.vimeo_raw;
           );
           if (entry.isIntersecting) {
             if (videoWrapper) {
-              // if the video is ready to be played, play it
-              if (
-                videoWrapper.querySelector("video").readyState > 3 ||
-                videoWrapper.querySelector("video").readyState === 0
-              ) {
-                videoWrapper.querySelector("video").play();
-              }
               videoWrapper.classList.add("isIntersecting");
               videoWrapper.style.position = "fixed";
               videoWrapper.style.opacity = 1;
@@ -341,10 +338,6 @@ const isVimeo = blok?.vimeo?.vimeo_raw;
             }
           } else {
             if (videoWrapper) {
-              // if the video is ready to be played, play it
-              if (videoWrapper.querySelector("video").readyState > 3) {
-                videoWrapper.querySelector("video").pause();
-              }
               videoWrapper.classList.remove("isIntersecting");
               window.setTimeout(() => {
                 videoWrapper.style.position = "absolute";
