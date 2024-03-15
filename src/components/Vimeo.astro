@@ -231,7 +231,7 @@ function formatSeconds(seconds) {
     let scaledHeight = height;
     let scaledWidth = width;
     const videoAspectRatio = width / height;
-    const aspectRatio = 16 / 9;
+    const aspectRatio = video.width / video.height;
     let bottom = 0;
 
     if (videoAspectRatio < aspectRatio) {
