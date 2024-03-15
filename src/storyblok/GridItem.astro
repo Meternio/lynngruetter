@@ -34,7 +34,7 @@ if (thumbnailUrl) {
 }
 
 const isLink = blok?.link && blok?.link?.url;
-const isVimeo = blok?.vimeo;
+const isVimeo = blok?.vimeo?.videoRawUrl;
 
 const Tag = isLink ? "a" : "div";
 ---
