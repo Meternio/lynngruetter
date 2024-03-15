@@ -34,7 +34,7 @@ if (thumbnailUrl) {
 }
 
 const isLink = blok?.link && blok?.link?.url;
-const isVimeo = blok?.vimeo?.vimeo_oembed?.response;
+const isVimeo = blok?.vimeo;
 
 const Tag = isLink ? "a" : "div";
 ---
@@ -90,7 +90,7 @@ const Tag = isLink ? "a" : "div";
       ) : (
         <>
           {isVimeo ? (
-            <Vimeo videoData={blok.vimeo?.vimeo_oembed?.response} autoplay={true} quality="360p" noControls={true}/>
+            <Vimeo videoData={blok.vimeo} autoplay={true} quality="360p" noControls={true}/>
           ) : (
             <video
               class="grid-category-item-thumbnail loading min-h-56 w-full object-cover"

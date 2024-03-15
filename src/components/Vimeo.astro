@@ -18,6 +18,8 @@ const {
 } = Astro.props;
 
 let additionalVimeoProps = "";
+const localVideoData = videoData.vimeo_oembed?.response || videoData;
+const videoId = localVideoData.video_id || videoData.vimeo_raw.split("/").pop();
 
 if (quality) {
   additionalVimeoProps = additionalVimeoProps + `&quality=${quality}`;
@@ -54,13 +56,13 @@ function formatSeconds(seconds) {
   class={`vimeo-wrapper ${isHero && "vimeo-wrapper-hero"}`}
 >
   <iframe
-    src={`https://player.vimeo.com/video/${videoData.video_id}?controls=0&loop=1${additionalVimeoProps}`}
-    width={videoData.width}
-    height={videoData.height}
+    src={`https://player.vimeo.com/video/${videoId}?controls=0&loop=1${additionalVimeoProps}`}
+    width={localVideoData.width || 426}
+    height={localVideoData.height || 240}
     class="vimeo-video pointer-events-none"
     allow="autoplay; fullscreen;"
-    title={videoData.title}
-    id={videoData.video_id}
+    title={localVideoData.title || "Vimeo Video"}
+    id={videoId}
     data-vimeo-video
     {...{ "data-auto-play": autoplay ? "true" : false }}
     {...{ "data-no-controls": noControls ? "true" : false }}
@@ -95,7 +97,7 @@ function formatSeconds(seconds) {
               </span>
               <div class="text-white">/</div>
               <span class="text-xs text-white" data-time-max>
-                {formatSeconds(videoData.duration)}
+                {formatSeconds(localVideoData.duration)}
               </span>
             </div>
           </div>
@@ -145,7 +147,7 @@ function formatSeconds(seconds) {
           data-progress-bar-wrapper
           role="slider"
           aria-valuemin="0"
-          aria-valuemax={videoData.duration}
+          aria-valuemax={localVideoData.duration}
           aria-valuenow="0"
           aria-valuetext="0% played"
           tabindex="0"
@@ -332,6 +334,7 @@ function formatSeconds(seconds) {
 
     player.getDuration().then((duration) => {
       timeMax.textContent = formatSeconds(duration);
+      progresBarWrapper.setAttribute("aria-valuemax", duration);
     });
 
     play.addEventListener("click", () => {

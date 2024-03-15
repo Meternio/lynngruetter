@@ -32,7 +32,7 @@ const isPropEmpty = (prop) => {
   );
 };
 
-const isVimeo = blok?.vimeo?.vimeo_oembed?.response;
+const isVimeo = blok?.vimeo;
 ---
 
 <div
@@ -77,7 +77,7 @@ const isVimeo = blok?.vimeo?.vimeo_oembed?.response;
         <>
           {isVimeo ? (
             <Vimeo
-              videoData={blok.vimeo?.vimeo_oembed?.response} dynamicResize={true}
+              videoData={blok.vimeo} dynamicResize={true}
             />
           ) : (
             <video

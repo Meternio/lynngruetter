@@ -28,7 +28,7 @@ if (blok?.video && blok?.video?.filename) {
   filenameSmall = blok.asset3?.filename;
 }
 
-const isVimeo = blok?.vimeo?.vimeo_oembed?.response;
+const isVimeo = blok?.vimeo;
 ---
 
 <section
@@ -54,7 +54,7 @@ const isVimeo = blok?.vimeo?.vimeo_oembed?.response;
           data-scroll-section-video-wrapper
         >
           {isVimeo ? (
-            <Vimeo videoData={blok.vimeo?.vimeo_oembed?.response} autoplay={true} isScrollSection={true}/>
+            <Vimeo videoData={blok.vimeo} autoplay={true} isScrollSection={true}/>
           ) : (
             <video
               data-scroll-section-video
