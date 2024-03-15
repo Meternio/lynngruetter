@@ -75,7 +75,7 @@ if (isVideo) {
   }
   {
     blok.vimeo?.vimeo_oembed?.response && !blok.asset.id && (
-      <Vimeo videoData={blok.vimeo?.vimeo_oembed?.response}/>
+      <Vimeo videoData={blok.vimeo?.vimeo_oembed?.response} autoplay={true} isHero={true}/>
     )
   }
 </div>

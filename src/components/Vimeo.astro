@@ -7,16 +7,16 @@ import mute from "../assets/mute.svg";
 import fullscreen from "../assets/fullscreen.svg";
 import boxedscreen from "../assets/boxedscreen.svg";
 
-const { videoData, noControls, background, quality } = Astro.props;
+const { videoData, noControls, autoplay, quality, isHero } = Astro.props;
 
-let additionalVimeoProps = '';
+let additionalVimeoProps = "";
 
-if(background){
-  additionalVimeoProps = additionalVimeoProps + '&background=1';
+if (quality) {
+  additionalVimeoProps = additionalVimeoProps + `&quality=${quality}`;
 }
 
-if(quality){
-  additionalVimeoProps = additionalVimeoProps + `&quality=${quality}`;
+if (autoplay) {
+  additionalVimeoProps = additionalVimeoProps + `&muted=1`;
 }
 
 function formatSeconds(seconds) {
@@ -28,11 +28,11 @@ function formatSeconds(seconds) {
   const formattedSeconds = secs < 10 ? "0" + secs : secs;
 
   // if nan return 0:00
-  if(isNaN(mins) || isNaN(secs)){
+  if (isNaN(mins) || isNaN(secs)) {
     return `0:00`;
   }
 
-  if(Math.round(secs) === 60){
+  if (Math.round(secs) === 60) {
     return `${mins + 1}:00`;
   }
 
@@ -51,21 +51,23 @@ function formatSeconds(seconds) {
     title={videoData.title}
     id={videoData.video_id}
     data-vimeo-video
-    data-no-controls={noControls || false}></iframe>
+    {...{ "data-auto-play": autoplay ? "true" : false }}
+    {...{ "data-no-controls": noControls ? "true" : false }}
+    {...{ "data-vimeo-hero": isHero ? "true" : false }}></iframe>
   {
     !noControls && (
       <div class="vimeo-controls absolute bottom-0 left-0 w-full p-4">
         <div class="flex justify-between items-center -mx-2">
           <div class="flex flex-row gap-2">
             <button
-              class={`hover:blur-[2px] p-1 ${background && 'hidden'}`}
+              class={`hover:blur-[2px] p-1 ${autoplay && "hidden"}`}
               aria-label="Play Video"
               data-play
             >
               <Image src={play} alt="Play Video" width="20" height="20" />
             </button>
             <button
-              class={`hover:blur-[2px] p-1 ${!background && 'hidden'}`}
+              class={`hover:blur-[2px] p-1 ${!autoplay && "hidden"}`}
               aria-label="Pause Video"
               data-pause
             >
@@ -83,14 +85,14 @@ function formatSeconds(seconds) {
           </div>
           <div>
             <button
-              class={`hover:blur-[2px] p-1 ${background && 'hidden'}`}
+              class={`hover:blur-[2px] p-1 ${autoplay && "hidden"}`}
               aria-label="Mute Video"
               data-mute
             >
               <Image src={mute} alt="Mute Video" width="20" height="20" />
             </button>
             <button
-              class={`hover:blur-[2px] p-1 ${!background && 'hidden'}`}
+              class={`hover:blur-[2px] p-1 ${!autoplay && "hidden"}`}
               aria-label="Unmute Video"
               data-unmute
             >
@@ -136,7 +138,7 @@ function formatSeconds(seconds) {
             <div
               class="vimeo-controls-progress-bar h-full w-0 bg-indigo-800 transition-all duration-200 ease-in-out"
               data-progress-bar
-            ></div>
+            />
           </div>
         </div>
       </div>
@@ -151,6 +153,29 @@ function formatSeconds(seconds) {
   let mouseIsDown = false;
   let isPlaying = false;
   let wasPlaying = false;
+  const playedVideos = new Set();
+  const videoInstances = [];
+
+  const videoObserver = new IntersectionObserver((entries) => {
+    entries.forEach(async (entry) => {
+      const player = videoInstances[entry.target.dataset.videoId];
+      if (entry.isIntersecting) {
+        await player.play();
+        playedVideos.add(player);
+
+        if (playedVideos.size > 2) {
+          // delete the first video in the set
+          const firstVideo = playedVideos.values().next().value;
+          playedVideos.delete(firstVideo);
+          firstVideo.pause();
+        }
+      } else {
+        const firstVideo = playedVideos.values().next().value;
+        playedVideos.delete(firstVideo);
+        firstVideo.pause();
+      }
+    });
+  });
 
   function formatSeconds(seconds) {
     // Calculate the minutes and seconds from the total seconds
@@ -209,11 +234,22 @@ function formatSeconds(seconds) {
     }
   }
 
-  vidoes.forEach((video) => {
+  vidoes.forEach((video, index) => {
     const player = new Vimeo(video);
-    video.dataset.vimeoVideo = player;
+    video.dataset.videoId = index;
+    videoInstances.push(player);
 
-    if(video.dataset.noControls) return
+    if (video.dataset.autoPlay) {
+      if (video.dataset.vimeoHero) {
+        window.setTimeout(() => {
+          videoObserver.observe(video);
+        }, 3000);
+      } else {
+        videoObserver.observe(video);
+      }
+    }
+
+    if (video.dataset.noControls) return;
 
     const timeMax = video.nextElementSibling.querySelector("[data-time-max]");
     const play = video.nextElementSibling.querySelector("[data-play]");
