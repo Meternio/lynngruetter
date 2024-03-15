@@ -143,7 +143,7 @@ if (blok) {
 
     // check if the current slide is a video. If so, remove data-carousel-next and data-carousel-prev
     function checkIfCurrentSlideIsVideo(node) {
-      const video = node.querySelector("video");
+      const video = node.querySelector("video") || node.querySelector("iframe");
 
       if (video && prevButtonNode && nextButtonNode) {
         prevButtonNode.parentElement.classList.add("isVideo");

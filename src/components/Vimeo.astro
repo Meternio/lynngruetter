@@ -7,8 +7,15 @@ import mute from "../assets/mute.svg";
 import fullscreen from "../assets/fullscreen.svg";
 import boxedscreen from "../assets/boxedscreen.svg";
 
-const { videoData, noControls, autoplay, quality, isHero, isScrollSection } =
-  Astro.props;
+const {
+  videoData,
+  noControls,
+  autoplay,
+  quality,
+  isHero,
+  isScrollSection,
+  dynamicResize,
+} = Astro.props;
 
 let additionalVimeoProps = "";
 
@@ -58,7 +65,8 @@ function formatSeconds(seconds) {
     {...{ "data-auto-play": autoplay ? "true" : false }}
     {...{ "data-no-controls": noControls ? "true" : false }}
     {...{ "data-vimeo-hero": isHero ? "true" : false }}
-    {...{ "data-scroll-section": isScrollSection ? "true" : false }}></iframe>
+    {...{ "data-scroll-section": isScrollSection ? "true" : false }}
+    {...{ "data-dynamic-resize": dynamicResize ? "true" : false }}></iframe>
   {
     !noControls && (
       <div
@@ -208,7 +216,7 @@ function formatSeconds(seconds) {
   });
 
   function positionControls(controls, video) {
-    if (!controls) return;
+    if (!controls || !video.dataset.dynamicResize) return;
     const height = video.offsetHeight;
     const width = video.offsetWidth;
     let scaledHeight = height;
@@ -294,12 +302,14 @@ function formatSeconds(seconds) {
     video.dataset.videoId = index;
     videoInstances.push(player);
 
-    if (video.dataset.vimeoHero) {
-      window.setTimeout(() => {
+    if (video.dataset.autoPlay || video.dataset.dynamicResize) {
+      if (video.dataset.vimeoHero) {
+        window.setTimeout(() => {
+          videoObserver.observe(video);
+        }, 3000);
+      } else {
         videoObserver.observe(video);
-      }, 3000);
-    } else {
-      videoObserver.observe(video);
+      }
     }
 
     if (video.dataset.noControls) return;
@@ -333,11 +343,11 @@ function formatSeconds(seconds) {
     });
 
     mute.addEventListener("click", () => {
-      player.setVolume(0);
+      player.setMuted(true);
     });
 
     unmute.addEventListener("click", () => {
-      player.setVolume(1);
+      player.setMuted(false);
     });
 
     fullscreen.addEventListener("click", () => {
@@ -403,8 +413,8 @@ function formatSeconds(seconds) {
     });
 
     player.on("volumechange", async () => {
-      const volume = await player.getVolume();
-      if (volume === 0) {
+      const muted = await player.getMuted();
+      if (muted) {
         mute.classList.add("hidden");
         unmute.classList.remove("hidden");
       } else {
@@ -480,9 +490,10 @@ function formatSeconds(seconds) {
     .vimeo-wrapper-hero {
       height: 320px;
     }
+  }
 
+  @media (max-width: 570px) {
     .vimeo-wrapper-hero .vimeo-video {
-      width: auto;
       height: 320px;
     }
   }

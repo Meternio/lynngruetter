@@ -77,7 +77,7 @@ const isVimeo = blok?.vimeo?.vimeo_oembed?.response;
         <>
           {isVimeo ? (
             <Vimeo
-              videoData={blok.vimeo?.vimeo_oembed?.response}
+              videoData={blok.vimeo?.vimeo_oembed?.response} dynamicResize={true}
             />
           ) : (
             <video
