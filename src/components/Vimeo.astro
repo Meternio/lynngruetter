@@ -306,10 +306,20 @@ function formatSeconds(seconds) {
     }
   }
 
+  async function setAspectRatio(player){
+    const width = await player.getVideoWidth();
+    player.element.width = width;
+    const height = await player.getVideoHeight();
+    player.element.height = height;
+    player.element.style.aspectRatio = `${width}/${height}`;
+  }
+
   vidoes.forEach((video, index) => {
     const player = new Vimeo(video);
     video.dataset.videoId = index;
     videoInstances.push(player);
+
+    setAspectRatio(player);
 
     if (video.dataset.autoPlay || video.dataset.dynamicResize) {
       if (video.dataset.vimeoHero) {
