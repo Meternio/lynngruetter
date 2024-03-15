@@ -59,7 +59,7 @@ function formatSeconds(seconds) {
     src={`https://player.vimeo.com/video/${videoId}?controls=0&loop=1${additionalVimeoProps}`}
     width={localVideoData.width || 426}
     height={localVideoData.height || 240}
-    class="vimeo-video pointer-events-none"
+    class={`vimeo-video pointer-events-none`}
     allow="autoplay; fullscreen;"
     title={localVideoData.title || "Vimeo Video"}
     id={videoId}
@@ -172,7 +172,6 @@ function formatSeconds(seconds) {
   let mouseIsDown = false;
   let isPlaying = false;
   let wasPlaying = false;
-  const playedVideos = new Set();
   const videoInstances = [];
 
   window.addEventListener(
@@ -199,26 +198,13 @@ function formatSeconds(seconds) {
 
         if (entry.target.dataset.autoPlay) {
           await player.play();
-          playedVideos.add(player);
-
-          if (playedVideos.size > 2) {
-            const firstVideo = playedVideos.values().next().value;
-            if (!firstVideo) return;
-
-            playedVideos.delete(firstVideo);
-            await firstVideo.pause();
-          }
         }
       } else {
         if(entry.target.dataset.intersectedOnce) {
           videoObserver.unobserve(entry.target);
         }
         if (entry.target.dataset.autoPlay) {
-          const firstVideo = playedVideos.values().next().value;
-          if (!firstVideo) return;
-
-          playedVideos.delete(firstVideo);
-          await firstVideo.pause();
+          await player.pause();
         }
       }
     });
@@ -331,7 +317,18 @@ function formatSeconds(seconds) {
       }
     }
 
-    if (video.dataset.noControls) return;
+    if (video.dataset.noControls) {
+      video.parentElement.addEventListener("mouseenter", async () => {
+        const index = video.dataset.videoId;
+        await videoInstances[index].pause();
+      }, false);
+
+      video.parentElement.addEventListener("mouseleave", async () => {
+        const index = video.dataset.videoId;
+        await videoInstances[index].play();
+      }, false);
+      return;
+    };
 
     const timeMax = video.nextElementSibling.querySelector("[data-time-max]");
     const play = video.nextElementSibling.querySelector("[data-play]");
