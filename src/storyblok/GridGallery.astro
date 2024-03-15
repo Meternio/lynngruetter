@@ -11,7 +11,7 @@ let filenameSmall;
 let dimensions;
 
 if (blok?.image?.filename) {
-  isVideo = blok.image?.filename.match(/\.(mp4|mov|webm)$/i) || blok.vimeo?.vimeo_oembed?.response;
+  isVideo = blok.image?.filename.match(/\.(mp4|mov|webm)$/i);
 
   if (!isVideo) {
     dimensions = {
@@ -42,7 +42,7 @@ const isVimeo = blok?.vimeo?.vimeo_oembed?.response;
 >
   <div class="h-[calc(100%-60px)]">
     {
-      !isVideo ? (
+      !isVideo && !isVimeo ? (
         <img
           data-srcset={`
                 ${
