@@ -43,7 +43,7 @@ const isBot =
   </head>
   <body
     data-body
-    class=`font-montrealMedium overflow-hidden ${(dev || isFrontendEditor) && 'dev'}`
+    class=`font-montrealMedium leading-[1] overflow-hidden ${(dev || isFrontendEditor) && 'dev'}`
   >
     <Header updateHeaderLinks={updateHeaderLinks} />
     {!dev && !isFrontendEditor && <HeroAnimation />}
