@@ -26,7 +26,7 @@ if (quality) {
 }
 
 if (autoplay) {
-  additionalVimeoProps = additionalVimeoProps + `&muted=1`;
+  additionalVimeoProps = additionalVimeoProps + `&muted=1&background=1`;
 }
 
 function formatSeconds(seconds) {
@@ -193,6 +193,10 @@ function formatSeconds(seconds) {
 
         positionControls(controls, entry.target);
 
+        if(entry.target.dataset.vimeoHero) {
+          entry.target.dataset.intersectedOnce = true;
+        }
+
         if (entry.target.dataset.autoPlay) {
           await player.play();
           playedVideos.add(player);
@@ -202,16 +206,19 @@ function formatSeconds(seconds) {
             if (!firstVideo) return;
 
             playedVideos.delete(firstVideo);
-            firstVideo.pause();
+            await firstVideo.pause();
           }
         }
       } else {
+        if(entry.target.dataset.intersectedOnce) {
+          videoObserver.unobserve(entry.target);
+        }
         if (entry.target.dataset.autoPlay) {
           const firstVideo = playedVideos.values().next().value;
           if (!firstVideo) return;
 
           playedVideos.delete(firstVideo);
-          firstVideo.pause();
+          await firstVideo.pause();
         }
       }
     });
@@ -337,29 +344,28 @@ function formatSeconds(seconds) {
       progresBarWrapper.setAttribute("aria-valuemax", duration);
     });
 
-    play.addEventListener("click", () => {
-      player.play();
+    play.addEventListener("click", async () => {
+      await player.play();
     });
 
-    pause.addEventListener("click", () => {
-      player.pause();
+    pause.addEventListener("click", async () => {
+      await player.pause();
     });
 
-    mute.addEventListener("click", () => {
-      player.setMuted(true);
+    mute.addEventListener("click", async () => {
+      await player.setMuted(true);
     });
 
-    unmute.addEventListener("click", () => {
-      player.setMuted(false);
+    unmute.addEventListener("click", async () => {
+      await player.setMuted(false);
     });
 
-    fullscreen.addEventListener("click", () => {
-      //player.requestFullscreen();
-      video.parentElement.requestFullscreen();
+    fullscreen.addEventListener("click", async () => {
+      await video.parentElement.requestFullscreen();
     });
 
-    boxedscreen.addEventListener("click", () => {
-      player.exitFullscreen();
+    boxedscreen.addEventListener("click", async () => {
+      await player.exitFullscreen();
     });
 
     progresBarWrapper.addEventListener("click", (e) =>
@@ -396,9 +402,9 @@ function formatSeconds(seconds) {
       if (e.key === " ") {
         e.preventDefault();
         if (isPlaying) {
-          player.pause();
+          await player.pause();
         } else {
-          player.play();
+          await player.play();
         }
       }
     });
