@@ -27,6 +27,15 @@ function formatSeconds(seconds) {
   // Format the seconds to always show two digits
   const formattedSeconds = secs < 10 ? "0" + secs : secs;
 
+  // if nan return 0:00
+  if(isNaN(mins) || isNaN(secs)){
+    return `0:00`;
+  }
+
+  if(Math.round(secs) === 60){
+    return `${mins + 1}:00`;
+  }
+
   // Return the formatted time
   return mins + ":" + formattedSeconds;
 }
@@ -49,14 +58,14 @@ function formatSeconds(seconds) {
         <div class="flex justify-between items-center -mx-2">
           <div class="flex flex-row gap-2">
             <button
-              class="hover:blur-[2px] p-1 hidden"
+              class={`hover:blur-[2px] p-1 ${background && 'hidden'}`}
               aria-label="Play Video"
               data-play
             >
               <Image src={play} alt="Play Video" width="20" height="20" />
             </button>
             <button
-              class="hover:blur-[2px] p-1"
+              class={`hover:blur-[2px] p-1 ${!background && 'hidden'}`}
               aria-label="Pause Video"
               data-pause
             >
@@ -74,14 +83,14 @@ function formatSeconds(seconds) {
           </div>
           <div>
             <button
-              class="hover:blur-[2px] p-1 hidden"
+              class={`hover:blur-[2px] p-1 ${background && 'hidden'}`}
               aria-label="Mute Video"
               data-mute
             >
               <Image src={mute} alt="Mute Video" width="20" height="20" />
             </button>
             <button
-              class="hover:blur-[2px] p-1"
+              class={`hover:blur-[2px] p-1 ${!background && 'hidden'}`}
               aria-label="Unmute Video"
               data-unmute
             >
@@ -206,6 +215,7 @@ function formatSeconds(seconds) {
 
     if(video.dataset.noControls) return
 
+    const timeMax = video.nextElementSibling.querySelector("[data-time-max]");
     const play = video.nextElementSibling.querySelector("[data-play]");
     const pause = video.nextElementSibling.querySelector("[data-pause]");
     const mute = video.nextElementSibling.querySelector("[data-mute]");
@@ -220,6 +230,10 @@ function formatSeconds(seconds) {
     const progresBarWrapper = video.nextElementSibling.querySelector(
       "[data-progress-bar-wrapper]"
     );
+
+    player.getDuration().then((duration) => {
+      timeMax.textContent = formatSeconds(duration);
+    });
 
     play.addEventListener("click", () => {
       player.play();
