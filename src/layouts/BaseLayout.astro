@@ -3,6 +3,7 @@ import { useStoryblokApi } from "@storyblok/astro";
 import Header from "../components/Header.astro";
 import HeroAnimation from "../components/HeroAnimation.astro";
 import CookieBanner from "../components/CookieBanner.astro";
+import lynnWhite from "../assets/lynnWhite.svg";
 
 const { updateHeaderLinks } = Astro.props;
 const storyblokApi = useStoryblokApi();
@@ -34,6 +35,7 @@ const isBot =
       type="font/woff2"
       crossorigin
     />
+    <link rel="preload" href={lynnWhite.src} as="image">
     <title>{content?.meta?.title || "Lynn Grütter"}</title>
     <meta
       name="description"
