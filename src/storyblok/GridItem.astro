@@ -25,7 +25,7 @@ if (thumbnailUrl) {
     height: thumbnailUrl.split("/")[5].split("x")[1],
   };
 
-  isVideo = thumbnailUrl.match(/\.(mp4|mov|webm)$/i);
+  isVideo = thumbnailUrl.match(/\.(mp4|mov|webm)$/i) || blok?.vimeo?.vimeo_oembed?.response;
 
   if (isVideo) {
     filenameMedium = blok.asset2?.filename;

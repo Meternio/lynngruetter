@@ -7,7 +7,7 @@ const { blok } = Astro.props;
 const vimeoId = blok.vimeo?.vimeo_oembed?.response?.uri?.split("/").pop();
 // Check if the asset is a video
 const isVideo =
-  blok.asset?.id && blok.asset?.filename.match(/\.(mp4|mov|webm)$/i);
+  blok.asset?.id && blok.asset?.filename.match(/\.(mp4|mov|webm)$/i) || blok.vimeo?.vimeo_oembed?.response;
 // Optimze the image for the hero
 const optimzedImageUrl =
   blok.asset?.filename + "/m/1920x0/smart/filters:format(webp):quality(80)";

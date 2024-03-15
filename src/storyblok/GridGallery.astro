@@ -11,7 +11,7 @@ let filenameSmall;
 let dimensions;
 
 if (blok?.image?.filename) {
-  isVideo = blok.image?.filename.match(/\.(mp4|mov|webm)$/i);
+  isVideo = blok.image?.filename.match(/\.(mp4|mov|webm)$/i) || blok.vimeo?.vimeo_oembed?.response;
 
   if (!isVideo) {
     dimensions = {
