@@ -130,7 +130,7 @@ const Tag = isLink ? "a" : "div";
     }
   </Tag>
   {
-    thumbnailUrl && (
+    thumbnailUrl || isVimeo && (
       <Dialog
         classes="grid-gallery-dialog"
         attrs={{ "data-grid-gallery-dialog": true }}
