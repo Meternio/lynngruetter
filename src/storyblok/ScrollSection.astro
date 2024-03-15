@@ -2,6 +2,7 @@
 import { storyblokEditable, useStoryblokApi } from "@storyblok/astro";
 import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
 import Signature from "./Signature.astro";
+import Vimeo from "../components/Vimeo.astro";
 
 const { blok } = Astro.props;
 
@@ -26,6 +27,8 @@ if (blok?.video && blok?.video?.filename) {
   filenameMedium = blok.asset2?.filename;
   filenameSmall = blok.asset3?.filename;
 }
+
+const isVimeo = blok?.vimeo?.vimeo_oembed?.response;
 ---
 
 <section
@@ -50,29 +53,36 @@ if (blok?.video && blok?.video?.filename) {
           class="scroll-section-video-wrapper absolute w-[calc(100%-32px)] h-[calc(100%-32px)] top-0 left-0 m-4 opacity-0 blur-sm z-[60] pointer-events-none"
           data-scroll-section-video-wrapper
         >
-          <video
-            data-scroll-section-video
-            muted
-            loop
-            playsinline
-            preload="none"
-            class="scroll-section-video object-cover w-48 h-auto rounded-xl absolute bottom-0 right-0 touch-none pointer-events-auto"
-          >
-            {filenameMedium ? (
-              <>
-                <source src={blok.video.filename} media="(min-width: 800px)" />
-                <source src={filenameMedium} media="(min-width: 500px)" />
-                {filenameSmall ? (
-                  <source src={filenameSmall} />
-                ) : (
-                  <source src={filenameMedium} />
-                )}
-              </>
-            ) : (
-              <source src={blok.video.filename} />
-            )}
-            Sorry, dein Browser unterstüzt keine Videos.
-          </video>
+          {isVimeo ? (
+            <Vimeo videoData={blok.vimeo?.vimeo_oembed?.response} autoplay={true} isScrollSection={true}/>
+          ) : (
+            <video
+              data-scroll-section-video
+              muted
+              loop
+              playsinline
+              preload="none"
+              class="scroll-section-video object-cover w-48 h-auto rounded-xl absolute bottom-0 right-0 touch-none pointer-events-auto"
+            >
+              {filenameMedium ? (
+                <>
+                  <source
+                    src={blok.video.filename}
+                    media="(min-width: 800px)"
+                  />
+                  <source src={filenameMedium} media="(min-width: 500px)" />
+                  {filenameSmall ? (
+                    <source src={filenameSmall} />
+                  ) : (
+                    <source src={filenameMedium} />
+                  )}
+                </>
+              ) : (
+                <source src={blok.video.filename} />
+              )}
+              Sorry, dein Browser unterstüzt keine Videos.
+            </video>
+          )}
         </div>
         <div
           data-sentinel

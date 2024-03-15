@@ -7,7 +7,8 @@ import mute from "../assets/mute.svg";
 import fullscreen from "../assets/fullscreen.svg";
 import boxedscreen from "../assets/boxedscreen.svg";
 
-const { videoData, noControls, autoplay, quality, isHero } = Astro.props;
+const { videoData, noControls, autoplay, quality, isHero, isScrollSection } =
+  Astro.props;
 
 let additionalVimeoProps = "";
 
@@ -41,22 +42,29 @@ function formatSeconds(seconds) {
 }
 ---
 
-<div data-fullscreen-wrapper class="vimeo-wrapper">
+<div
+  data-fullscreen-wrapper
+  class={`vimeo-wrapper ${isHero && "vimeo-wrapper-hero"}`}
+>
   <iframe
-    src={`https://player.vimeo.com/video/${videoData.video_id}?controls=0&loop=1&${additionalVimeoProps}`}
+    src={`https://player.vimeo.com/video/${videoData.video_id}?controls=0&loop=1${additionalVimeoProps}`}
     width={videoData.width}
     height={videoData.height}
-    class="vimeo-video"
+    class="vimeo-video pointer-events-none"
     allow="autoplay; fullscreen;"
     title={videoData.title}
     id={videoData.video_id}
     data-vimeo-video
     {...{ "data-auto-play": autoplay ? "true" : false }}
     {...{ "data-no-controls": noControls ? "true" : false }}
-    {...{ "data-vimeo-hero": isHero ? "true" : false }}></iframe>
+    {...{ "data-vimeo-hero": isHero ? "true" : false }}
+    {...{ "data-scroll-section": isScrollSection ? "true" : false }}></iframe>
   {
     !noControls && (
-      <div class="vimeo-controls absolute bottom-0 left-0 w-full p-4">
+      <div
+        class="vimeo-controls absolute bottom-0 left-1/2 -translate-x-1/2 w-full p-4"
+        data-vimeo-video-controls
+      >
         <div class="flex justify-between items-center -mx-2">
           <div class="flex flex-row gap-2">
             <button
@@ -160,19 +168,35 @@ function formatSeconds(seconds) {
     entries.forEach(async (entry) => {
       const player = videoInstances[entry.target.dataset.videoId];
       if (entry.isIntersecting) {
-        await player.play();
-        playedVideos.add(player);
+        const controls = entry.target.nextElementSibling;
 
-        if (playedVideos.size > 2) {
-          // delete the first video in the set
+        if (controls && !entry.target.style.maxWidth) {
+          const height = entry.target.offsetHeight;
+          const aspectRation = 16 / 9;
+          const newWidth = height * aspectRation;
+          controls.style.maxWidth = `${newWidth}px`;
+        }
+
+        if (entry.target.dataset.autoPlay) {
+          await player.play();
+          playedVideos.add(player);
+
+          if (playedVideos.size > 2) {
+            const firstVideo = playedVideos.values().next().value;
+            if (!firstVideo) return;
+
+            playedVideos.delete(firstVideo);
+            firstVideo.pause();
+          }
+        }
+      } else {
+        if (entry.target.dataset.autoPlay) {
           const firstVideo = playedVideos.values().next().value;
+          if (!firstVideo) return;
+
           playedVideos.delete(firstVideo);
           firstVideo.pause();
         }
-      } else {
-        const firstVideo = playedVideos.values().next().value;
-        playedVideos.delete(firstVideo);
-        firstVideo.pause();
       }
     });
   });
@@ -239,14 +263,12 @@ function formatSeconds(seconds) {
     video.dataset.videoId = index;
     videoInstances.push(player);
 
-    if (video.dataset.autoPlay) {
-      if (video.dataset.vimeoHero) {
-        window.setTimeout(() => {
-          videoObserver.observe(video);
-        }, 3000);
-      } else {
+    if (video.dataset.vimeoHero) {
+      window.setTimeout(() => {
         videoObserver.observe(video);
-      }
+      }, 3000);
+    } else {
+      videoObserver.observe(video);
     }
 
     if (video.dataset.noControls) return;
@@ -363,11 +385,16 @@ function formatSeconds(seconds) {
     player.on("fullscreenchange", async () => {
       const isFullscreen = await player.getFullscreen();
       if (isFullscreen) {
-        video.classList.remove("vimeo-video");
+        if (video.dataset.vimeoHero) {
+          video.parentElement.classList.remove("vimeo-wrapper-hero");
+        }
+
         fullscreen.classList.add("hidden");
         boxedscreen.classList.remove("hidden");
       } else {
-        video.classList.add("vimeo-video");
+        if (video.dataset.vimeoHero) {
+          video.parentElement.classList.add("vimeo-wrapper-hero");
+        }
         boxedscreen.classList.add("hidden");
         fullscreen.classList.remove("hidden");
       }
@@ -387,12 +414,16 @@ function formatSeconds(seconds) {
     height: 100%;
   }
 
-  .vimeo-wrapper > iframe:not(.vimeo-video) {
+  .vimeo-video {
+    aspect-ratio: 16 / 9;
+  }
+
+  .vimeo-wrapper:not(.vimeo-wrapper-hero) > iframe {
     width: 100%;
     height: 100%;
   }
 
-  .vimeo-video {
+  .vimeo-wrapper-hero .vimeo-video {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -402,20 +433,20 @@ function formatSeconds(seconds) {
   }
 
   @media (min-aspect-ratio: 16/9) {
-    .vimeo-video {
+    .vimeo-wrapper-hero .vimeo-video {
       /* height = 100 * (9 / 16) = 56.25 */
       height: 56.25vw;
     }
   }
   @media (max-aspect-ratio: 16/9) {
-    .vimeo-video {
+    .vimeo-wrapper-hero .vimeo-video {
       /* width = 100 / (9 / 16) = 177.777777 */
       width: 177.78vh;
     }
   }
 
   @media (max-width: 1024px) {
-    .vimeo-wrapper {
+    .vimeo-wrapper-hero {
       height: 320px;
     }
   }

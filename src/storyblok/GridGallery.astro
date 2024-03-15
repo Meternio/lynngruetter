@@ -1,6 +1,7 @@
 ---
 import { storyblokEditable } from "@storyblok/astro";
 import RichTextRenderer from "@storyblok/astro/RichTextRenderer.astro";
+import Vimeo from "../components/Vimeo.astro";
 
 const { blok, current, max } = Astro.props;
 
@@ -30,6 +31,8 @@ const isPropEmpty = (prop) => {
     (prop?.content[0]?.content || prop?.content[0]?.attrs)
   );
 };
+
+const isVimeo = blok?.vimeo?.vimeo_oembed?.response;
 ---
 
 <div
@@ -71,30 +74,41 @@ const isPropEmpty = (prop) => {
           data-grid-category-item-gallery-image
         />
       ) : (
-        <video
-          class="grid-category-item-gallery-image loading relative top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-h-full"
-          data-grid-category-item-gallery-image
-          data-autoplay
-          playsinline
-          muted
-          preload="none"
-          controls
-        >
-          {filenameMedium ? (
-            <>
-              <source src={blok.image?.filename} media="(min-width: 800px)" />
-              <source src={filenameMedium} media="(min-width: 500px)" />
-              {filenameSmall ? (
-                <source src={filenameSmall} />
-              ) : (
-                <source src={filenameMedium} />
-              )}
-            </>
+        <>
+          {isVimeo ? (
+            <Vimeo
+              videoData={blok.vimeo?.vimeo_oembed?.response}
+            />
           ) : (
-            <source src={blok.image?.filename} />
+            <video
+              class="grid-category-item-gallery-image loading relative top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-h-full"
+              data-grid-category-item-gallery-image
+              data-autoplay
+              playsinline
+              muted
+              preload="none"
+              controls
+            >
+              {filenameMedium ? (
+                <>
+                  <source
+                    src={blok.image?.filename}
+                    media="(min-width: 800px)"
+                  />
+                  <source src={filenameMedium} media="(min-width: 500px)" />
+                  {filenameSmall ? (
+                    <source src={filenameSmall} />
+                  ) : (
+                    <source src={filenameMedium} />
+                  )}
+                </>
+              ) : (
+                <source src={blok.image?.filename} />
+              )}
+              Sorry, dein Browser unterstüzt keine Videos.
+            </video>
           )}
-          Sorry, dein Browser unterstüzt keine Videos.
-        </video>
+        </>
       )
     }
   </div>
