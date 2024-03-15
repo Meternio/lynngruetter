@@ -1,5 +1,6 @@
 ---
 import { storyblokEditable } from "@storyblok/astro";
+import Vimeo from "../components/Vimeo.astro";
 
 const { blok } = Astro.props;
 // Get the Vimeo ID from the URL
@@ -74,14 +75,7 @@ if (isVideo) {
   }
   {
     blok.vimeo?.vimeo_oembed?.response && !blok.asset.id && (
-      <iframe
-        src={`https://player.vimeo.com/video/${vimeoId}?autoplay=1&background=1`}
-        width={blok.vimeo.vimeo_oembed.response.width}
-        height={blok.vimeo.vimeo_oembed.response.height}
-        class="hero-iframe w-full h-full top-1/2 left-1/2 absolute -translate-x-1/2 -translate-y-1/2"
-        allow="autoplay; fullscreen; picture-in-picture"
-        title={blok.vimeo.vimeo_oembed.response.title}
-      />
+      <Vimeo videoData={blok.vimeo?.vimeo_oembed?.response}/>
     )
   }
 </div>

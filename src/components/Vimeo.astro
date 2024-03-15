@@ -1,0 +1,372 @@
+---
+import { Image } from "astro:assets";
+import sound from "../assets/sound.svg";
+import pause from "../assets/pause.svg";
+import play from "../assets/play.svg";
+import mute from "../assets/mute.svg";
+import fullscreen from "../assets/fullscreen.svg";
+import boxedscreen from "../assets/boxedscreen.svg";
+
+const { videoData, noControls, background, quality } = Astro.props;
+
+let additionalVimeoProps = '';
+
+if(background){
+  additionalVimeoProps = additionalVimeoProps + '&background=1';
+}
+
+if(quality){
+  additionalVimeoProps = additionalVimeoProps + `&quality=${quality}`;
+}
+
+function formatSeconds(seconds) {
+  // Calculate the minutes and seconds from the total seconds
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+
+  // Format the seconds to always show two digits
+  const formattedSeconds = secs < 10 ? "0" + secs : secs;
+
+  // Return the formatted time
+  return mins + ":" + formattedSeconds;
+}
+---
+
+<div data-fullscreen-wrapper class="vimeo-wrapper">
+  <iframe
+    src={`https://player.vimeo.com/video/${videoData.video_id}?controls=0&${additionalVimeoProps}`}
+    width={videoData.width}
+    height={videoData.height}
+    class="vimeo-video"
+    allow="autoplay; fullscreen;"
+    title={videoData.title}
+    id={videoData.video_id}
+    data-vimeo-video
+    data-no-controls={noControls || false}></iframe>
+  {
+    !noControls && (
+      <div class="vimeo-controls absolute bottom-0 left-0 w-full p-4">
+        <div class="flex justify-between items-center -mx-2">
+          <div class="flex flex-row gap-2">
+            <button
+              class="hover:blur-[2px] p-1 hidden"
+              aria-label="Play Video"
+              data-play
+            >
+              <Image src={play} alt="Play Video" width="20" height="20" />
+            </button>
+            <button
+              class="hover:blur-[2px] p-1"
+              aria-label="Pause Video"
+              data-pause
+            >
+              <Image src={pause} alt="Pause Video" width="20" height="20" />
+            </button>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-white" data-time-current>
+                0:00
+              </span>
+              <div class="text-white">/</div>
+              <span class="text-xs text-white" data-time-max>
+                {formatSeconds(videoData.duration)}
+              </span>
+            </div>
+          </div>
+          <div>
+            <button
+              class="hover:blur-[2px] p-1 hidden"
+              aria-label="Mute Video"
+              data-mute
+            >
+              <Image src={mute} alt="Mute Video" width="20" height="20" />
+            </button>
+            <button
+              class="hover:blur-[2px] p-1"
+              aria-label="Unmute Video"
+              data-unmute
+            >
+              <Image src={sound} alt="Unmute Video" width="20" height="20" />
+            </button>
+            <button
+              class="hover:blur-[2px] p-1"
+              aria-label="Fullscreen Video"
+              data-fullscreen
+            >
+              <Image
+                src={fullscreen}
+                alt="Fullscreen Video"
+                width="20"
+                height="20"
+              />
+            </button>
+            <button
+              class="hover:blur-[2px] p-1 hidden"
+              aria-label="Exit Fullscreen Video"
+              data-boxedscreen
+            >
+              <Image
+                src={boxedscreen}
+                alt="Exit Fullscreen Video"
+                width="20"
+                height="20"
+              />
+            </button>
+          </div>
+        </div>
+        <div
+          class="vimeo-controls-progress-bar-spacer cursor-pointer p-2 -mb-2 -ml-2 -mr-2"
+          data-progress-bar-wrapper
+          role="slider"
+          aria-valuemin="0"
+          aria-valuemax={videoData.duration}
+          aria-valuenow="0"
+          aria-valuetext="0% played"
+          tabindex="0"
+        >
+          <div class="vimeo-controls-progress-bar-wrapper h-1 w-full bg-white">
+            <div
+              class="vimeo-controls-progress-bar h-full w-0 bg-indigo-800 transition-all duration-200 ease-in-out"
+              data-progress-bar
+            ></div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+</div>
+
+<script>
+  import Vimeo from "@vimeo/player";
+
+  const vidoes = document.querySelectorAll("[data-vimeo-video]");
+  let mouseIsDown = false;
+  let isPlaying = false;
+  let wasPlaying = false;
+
+  function formatSeconds(seconds) {
+    // Calculate the minutes and seconds from the total seconds
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+
+    if (Math.round(secs) === 60) {
+      return `${mins + 1}:00`;
+    }
+
+    // Format the seconds to always show two digits
+    const formattedSeconds =
+      secs < 10 ? "0" + Math.round(secs) : Math.round(secs);
+
+    // Return the formatted time
+    return mins + ":" + formattedSeconds;
+  }
+
+  function timeUpdate(data, player, progressBar) {
+    const time = data.seconds;
+    const video = player.element;
+    const timeCurrent = video.nextElementSibling.querySelector(
+      "[data-time-current]"
+    );
+    timeCurrent.textContent = formatSeconds(time);
+
+    const progressPercentage = data.percent * 100;
+    progressBar.style.width = `${progressPercentage}%`;
+
+    progressBar.setAttribute("aria-valuenow", time);
+    progressBar.setAttribute("aria-valuetext", `${progressPercentage}% played`);
+  }
+
+  async function setProgress(e, player, progessBarWrapper) {
+    if (isPlaying) {
+      await player.pause();
+      wasPlaying = true;
+    }
+
+    const videoDuration = await player.getDuration();
+    let updatedTime =
+      (e.offsetX / progessBarWrapper.offsetWidth) * parseInt(videoDuration) +
+      e.offsetX / progessBarWrapper.offsetWidth / 2.5;
+
+    if (updatedTime < 0) {
+      updatedTime = 0;
+    } else if (updatedTime > videoDuration) {
+      updatedTime = videoDuration;
+    }
+
+    await player.setCurrentTime(updatedTime);
+
+    if (wasPlaying) {
+      await player.play();
+      wasPlaying = false;
+    }
+  }
+
+  vidoes.forEach((video) => {
+    const player = new Vimeo(video);
+    video.dataset.vimeoVideo = player;
+
+    if(video.dataset.noControls) return
+
+    const play = video.nextElementSibling.querySelector("[data-play]");
+    const pause = video.nextElementSibling.querySelector("[data-pause]");
+    const mute = video.nextElementSibling.querySelector("[data-mute]");
+    const unmute = video.nextElementSibling.querySelector("[data-unmute]");
+    const fullscreen =
+      video.nextElementSibling.querySelector("[data-fullscreen]");
+    const boxedscreen =
+      video.nextElementSibling.querySelector("[data-boxedscreen]");
+    const progressBar = video.nextElementSibling.querySelector(
+      "[data-progress-bar]"
+    );
+    const progresBarWrapper = video.nextElementSibling.querySelector(
+      "[data-progress-bar-wrapper]"
+    );
+
+    play.addEventListener("click", () => {
+      player.play();
+    });
+
+    pause.addEventListener("click", () => {
+      player.pause();
+    });
+
+    mute.addEventListener("click", () => {
+      player.setVolume(0);
+    });
+
+    unmute.addEventListener("click", () => {
+      player.setVolume(1);
+    });
+
+    fullscreen.addEventListener("click", () => {
+      //player.requestFullscreen();
+      video.parentElement.requestFullscreen();
+    });
+
+    boxedscreen.addEventListener("click", () => {
+      player.exitFullscreen();
+    });
+
+    progresBarWrapper.addEventListener("click", (e) =>
+      setProgress(e, player, progresBarWrapper)
+    );
+    progresBarWrapper.addEventListener("mousedown", () => (mouseIsDown = true));
+    progresBarWrapper.addEventListener("mouseup", () => (mouseIsDown = false));
+    progresBarWrapper.addEventListener(
+      "mousemove",
+      (e) => mouseIsDown && setProgress(e, player, progresBarWrapper)
+    );
+    progresBarWrapper.addEventListener("keydown", async (e) => {
+      if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+        const videoDuration = await player.getDuration();
+        const currentTime = await player.getCurrentTime();
+        const step = 5;
+        let updatedTime;
+
+        if (e.key === "ArrowRight") {
+          updatedTime = currentTime + step;
+        } else {
+          updatedTime = currentTime - step;
+        }
+
+        if (updatedTime < 0) {
+          updatedTime = 0;
+        } else if (updatedTime > videoDuration) {
+          updatedTime = videoDuration;
+        }
+
+        player.setCurrentTime(updatedTime);
+      }
+
+      if (e.key === " ") {
+        e.preventDefault();
+        if (isPlaying) {
+          player.pause();
+        } else {
+          player.play();
+        }
+      }
+    });
+
+    player.on("play", () => {
+      isPlaying = true;
+      play.classList.add("hidden");
+      pause.classList.remove("hidden");
+    });
+
+    player.on("pause", () => {
+      isPlaying = false;
+      pause.classList.add("hidden");
+      play.classList.remove("hidden");
+    });
+
+    player.on("volumechange", async () => {
+      const volume = await player.getVolume();
+      if (volume === 0) {
+        mute.classList.add("hidden");
+        unmute.classList.remove("hidden");
+      } else {
+        unmute.classList.add("hidden");
+        mute.classList.remove("hidden");
+      }
+    });
+
+    player.on("fullscreenchange", async () => {
+      const isFullscreen = await player.getFullscreen();
+      if (isFullscreen) {
+        video.classList.remove("vimeo-video");
+        fullscreen.classList.add("hidden");
+        boxedscreen.classList.remove("hidden");
+      } else {
+        video.classList.add("vimeo-video");
+        boxedscreen.classList.add("hidden");
+        fullscreen.classList.remove("hidden");
+      }
+    });
+
+    player.on("timeupdate", (data) => {
+      timeUpdate(data, player, progressBar);
+    });
+  });
+</script>
+
+<style>
+  .vimeo-wrapper {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+  }
+
+  .vimeo-wrapper > iframe:not(.vimeo-video) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .vimeo-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100dvw;
+    height: 100dvh;
+    transform: translate(-50%, -50%);
+  }
+
+  @media (min-aspect-ratio: 16/9) {
+    .vimeo-video {
+      /* height = 100 * (9 / 16) = 56.25 */
+      height: 56.25vw;
+    }
+  }
+  @media (max-aspect-ratio: 16/9) {
+    .vimeo-video {
+      /* width = 100 / (9 / 16) = 177.777777 */
+      width: 177.78vh;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .vimeo-wrapper {
+      height: 320px;
+    }
+  }
+</style>
