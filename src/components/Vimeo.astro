@@ -201,16 +201,15 @@ function formatSeconds(seconds) {
               player.element.classList.remove("loading");
               player.off("playing");
             });
+            window.setTimeout(() => {
+              player.element.classList.remove("loading");
+            }, 2000);
           } else {
             player.element.classList.remove("loading");
           }
         } else {
           player.element.classList.remove("loading");
         }
-
-        const controls = entry.target.nextElementSibling;
-
-        positionControls(controls, entry.target);
 
         if (entry.target.dataset.vimeoHero) {
           entry.target.dataset.intersectedOnce = true;
@@ -219,6 +218,10 @@ function formatSeconds(seconds) {
         if (entry.target.dataset.autoPlay || entry.target.dataset.vimeoHero) {
           await player.play();
         }
+
+        const controls = entry.target.nextElementSibling;
+
+        positionControls(controls, entry.target);
       } else {
         if (entry.target.dataset.intersectedOnce) {
           videoObserver.unobserve(entry.target);
