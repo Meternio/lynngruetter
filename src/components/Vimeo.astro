@@ -15,6 +15,7 @@ const {
   isHero,
   isScrollSection,
   dynamicResize,
+  muted,
 } = Astro.props;
 
 let additionalVimeoProps = "";
@@ -27,6 +28,10 @@ if (quality) {
 
 if (autoplay) {
   additionalVimeoProps = additionalVimeoProps + `&muted=1&background=1`;
+}
+
+if (muted) {
+  additionalVimeoProps = additionalVimeoProps + `&muted=1`;
 }
 
 function formatSeconds(seconds) {
@@ -200,14 +205,14 @@ function formatSeconds(seconds) {
           entry.target.dataset.intersectedOnce = true;
         }
 
-        if (entry.target.dataset.autoPlay) {
+        if (entry.target.dataset.autoPlay || entry.target.dataset.vimeoHero) {
           await player.play();
         }
       } else {
         if(entry.target.dataset.intersectedOnce) {
           videoObserver.unobserve(entry.target);
         }
-        if (entry.target.dataset.autoPlay) {
+        if (entry.target.dataset.autoPlay || entry.target.dataset.vimeoHero) {
           await player.pause();
         }
       }
@@ -216,7 +221,7 @@ function formatSeconds(seconds) {
 
   async function onIframeLoaded(player) {
     await setAspectRatio(player);
-    if (player.element.dataset.autoPlay || player.element.dataset.dynamicResize) {
+    if (player.element.dataset.autoPlay || player.element.dataset.dynamicResize || player.element.dataset.vimeoHero) {
       if (player.element.dataset.vimeoHero) {
         window.setTimeout(() => {
           videoObserver.observe(player.element);
