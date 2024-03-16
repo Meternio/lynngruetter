@@ -201,8 +201,12 @@ function formatSeconds(seconds) {
               player.element.classList.remove("loading");
               player.off("playing");
             });
-            window.setTimeout(() => {
+            window.setTimeout(async () => {
               player.element.classList.remove("loading");
+              const isPaused = await player.getPaused();
+              if (isPaused && entry.isIntersecting) {
+                await player.play();
+              }
             }, 2000);
           } else {
             player.element.classList.remove("loading");
