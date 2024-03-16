@@ -61,7 +61,7 @@ function formatSeconds(seconds) {
   class={`vimeo-wrapper ${isHero && "vimeo-wrapper-hero"}`}
 >
   <iframe
-    src={`https://player.vimeo.com/video/${videoId}?controls=0&loop=1${additionalVimeoProps}`}
+    src={`https://player.vimeo.com/video/${videoId}?controls=0&loop=1&dnt=1${additionalVimeoProps}`}
     width={localVideoData.width || 426}
     height={localVideoData.height || 240}
     class={`vimeo-video pointer-events-none loading ${isScrollSection && "rounded-xl"}`}
@@ -360,9 +360,13 @@ function formatSeconds(seconds) {
   }
 
   async function setAspectRatio(player) {
-    const width = await player.getVideoWidth();
+    const dimensions = await Promise.all([
+      player.getVideoWidth(),
+      player.getVideoHeight(),
+    ]);
+    const width = dimensions[0];
+    const height = dimensions[1];
     player.element.width = width;
-    const height = await player.getVideoHeight();
     player.element.height = height;
     player.element.style.aspectRatio = `${width}/${height}`;
   }
