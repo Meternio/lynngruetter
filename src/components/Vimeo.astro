@@ -193,6 +193,7 @@ function formatSeconds(seconds) {
     entries.forEach(async (entry) => {
       const player = videoInstances[entry.target.dataset.videoId];
       if (entry.isIntersecting) {
+        await setAspectRatio(player);
         if (entry.target.dataset.autoPlay || entry.target.dataset.vimeoHero) {
           player.on("playing", () => {
             player.element.classList.remove("loading");
@@ -227,7 +228,6 @@ function formatSeconds(seconds) {
   });
 
   async function onIframeLoaded(player) {
-    await setAspectRatio(player);
     if (
       player.element.dataset.autoPlay ||
       player.element.dataset.dynamicResize ||
@@ -241,6 +241,7 @@ function formatSeconds(seconds) {
         videoObserver.observe(player.element);
       }
     } else {
+      await setAspectRatio(player);
       window.setTimeout(() => {
         player.element.classList.remove("loading");
       }, 300);
