@@ -195,14 +195,17 @@ function formatSeconds(seconds) {
       if (entry.isIntersecting) {
         await setAspectRatio(player);
         if (entry.target.dataset.autoPlay || entry.target.dataset.vimeoHero) {
-          player.on("playing", () => {
+          const isPaused = await player.getPaused();
+          if (isPaused) {
+            player.on("playing", () => {
+              player.element.classList.remove("loading");
+              player.off("playing");
+            });
+          } else {
             player.element.classList.remove("loading");
-            player.off("playing");
-          });
+          }
         } else {
-          window.setTimeout(() => {
-            player.element.classList.remove("loading");
-          }, 300);
+          player.element.classList.remove("loading");
         }
 
         const controls = entry.target.nextElementSibling;
@@ -242,9 +245,7 @@ function formatSeconds(seconds) {
       }
     } else {
       await setAspectRatio(player);
-      window.setTimeout(() => {
-        player.element.classList.remove("loading");
-      }, 300);
+      player.element.classList.remove("loading");
     }
 
     const controls = player.element.nextElementSibling;
