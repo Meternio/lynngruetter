@@ -59,7 +59,7 @@ function formatSeconds(seconds) {
     src={`https://player.vimeo.com/video/${videoId}?controls=0&loop=1${additionalVimeoProps}`}
     width={localVideoData.width || 426}
     height={localVideoData.height || 240}
-    class={`vimeo-video pointer-events-none ${isScrollSection && "rounded-xl"}`}
+    class={`vimeo-video pointer-events-none loading ${isScrollSection && "rounded-xl"}`}
     allow="autoplay; fullscreen;"
     title={localVideoData.title || "Vimeo Video"}
     id={videoId}
@@ -188,6 +188,10 @@ function formatSeconds(seconds) {
     entries.forEach(async (entry) => {
       const player = videoInstances[entry.target.dataset.videoId];
       if (entry.isIntersecting) {
+        player.on("playing", () => {
+          player.element.classList.remove("loading");
+          player.off("playing");
+        });
         const controls = entry.target.nextElementSibling;
 
         positionControls(controls, entry.target);
@@ -209,6 +213,31 @@ function formatSeconds(seconds) {
       }
     });
   });
+
+  async function onIframeLoaded(player) {
+    await setAspectRatio(player);
+    if (player.element.dataset.autoPlay || player.element.dataset.dynamicResize) {
+      if (player.element.dataset.vimeoHero) {
+        window.setTimeout(() => {
+          videoObserver.observe(player.element);
+        }, 3000);
+      } else {
+        videoObserver.observe(player.element);
+      }
+    } else {
+      window.setTimeout(() => {
+        player.element.classList.remove("loading");
+      }, 300);
+    }
+
+    const controls = player.element.nextElementSibling;
+    if(!controls) return;
+    const duration = await player.getDuration();
+    const timeMax = controls.querySelector("[data-time-max]");
+    timeMax.textContent = formatSeconds(duration);
+    const progresBarWrapper = controls.querySelector("[data-progress-bar-wrapper]");
+    progresBarWrapper.setAttribute("aria-valuemax", duration);
+  }
 
   function positionControls(controls, video) {
     if (!controls || !video.dataset.dynamicResize) return;
@@ -305,17 +334,7 @@ function formatSeconds(seconds) {
     video.dataset.videoId = index;
     videoInstances.push(player);
 
-    setAspectRatio(player);
-
-    if (video.dataset.autoPlay || video.dataset.dynamicResize) {
-      if (video.dataset.vimeoHero) {
-        window.setTimeout(() => {
-          videoObserver.observe(video);
-        }, 3000);
-      } else {
-        videoObserver.observe(video);
-      }
-    }
+    player.ready().then(async () => await onIframeLoaded(player));
 
     if (video.dataset.noControls) {
       video.parentElement.addEventListener("mouseenter", async () => {
@@ -345,11 +364,6 @@ function formatSeconds(seconds) {
     const progresBarWrapper = video.nextElementSibling.querySelector(
       "[data-progress-bar-wrapper]"
     );
-
-    player.getDuration().then((duration) => {
-      timeMax.textContent = formatSeconds(duration);
-      progresBarWrapper.setAttribute("aria-valuemax", duration);
-    });
 
     play.addEventListener("click", async () => {
       await player.play();
