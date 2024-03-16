@@ -45,10 +45,10 @@ const isBot =
   </head>
   <body
     data-body
-    class=`font-montrealMedium overflow-hidden leading-tight ${(!dev || isFrontendEditor) && 'dev'}`
+    class=`font-montrealMedium overflow-hidden leading-tight ${(dev || isFrontendEditor) && 'dev'}`
   >
     <Header updateHeaderLinks={updateHeaderLinks} />
-    {dev && !isFrontendEditor && <HeroAnimation />}
+    {!dev && !isFrontendEditor && <HeroAnimation />}
     <main class="relative opacity-0 bg-gray" data-main>
       <div>
         <slot />
