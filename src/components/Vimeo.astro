@@ -193,15 +193,22 @@ function formatSeconds(seconds) {
     entries.forEach(async (entry) => {
       const player = videoInstances[entry.target.dataset.videoId];
       if (entry.isIntersecting) {
-        player.on("playing", () => {
-          player.element.classList.remove("loading");
-          player.off("playing");
-        });
+        if (entry.target.dataset.autoPlay || entry.target.dataset.vimeoHero) {
+          player.on("playing", () => {
+            player.element.classList.remove("loading");
+            player.off("playing");
+          });
+        } else {
+          window.setTimeout(() => {
+            player.element.classList.remove("loading");
+          }, 300);
+        }
+
         const controls = entry.target.nextElementSibling;
 
         positionControls(controls, entry.target);
 
-        if(entry.target.dataset.vimeoHero) {
+        if (entry.target.dataset.vimeoHero) {
           entry.target.dataset.intersectedOnce = true;
         }
 
@@ -209,7 +216,7 @@ function formatSeconds(seconds) {
           await player.play();
         }
       } else {
-        if(entry.target.dataset.intersectedOnce) {
+        if (entry.target.dataset.intersectedOnce) {
           videoObserver.unobserve(entry.target);
         }
         if (entry.target.dataset.autoPlay || entry.target.dataset.vimeoHero) {
@@ -221,7 +228,11 @@ function formatSeconds(seconds) {
 
   async function onIframeLoaded(player) {
     await setAspectRatio(player);
-    if (player.element.dataset.autoPlay || player.element.dataset.dynamicResize || player.element.dataset.vimeoHero) {
+    if (
+      player.element.dataset.autoPlay ||
+      player.element.dataset.dynamicResize ||
+      player.element.dataset.vimeoHero
+    ) {
       if (player.element.dataset.vimeoHero) {
         window.setTimeout(() => {
           videoObserver.observe(player.element);
@@ -236,11 +247,32 @@ function formatSeconds(seconds) {
     }
 
     const controls = player.element.nextElementSibling;
-    if(!controls) return;
+    if (!controls) {
+      player.element.parentElement.addEventListener(
+        "mouseenter",
+        async () => {
+          const index = player.element.dataset.videoId;
+          await videoInstances[index].pause();
+        },
+        false
+      );
+
+      player.element.parentElement.addEventListener(
+        "mouseleave",
+        async () => {
+          const index = player.element.dataset.videoId;
+          await videoInstances[index].play();
+        },
+        false
+      );
+      return;
+    }
     const duration = await player.getDuration();
     const timeMax = controls.querySelector("[data-time-max]");
     timeMax.textContent = formatSeconds(duration);
-    const progresBarWrapper = controls.querySelector("[data-progress-bar-wrapper]");
+    const progresBarWrapper = controls.querySelector(
+      "[data-progress-bar-wrapper]"
+    );
     progresBarWrapper.setAttribute("aria-valuemax", duration);
   }
 
@@ -326,7 +358,7 @@ function formatSeconds(seconds) {
     }
   }
 
-  async function setAspectRatio(player){
+  async function setAspectRatio(player) {
     const width = await player.getVideoWidth();
     player.element.width = width;
     const height = await player.getVideoHeight();
@@ -342,17 +374,8 @@ function formatSeconds(seconds) {
     player.ready().then(async () => await onIframeLoaded(player));
 
     if (video.dataset.noControls) {
-      video.parentElement.addEventListener("mouseenter", async () => {
-        const index = video.dataset.videoId;
-        await videoInstances[index].pause();
-      }, false);
-
-      video.parentElement.addEventListener("mouseleave", async () => {
-        const index = video.dataset.videoId;
-        await videoInstances[index].play();
-      }, false);
       return;
-    };
+    }
 
     const timeMax = video.nextElementSibling.querySelector("[data-time-max]");
     const play = video.nextElementSibling.querySelector("[data-play]");
