@@ -418,4 +418,8 @@ const isVimeo = blok?.vimeo?.vimeo_raw;
       height 0.3s ease-in-out,
       bottom 0.3s ease-in-out;
   }
+
+  .scroll-section-video-wrapper:not(.isZoomed) :global(.vimeo-controls) {
+    display: none;
+  }
 </style>
