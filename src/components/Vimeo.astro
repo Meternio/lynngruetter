@@ -33,7 +33,7 @@ if (autoplay) {
 }
 
 if (muted) {
-  additionalVimeoProps = additionalVimeoProps + `&muted=1`;
+  additionalVimeoProps = additionalVimeoProps + `&muted=1&autopause=0`;
 }
 
 function formatSeconds(seconds) {
@@ -63,7 +63,7 @@ function formatSeconds(seconds) {
   class={`vimeo-wrapper ${isHero && "vimeo-wrapper-hero"}`}
 >
   <iframe
-    src={`https://player.vimeo.com/video/${videoId}?customId=${uuid}&controls=0&loop=1&dnt=1${additionalVimeoProps}#t=1s`}
+    src={`https://player.vimeo.com/video/${videoId}?customId=${uuid}&controls=0&loop=1&dnt=1${additionalVimeoProps}`}
     width={localVideoData.width || 426}
     height={localVideoData.height || 240}
     class={`vimeo-video pointer-events-none loading ${isScrollSection && "rounded-xl"}`}
@@ -74,7 +74,7 @@ function formatSeconds(seconds) {
     title={localVideoData.title || "Vimeo Video"}
     id={`${videoId}-${uuid}`}
     data-vimeo-video
-    loading="lazy"
+    loading=`${isHero ? "eager" : "lazy"}`
     {...{ "data-auto-play": autoplay ? "true" : false }}
     {...{ "data-no-controls": noControls ? "true" : false }}
     {...{ "data-vimeo-hero": isHero ? "true" : false }}
@@ -195,9 +195,7 @@ function formatSeconds(seconds) {
     }, 400)
   );
 
-  const videoObserver = new IntersectionObserver(
-    (entries) => {
-      entries.forEach(async (entry) => {
+  async function observeElement (entry, videoObserver) {
         const player = videoInstances[entry.target.dataset.videoId];
         if (entry.isIntersecting) {
           await setAspectRatio(player);
@@ -231,10 +229,21 @@ function formatSeconds(seconds) {
             }
           }
         }
-      });
+      }
+
+  const videoObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => observeElement(entry, videoObserver));
     },
     { threshold: 0.4 }
   );
+
+  const videoObserverHero = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => observeElement(entry, videoObserverHero));
+    }
+  );
+
 
   async function onIframeLoaded(player) {
     if (
@@ -242,10 +251,8 @@ function formatSeconds(seconds) {
       player.element.dataset.dynamicResize ||
       player.element.dataset.vimeoHero
     ) {
-      if (player.element.dataset.vimeoHero) {
-        window.setTimeout(() => {
-          videoObserver.observe(player.element);
-        }, 3000);
+      if(player.element.dataset.vimeoHero) {
+        videoObserverHero.observe(player.element);
       } else {
         videoObserver.observe(player.element);
       }

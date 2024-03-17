@@ -362,6 +362,9 @@ const isVimeo = blok?.vimeo?.vimeo_raw;
               videoWrapper.style.width = "100%";
             }
           } else {
+            if(!videoWrapper.classList.contains("isSnapped")) {
+              return;
+            }
             videoWrapper.classList.remove("isSnapped");
             resetVideoSize({ target: entry.target.parentElement });
           }
