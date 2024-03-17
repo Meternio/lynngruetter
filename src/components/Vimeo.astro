@@ -28,7 +28,7 @@ if (quality) {
 }
 
 if (autoplay) {
-  additionalVimeoProps = additionalVimeoProps + `&muted=1&background=1`;
+  additionalVimeoProps = additionalVimeoProps + `&muted=1&background=1&autoplay=1&autopause=0`;
 }
 
 if (muted) {
@@ -62,7 +62,7 @@ function formatSeconds(seconds) {
   class={`vimeo-wrapper ${isHero && "vimeo-wrapper-hero"}`}
 >
   <iframe
-    src={`https://player.vimeo.com/video/${videoId}?customId=${uuid}&controls=0&loop=1&dnt=1${additionalVimeoProps}#t=1s`}
+    src={`https://player.vimeo.com/video/${videoId}?h=${uuid}&controls=0&loop=1&dnt=1${additionalVimeoProps}#t=1s`}
     width={localVideoData.width || 426}
     height={localVideoData.height || 240}
     class={`vimeo-video pointer-events-none loading ${isScrollSection && "rounded-xl"}`}
@@ -236,7 +236,7 @@ function formatSeconds(seconds) {
         }
       }
     });
-  }, { threshold: 0.5 });
+  }, { threshold: 0.4 });
 
   async function onIframeLoaded(player) {
     if (
