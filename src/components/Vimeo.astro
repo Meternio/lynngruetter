@@ -60,9 +60,10 @@ function formatSeconds(seconds) {
 
 <div
   data-fullscreen-wrapper
-  class={`vimeo-wrapper pointer-events-auto ${isHero && "vimeo-wrapper-hero"}`}
+  class={`vimeo-wrapper relative ${isHero && "vimeo-wrapper-hero"}`}
 >
-  <iframe
+
+<div class="absolute top-0 right-0 bottom-0 left-0 z-50"> </div> <iframe
     src={`https://player.vimeo.com/video/${videoId}?customId=${uuid}&controls=0&loop=1&dnt=1${additionalVimeoProps}`}
     width={localVideoData.width || 426}
     height={localVideoData.height || 240}
