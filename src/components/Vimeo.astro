@@ -62,7 +62,7 @@ function formatSeconds(seconds) {
   class={`vimeo-wrapper ${isHero && "vimeo-wrapper-hero"}`}
 >
   <iframe
-    src={`https://player.vimeo.com/video/${videoId}?h=${uuid}&controls=0&loop=1&dnt=1${additionalVimeoProps}#t=1s`}
+    src={`https://player.vimeo.com/video/${videoId}?customId=${uuid}&controls=0&loop=1&dnt=1&transparent=0${additionalVimeoProps}#t=1s`}
     width={localVideoData.width || 426}
     height={localVideoData.height || 240}
     class={`vimeo-video pointer-events-none loading ${isScrollSection && "rounded-xl"}`}
