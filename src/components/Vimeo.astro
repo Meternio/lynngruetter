@@ -456,7 +456,7 @@ function formatSeconds(seconds) {
         await video.parentElement.requestFullscreen();
       } catch (error) {
         try {
-          await video.requestFullscreen();
+          await player.requestFullscreen();
         } catch (error) {
           console.error(error);
         }
