@@ -74,6 +74,7 @@ function formatSeconds(seconds) {
     title={localVideoData.title || "Vimeo Video"}
     id={`${videoId}-${uuid}`}
     data-vimeo-video
+    loading="lazy"
     {...{ "data-auto-play": autoplay ? "true" : false }}
     {...{ "data-no-controls": noControls ? "true" : false }}
     {...{ "data-vimeo-hero": isHero ? "true" : false }}
