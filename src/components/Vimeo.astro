@@ -21,6 +21,7 @@ const {
 let additionalVimeoProps = "";
 const localVideoData = videoData.vimeo_oembed?.response || videoData;
 const videoId = localVideoData.video_id || videoData.vimeo_raw.split("/").pop();
+const uuid = Math.random().toString(36).substring(7);
 
 if (quality) {
   additionalVimeoProps = additionalVimeoProps + `&quality=${quality}`;
@@ -61,13 +62,13 @@ function formatSeconds(seconds) {
   class={`vimeo-wrapper ${isHero && "vimeo-wrapper-hero"}`}
 >
   <iframe
-    src={`https://player.vimeo.com/video/${videoId}?controls=0&loop=1&dnt=1${additionalVimeoProps}#t=1s`}
+    src={`https://player.vimeo.com/video/${videoId}?customId=${uuid}&controls=0&loop=1&dnt=1${additionalVimeoProps}#t=1s`}
     width={localVideoData.width || 426}
     height={localVideoData.height || 240}
     class={`vimeo-video pointer-events-none loading ${isScrollSection && "rounded-xl"}`}
     allow="autoplay; fullscreen;"
     title={localVideoData.title || "Vimeo Video"}
-    id={`${videoId}-${Math.random().toString(36).substring(7)}`}
+    id={`${videoId}-${uuid}`}
     data-vimeo-video
     {...{ "data-auto-play": autoplay ? "true" : false }}
     {...{ "data-no-controls": noControls ? "true" : false }}
