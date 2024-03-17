@@ -10,7 +10,7 @@ const isVideo =
   blok.asset?.id && blok.asset?.filename.match(/\.(mp4|mov|webm)$/i);
 // Optimze the image for the hero
 const optimzedImageUrl =
-  blok.asset?.filename + "/m/1920x0/smart/filters:format(webp):quality(80)";
+  blok.asset?.filename + "/m/1920x0/smart/filters:format(webp):quality(60)";
 
 let filenameMedium;
 let filenameSmall;
@@ -30,13 +30,13 @@ if (isVideo) {
     blok.asset?.filename && !isVideo && (
       <img
         srcset={`
-            ${blok.asset?.filename + "/m/1920x0/smart/filters:format(webp):quality(80)"} 1200w,
-            ${blok.asset?.filename + "/m/992x0/smart/filters:format(webp):quality(80)"} 992w,
-            ${blok.asset?.filename + "/m/768x0/smart/filters:format(webp):quality(80)"} 768w,
-            ${blok.asset?.filename + "/m/576x0/smart/filters:format(webp):quality(80)"} 576w`}
+            ${blok.asset?.filename + "/m/1920x0/smart/filters:format(webp):quality(60)"} 1200w,
+            ${blok.asset?.filename + "/m/992x0/smart/filters:format(webp):quality(60)"} 992w,
+            ${blok.asset?.filename + "/m/768x0/smart/filters:format(webp):quality(60)"} 768w,
+            ${blok.asset?.filename + "/m/576x0/smart/filters:format(webp):quality(60)"} 576w`}
         src={
           blok.asset?.filename +
-          "/m/1920x0/smart/filters:format(webp):quality(80)"
+          "/m/1920x0/smart/filters:format(webp):quality(60)"
         }
         alt={blok.asset?.alt || "Hero Image"}
         loading="eager"
