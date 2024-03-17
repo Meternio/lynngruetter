@@ -289,9 +289,6 @@ const isVimeo = blok?.vimeo?.vimeo_raw;
   // add click event to all videos to resize them to their original size
   videos.forEach((video) => {
     video.addEventListener("click", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      event.stopImmediatePropagation();
       if (isDragging || isZoomed) return;
 
       isZoomed = true;
