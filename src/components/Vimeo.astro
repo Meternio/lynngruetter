@@ -67,7 +67,6 @@ function formatSeconds(seconds) {
     class={`vimeo-video pointer-events-none loading ${isScrollSection && "rounded-xl"}`}
     allow="autoplay; fullscreen;"
     title={localVideoData.title || "Vimeo Video"}
-    id={videoId}
     data-vimeo-video
     {...{ "data-auto-play": autoplay ? "true" : false }}
     {...{ "data-no-controls": noControls ? "true" : false }}
