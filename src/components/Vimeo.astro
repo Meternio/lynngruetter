@@ -453,11 +453,21 @@ function formatSeconds(seconds) {
     });
 
     fullscreen.addEventListener("click", async () => {
-      await video.parentElement.requestFullscreen();
+      try {
+        video.style.transition = "none";
+        await video.parentElement.requestFullscreen();
+      } catch (error) {
+        console.error(error);
+      }
     });
 
     boxedscreen.addEventListener("click", async () => {
-      await player.exitFullscreen();
+      try {
+        video.style.transition = "opacity 0.325s ease-in-out, transform 0.325s ease-in-out";
+        await document.exitFullscreen();
+      } catch (error) {
+        console.error(error);
+      }
     });
 
     progresBarWrapper.addEventListener("click", (e) =>
