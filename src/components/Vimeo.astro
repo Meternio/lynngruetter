@@ -68,9 +68,6 @@ function formatSeconds(seconds) {
     height={localVideoData.height || 240}
     class={`vimeo-video pointer-events-none loading ${isScrollSection && "rounded-xl"}`}
     allow="autoplay; fullscreen"
-    webkitallowfullscreen
-    mozallowfullscreen
-    allowfullscreen
     title={localVideoData.title || "Vimeo Video"}
     id={`${videoId}-${uuid}`}
     data-vimeo-video
@@ -161,6 +158,7 @@ function formatSeconds(seconds) {
           aria-valuemax={localVideoData.duration}
           aria-valuenow="0"
           aria-valuetext="0% played"
+          aria-label="Video Progress Bar"
           tabindex="0"
         >
           <div class="vimeo-controls-progress-bar-wrapper h-1 w-full bg-white">
