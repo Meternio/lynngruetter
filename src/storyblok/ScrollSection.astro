@@ -255,6 +255,18 @@ const isVimeo = blok?.vimeo?.vimeo_raw;
     },
   });
 
+  // Potential fix for the issue where the video is not draggable
+  interact(document).on("down", function (event) {
+    const interaction = event.interaction;
+    const canGesture =
+      interaction.target && interaction.target.options.gesture.enabled;
+    const maxAllowedPointers = canGesture ? 2 : 1;
+
+    while (interaction.pointers && interaction.pointers.length > maxAllowedPointers) {
+      interaction.removePointer(interaction.pointers[0]);
+    }
+  });
+
   const resetVideoSize = (event) => {
     if (event.target.closest("[data-scroll-section-video]")) return;
 
