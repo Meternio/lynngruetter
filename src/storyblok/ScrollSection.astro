@@ -228,10 +228,6 @@ const isVimeo = blok?.vimeo?.vimeo_raw;
       move: (event) => {
         if (isZoomed) return;
 
-        event.preventDefault();
-        event.stopPropagation();
-        event.stopImmediatePropagation();
-
         isDragging = true;
         if (isTouchDevice()) {
           document.body.style.overflow = "hidden";
@@ -245,10 +241,6 @@ const isVimeo = blok?.vimeo?.vimeo_raw;
       },
       end: (event) => {
         if (isZoomed) return;
-
-        event.preventDefault();
-        event.stopPropagation();
-        event.stopImmediatePropagation();
 
         event.target.style.transition =
           "transform 0.3s ease-in-out, width 0.3s ease-in-out, height 0.3s ease-in-out, bottom 0.3s ease-in-out";
@@ -297,9 +289,6 @@ const isVimeo = blok?.vimeo?.vimeo_raw;
   // add click event to all videos to resize them to their original size
   videos.forEach((video) => {
     video.addEventListener("click", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      event.stopImmediatePropagation();
       if (isDragging || isZoomed) return;
 
       isZoomed = true;
@@ -326,6 +315,18 @@ const isVimeo = blok?.vimeo?.vimeo_raw;
       video
         .closest("[data-scroll-section-video-wrapper]")
         .addEventListener("click", resetVideoSize);
+    });
+
+    video.addEventListener("touchStart", (event) => {
+      if (isTouchDevice()) {
+        document.body.style.overflow = "hidden";
+      }
+    });
+
+    video.addEventListener("touchEnd", (event) => {
+      if (isTouchDevice()) {
+        document.body.style.overflow = "auto";
+      }
     });
   });
 
