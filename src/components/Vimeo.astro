@@ -235,7 +235,7 @@ function formatSeconds(seconds) {
         }
       }
     });
-  });
+  }, { threshold: 0.5 });
 
   async function onIframeLoaded(player) {
     if (
