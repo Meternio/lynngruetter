@@ -251,7 +251,8 @@ function formatSeconds(seconds) {
       player.element.dataset.vimeoHero
     ) {
       if(player.element.dataset.vimeoHero) {
-        window.setTimeout(async () => {
+        await player.pause();
+        window.setTimeout(() => {
           videoObserverHero.observe(player.element);
         }, 3750);
       } else {
