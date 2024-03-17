@@ -201,6 +201,14 @@ const isVimeo = blok?.vimeo?.vimeo_raw;
     event.target.style.transform = `translate(${position.x}px, ${position.y}px)`;
   }
 
+  function isTouchDevice() {
+    return (
+      "ontouchstart" in window ||
+      navigator.maxTouchPoints > 0 ||
+      navigator.msMaxTouchPoints > 0
+    );
+  }
+
   // get all videos
   const videos = document.querySelectorAll("[data-scroll-section-video]");
 
@@ -221,7 +229,9 @@ const isVimeo = blok?.vimeo?.vimeo_raw;
         if (isZoomed) return;
 
         isDragging = true;
-        document.body.style.overflow = "hidden";
+        if (isTouchDevice()) {
+          document.body.style.overflow = "hidden";
+        }
         event.target.style.transition = "none";
 
         position.x += event.dx;
@@ -234,7 +244,9 @@ const isVimeo = blok?.vimeo?.vimeo_raw;
 
         event.target.style.transition =
           "transform 0.3s ease-in-out, width 0.3s ease-in-out, height 0.3s ease-in-out, bottom 0.3s ease-in-out";
-        document.body.style.overflow = "auto";
+        if (isTouchDevice()) {
+          document.body.style.overflow = "auto";
+        }
         updatePosition(event);
         window.setTimeout(() => {
           isDragging = false;
