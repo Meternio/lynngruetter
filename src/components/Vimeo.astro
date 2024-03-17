@@ -244,7 +244,6 @@ function formatSeconds(seconds) {
     }
   );
 
-
   async function onIframeLoaded(player) {
     if (
       player.element.dataset.autoPlay ||
@@ -252,7 +251,9 @@ function formatSeconds(seconds) {
       player.element.dataset.vimeoHero
     ) {
       if(player.element.dataset.vimeoHero) {
-        videoObserverHero.observe(player.element);
+        window.setTimeout(async () => {
+          videoObserverHero.observe(player.element);
+        }, 3750);
       } else {
         videoObserver.observe(player.element);
       }
