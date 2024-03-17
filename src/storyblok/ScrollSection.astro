@@ -221,6 +221,7 @@ const isVimeo = blok?.vimeo?.vimeo_raw;
         if (isZoomed) return;
 
         isDragging = true;
+        document.body.style.overflow = "hidden";
         event.target.style.transition = "none";
 
         position.x += event.dx;
@@ -233,6 +234,7 @@ const isVimeo = blok?.vimeo?.vimeo_raw;
 
         event.target.style.transition =
           "transform 0.3s ease-in-out, width 0.3s ease-in-out, height 0.3s ease-in-out, bottom 0.3s ease-in-out";
+        document.body.style.overflow = "auto";
         updatePosition(event);
         window.setTimeout(() => {
           isDragging = false;
