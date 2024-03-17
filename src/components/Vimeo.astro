@@ -193,41 +193,41 @@ function formatSeconds(seconds) {
     }, 400)
   );
 
-  async function observeElement (entry, videoObserver) {
-        const player = videoInstances[entry.target.dataset.videoId];
-        if (entry.isIntersecting) {
-          await setAspectRatio(player);
+  async function observeElement(entry, videoObserver) {
+    const player = videoInstances[entry.target.dataset.videoId];
+    if (entry.isIntersecting) {
+      await setAspectRatio(player);
 
-          player.element.classList.remove("loading");
+      player.element.classList.remove("loading");
 
-          if (entry.target.dataset.vimeoHero) {
-            entry.target.dataset.intersectedOnce = true;
-          }
+      if (entry.target.dataset.vimeoHero) {
+        entry.target.dataset.intersectedOnce = true;
+      }
 
-          if (entry.target.dataset.autoPlay || entry.target.dataset.vimeoHero) {
-            try {
-              await player.play();
-            } catch (error) {
-              console.error(error);
-            }
-          }
-
-          const controls = entry.target.nextElementSibling;
-
-          positionControls(controls, entry.target);
-        } else {
-          if (entry.target.dataset.intersectedOnce) {
-            videoObserver.unobserve(entry.target);
-          }
-          if (entry.target.dataset.autoPlay || entry.target.dataset.vimeoHero) {
-            try {
-              await player.pause();
-            } catch (error) {
-              console.error(error);
-            }
-          }
+      if (entry.target.dataset.autoPlay || entry.target.dataset.vimeoHero) {
+        try {
+          await player.play();
+        } catch (error) {
+          console.error(error);
         }
       }
+
+      const controls = entry.target.nextElementSibling;
+
+      positionControls(controls, entry.target);
+    } else {
+      if (entry.target.dataset.intersectedOnce) {
+        videoObserver.unobserve(entry.target);
+      }
+      if (entry.target.dataset.autoPlay || entry.target.dataset.vimeoHero) {
+        try {
+          await player.pause();
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    }
+  }
 
   const videoObserver = new IntersectionObserver(
     (entries) => {
@@ -236,11 +236,9 @@ function formatSeconds(seconds) {
     { threshold: 0.4 }
   );
 
-  const videoObserverHero = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => observeElement(entry, videoObserverHero));
-    }
-  );
+  const videoObserverHero = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => observeElement(entry, videoObserverHero));
+  });
 
   async function onIframeLoaded(player) {
     if (
@@ -248,7 +246,7 @@ function formatSeconds(seconds) {
       player.element.dataset.dynamicResize ||
       player.element.dataset.vimeoHero
     ) {
-      if(player.element.dataset.vimeoHero) {
+      if (player.element.dataset.vimeoHero) {
         await player.pause();
         window.setTimeout(() => {
           videoObserverHero.observe(player.element);
@@ -457,13 +455,18 @@ function formatSeconds(seconds) {
         video.style.transition = "none";
         await video.parentElement.requestFullscreen();
       } catch (error) {
-        console.error(error);
+        try {
+          await video.requestFullscreen();
+        } catch (error) {
+          console.error(error);
+        }
       }
     });
 
     boxedscreen.addEventListener("click", async () => {
       try {
-        video.style.transition = "opacity 0.325s ease-in-out, transform 0.325s ease-in-out";
+        video.style.transition =
+          "opacity 0.325s ease-in-out, transform 0.325s ease-in-out";
         await document.exitFullscreen();
       } catch (error) {
         console.error(error);
