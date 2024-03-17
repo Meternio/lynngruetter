@@ -200,33 +200,19 @@ function formatSeconds(seconds) {
         const player = videoInstances[entry.target.dataset.videoId];
         if (entry.isIntersecting) {
           await setAspectRatio(player);
-          if (entry.target.dataset.autoPlay || entry.target.dataset.vimeoHero) {
-            const isPaused = await player.getPaused();
-            if (isPaused) {
-              player.on("playing", () => {
-                player.element.classList.remove("loading");
-                player.off("playing");
-              });
-              window.setTimeout(async () => {
-                player.element.classList.remove("loading");
-                const isPaused = await player.getPaused();
-                if (isPaused && entry.isIntersecting) {
-                  await player.play();
-                }
-              }, 2000);
-            } else {
-              player.element.classList.remove("loading");
-            }
-          } else {
-            player.element.classList.remove("loading");
-          }
+
+          player.element.classList.remove("loading");
 
           if (entry.target.dataset.vimeoHero) {
             entry.target.dataset.intersectedOnce = true;
           }
 
           if (entry.target.dataset.autoPlay || entry.target.dataset.vimeoHero) {
-            await player.play();
+            try {
+              await player.play();
+            } catch (error) {
+              console.error(error);
+            }
           }
 
           const controls = entry.target.nextElementSibling;
@@ -237,7 +223,11 @@ function formatSeconds(seconds) {
             videoObserver.unobserve(entry.target);
           }
           if (entry.target.dataset.autoPlay || entry.target.dataset.vimeoHero) {
-            await player.pause();
+            try {
+              await player.pause();
+            } catch (error) {
+              console.error(error);
+            }
           }
         }
       });
@@ -269,7 +259,11 @@ function formatSeconds(seconds) {
         "mouseenter",
         async () => {
           const index = player.element.dataset.videoId;
-          await videoInstances[index].pause();
+          try {
+            await videoInstances[index].pause();
+          } catch (error) {
+            console.error(error);
+          }
         },
         false
       );
@@ -278,7 +272,11 @@ function formatSeconds(seconds) {
         "mouseleave",
         async () => {
           const index = player.element.dataset.videoId;
-          await videoInstances[index].play();
+          try {
+            await videoInstances[index].play();
+          } catch (error) {
+            console.error(error);
+          }
         },
         false
       );
@@ -352,8 +350,12 @@ function formatSeconds(seconds) {
 
   async function setProgress(e, player, progessBarWrapper) {
     if (isPlaying) {
-      await player.pause();
-      wasPlaying = true;
+      try {
+        await player.pause();
+        wasPlaying = true;
+      } catch (error) {
+        console.error(error);
+      }
     }
 
     const videoDuration = await player.getDuration();
@@ -370,8 +372,12 @@ function formatSeconds(seconds) {
     await player.setCurrentTime(updatedTime);
 
     if (wasPlaying) {
-      await player.play();
-      wasPlaying = false;
+      try {
+        await player.play();
+        wasPlaying = false;
+      } catch (error) {
+        console.error(error);
+      }
     }
   }
 
@@ -415,11 +421,19 @@ function formatSeconds(seconds) {
     );
 
     play.addEventListener("click", async () => {
-      await player.play();
+      try {
+        await player.play();
+      } catch (error) {
+        console.error(error);
+      }
     });
 
     pause.addEventListener("click", async () => {
-      await player.pause();
+      try {
+        await player.pause();
+      } catch (error) {
+        console.error(error);
+      }
     });
 
     mute.addEventListener("click", async () => {
@@ -471,10 +485,14 @@ function formatSeconds(seconds) {
 
       if (e.key === " ") {
         e.preventDefault();
-        if (isPlaying) {
-          await player.pause();
-        } else {
-          await player.play();
+        try {
+          if (isPlaying) {
+            await player.pause();
+          } else {
+            await player.play();
+          }
+        } catch (error) {
+          console.error(error);
         }
       }
     });
