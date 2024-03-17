@@ -60,13 +60,13 @@ function formatSeconds(seconds) {
 
 <div
   data-fullscreen-wrapper
-  class={`vimeo-wrapper ${isHero && "vimeo-wrapper-hero"}`}
+  class={`vimeo-wrapper pointer-events-auto ${isHero && "vimeo-wrapper-hero"}`}
 >
   <iframe
     src={`https://player.vimeo.com/video/${videoId}?customId=${uuid}&controls=0&loop=1&dnt=1${additionalVimeoProps}`}
     width={localVideoData.width || 426}
     height={localVideoData.height || 240}
-    class={`vimeo-video loading ${isScrollSection ? "rounded-xl" : "pointer-events-none touch-none select-none"}`}
+    class={`vimeo-video loading pointer-events-none touch-none select-none ${isScrollSection && "rounded-xl"}`}
     allow="autoplay; fullscreen"
     title={localVideoData.title || "Vimeo Video"}
     id={`${videoId}-${uuid}`}
