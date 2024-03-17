@@ -43,7 +43,7 @@ const isVimeo = blok?.vimeo?.vimeo_raw;
     })
   }
   {
-    (blok.video && blok.video.filename || isVimeo) && (
+    ((blok.video && blok.video.filename) || isVimeo) && (
       <>
         <div
           data-sentinel
@@ -54,7 +54,10 @@ const isVimeo = blok?.vimeo?.vimeo_raw;
           data-scroll-section-video-wrapper
         >
           {isVimeo ? (
-            <div data-scroll-section-video class="scroll-section-video object-cover w-48 h-auto rounded-xl absolute bottom-0 right-0 touch-none pointer-events-auto">
+            <div
+              data-scroll-section-video
+              class="scroll-section-video object-cover w-48 h-auto rounded-xl absolute bottom-0 right-0 touch-none pointer-events-auto"
+            >
               <Vimeo
                 videoData={blok.vimeo}
                 autoplay={true}
@@ -241,7 +244,12 @@ const isVimeo = blok?.vimeo?.vimeo_raw;
   const resetVideoSize = (event) => {
     if (event.target.closest("[data-scroll-section-video]")) return;
 
-    const videos = event.target.querySelectorAll("[data-scroll-section-video]");
+    const videos = event.target
+      .closest("[data-scroll-section]")
+      .querySelectorAll(
+        "[data-scroll-section-video-wrapper].isZoomed [data-scroll-section-video]"
+      );
+
     videos.forEach((video) => {
       isZoomed = false;
       video.parentElement.classList.remove("isZoomed");
@@ -260,6 +268,7 @@ const isVimeo = blok?.vimeo?.vimeo_raw;
       video
         .closest("[data-scroll-section-video-wrapper]")
         .removeEventListener("click", resetVideoSize);
+      window.removeEventListener("click", resetVideoSize);
     });
   };
 
@@ -284,6 +293,8 @@ const isVimeo = blok?.vimeo?.vimeo_raw;
         video.parentElement.style.top = `${offsetTop}px`;
         video.parentElement.style.margin = 0;
         video.parentElement.style.width = "100%";
+        // on outside video click, reset the video to its original size
+        window.addEventListener("click", resetVideoSize);
       }
       video.classList.remove("w-48", "bottom-0");
       video.classList.add("w-4/5", "bottom-1/2");
@@ -360,9 +371,11 @@ const isVimeo = blok?.vimeo?.vimeo_raw;
               videoWrapper.style.top = `${offsetTop}px`;
               videoWrapper.style.margin = 0;
               videoWrapper.style.width = "100%";
+              // on outside video click, reset the video to its original size
+              window.addEventListener("click", resetVideoSize);
             }
           } else {
-            if(!videoWrapper.classList.contains("isSnapped")) {
+            if (!videoWrapper.classList.contains("isSnapped")) {
               return;
             }
             videoWrapper.classList.remove("isSnapped");

@@ -81,7 +81,7 @@ const content = data.story.content;
     const headerNav = document.querySelectorAll(
       "[data-header-nav-content-menu] > a",
     );
-    const body = document.querySelector("body");
+    const html = document.querySelector("html");
     const headerNavLogo = document.querySelector("[data-header-nav-logo]");
     const headerNavLogoWhite = document.querySelector(
       "[data-header-nav-logo-white]",
@@ -165,7 +165,7 @@ const content = data.story.content;
         header.classList.remove("-translate-y-full", "absolute");
         header.classList.add("fixed");
 
-        body.classList.add("opacity-0", "blur-sm");
+        html.classList.add("opacity-0", "blur-sm");
 
         window.setTimeout(() => {
           window.removeEventListener("scroll", throttleScroll);
@@ -193,7 +193,7 @@ const content = data.story.content;
         }, 500);
         return;
       }
-      body.classList.remove("blur-sm", "opacity-0");
+      html.classList.remove("blur-sm", "opacity-0");
       header.classList.remove("-translate-y-full", "absolute");
       header.classList.add("fixed");
 
