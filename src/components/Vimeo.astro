@@ -28,7 +28,8 @@ if (quality) {
 }
 
 if (autoplay) {
-  additionalVimeoProps = additionalVimeoProps + `&muted=1&background=1&autoplay=1&autopause=0`;
+  additionalVimeoProps =
+    additionalVimeoProps + `&muted=1&background=1&autoplay=1&autopause=0`;
 }
 
 if (muted) {
@@ -66,7 +67,10 @@ function formatSeconds(seconds) {
     width={localVideoData.width || 426}
     height={localVideoData.height || 240}
     class={`vimeo-video pointer-events-none loading ${isScrollSection && "rounded-xl"}`}
-    allow="autoplay; fullscreen;"
+    allow="autoplay"
+    webkitallowfullscreen
+    mozallowfullscreen
+    allowfullscreen
     title={localVideoData.title || "Vimeo Video"}
     id={`${videoId}-${uuid}`}
     data-vimeo-video
@@ -190,53 +194,56 @@ function formatSeconds(seconds) {
     }, 400)
   );
 
-  const videoObserver = new IntersectionObserver((entries) => {
-    entries.forEach(async (entry) => {
-      const player = videoInstances[entry.target.dataset.videoId];
-      if (entry.isIntersecting) {
-        await setAspectRatio(player);
-        if (entry.target.dataset.autoPlay || entry.target.dataset.vimeoHero) {
-          const isPaused = await player.getPaused();
-          if (isPaused) {
-            player.on("playing", () => {
+  const videoObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach(async (entry) => {
+        const player = videoInstances[entry.target.dataset.videoId];
+        if (entry.isIntersecting) {
+          await setAspectRatio(player);
+          if (entry.target.dataset.autoPlay || entry.target.dataset.vimeoHero) {
+            const isPaused = await player.getPaused();
+            if (isPaused) {
+              player.on("playing", () => {
+                player.element.classList.remove("loading");
+                player.off("playing");
+              });
+              window.setTimeout(async () => {
+                player.element.classList.remove("loading");
+                const isPaused = await player.getPaused();
+                if (isPaused && entry.isIntersecting) {
+                  await player.play();
+                }
+              }, 2000);
+            } else {
               player.element.classList.remove("loading");
-              player.off("playing");
-            });
-            window.setTimeout(async () => {
-              player.element.classList.remove("loading");
-              const isPaused = await player.getPaused();
-              if (isPaused && entry.isIntersecting) {
-                await player.play();
-              }
-            }, 2000);
+            }
           } else {
             player.element.classList.remove("loading");
           }
+
+          if (entry.target.dataset.vimeoHero) {
+            entry.target.dataset.intersectedOnce = true;
+          }
+
+          if (entry.target.dataset.autoPlay || entry.target.dataset.vimeoHero) {
+            await player.play();
+          }
+
+          const controls = entry.target.nextElementSibling;
+
+          positionControls(controls, entry.target);
         } else {
-          player.element.classList.remove("loading");
+          if (entry.target.dataset.intersectedOnce) {
+            videoObserver.unobserve(entry.target);
+          }
+          if (entry.target.dataset.autoPlay || entry.target.dataset.vimeoHero) {
+            await player.pause();
+          }
         }
-
-        if (entry.target.dataset.vimeoHero) {
-          entry.target.dataset.intersectedOnce = true;
-        }
-
-        if (entry.target.dataset.autoPlay || entry.target.dataset.vimeoHero) {
-          await player.play();
-        }
-
-        const controls = entry.target.nextElementSibling;
-
-        positionControls(controls, entry.target);
-      } else {
-        if (entry.target.dataset.intersectedOnce) {
-          videoObserver.unobserve(entry.target);
-        }
-        if (entry.target.dataset.autoPlay || entry.target.dataset.vimeoHero) {
-          await player.pause();
-        }
-      }
-    });
-  }, { threshold: 0.4 });
+      });
+    },
+    { threshold: 0.4 }
+  );
 
   async function onIframeLoaded(player) {
     if (
