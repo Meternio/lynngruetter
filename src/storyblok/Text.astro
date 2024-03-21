@@ -14,7 +14,7 @@ const isPropEmpty = (prop) => {
 ---
 
 <div class="text-section-content mt-8 break-words sm:break-normal" {...storyblokEditable(blok)}>
-  <h3 class=`uppercase text-lg ${blok.isAccordion && 'text-accordion-trigger font-normal'}` {...{'data-text-accordion-trigger': blok.isAccordion ? "true" : false}}>{blok.title}</h3>
+  <h3 class=`uppercase text-lg ${blok.isAccordion && 'text-accordion-trigger font-normal'}` {...{'data-text-accordion-trigger': blok.isAccordion ? "true" : false, 'tabindex': blok.isAccordion ? "0" : false, 'aria-label': blok.isAccordion ? "click to toggle" : false}}>{blok.title}</h3>
   {
     isPropEmpty(blok.content2) ? (
       <div class={`grid grid-flow-row sm:grid-flow-col ${blok.wrapIndividually && 'grid-cols-1'} ${blok.isColumn && '!grid-flow-row !grid-cols-1'} ${blok.noWrap && isPropEmpty(blok.content3) && 'grid-cols-[2fr_2fr_1fr] sm:grid-cols-3'} ${!blok.noWrap && !blok.wrapIndividually && 'grid-cols-2'} sm:auto-cols-fr gap-12`}>
@@ -56,11 +56,20 @@ const isPropEmpty = (prop) => {
 <script>
   const accordionTriggers = document.querySelectorAll('[data-text-accordion-trigger]');
 
+  function toggleAccordion(trigger) {
+    trigger.nextElementSibling.classList.toggle('max-h-10');
+    trigger.nextElementSibling.classList.toggle('opacity-0');
+    trigger.nextElementSibling.classList.toggle('blur-sm');
+  }
+
   accordionTriggers.forEach(trigger => {
-    trigger.addEventListener('click', () => {
-      trigger.nextElementSibling.classList.toggle('max-h-10');
-      trigger.nextElementSibling.classList.toggle('opacity-0');
-      trigger.nextElementSibling.classList.toggle('blur-sm');
+    trigger.addEventListener('click', () => toggleAccordion(trigger));
+
+    trigger.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleAccordion(trigger);
+      }
     });
   });
 </script>
