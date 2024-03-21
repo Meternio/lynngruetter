@@ -36,7 +36,7 @@ const isPropEmpty = (prop) => {
       <>
         {
           blok.isAccordion ? (
-            <div class="text-accordion-content opacity-0 blur-sm">
+            <div class="text-accordion-content max-h-0 opacity-0 blur-sm">
               <RichTextRenderer richTextData={blok.content} />
             </div>
           ) : (
@@ -58,7 +58,7 @@ const isPropEmpty = (prop) => {
 
   accordionTriggers.forEach(trigger => {
     trigger.addEventListener('click', () => {
-      trigger.classList.toggle('opacity-0');
+      trigger.nextElementSibling.classList.toggle('max-h-10');
       trigger.nextElementSibling.classList.toggle('opacity-0');
       trigger.nextElementSibling.classList.toggle('blur-sm');
     });
@@ -67,7 +67,7 @@ const isPropEmpty = (prop) => {
 
 <style>
   .text-accordion-content, .text-accordion-trigger {
-    transition: opacity 0.75s ease-in-out, filter 0.325s ease-in-out;
+    transition: opacity 0.75s ease-in-out, filter 0.325s ease-in-out, max-height 0.75s ease-in-out;
   }
 
   :global(.text-section-content h1, .text-section-content h2, .text-section-content h3, .text-section-content h4, .text-section-content h5, .text-section-content h6) {
