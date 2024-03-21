@@ -57,6 +57,7 @@ const isPropEmpty = (prop) => {
   const accordionTriggers = document.querySelectorAll('[data-text-accordion-trigger]');
 
   function toggleAccordion(trigger) {
+    trigger.parentElement.classList.toggle('text-accordion-active');
     trigger.nextElementSibling.classList.toggle('max-h-10');
     trigger.nextElementSibling.classList.toggle('opacity-0');
     trigger.nextElementSibling.classList.toggle('blur-sm');
@@ -77,6 +78,20 @@ const isPropEmpty = (prop) => {
 <style>
   .text-accordion-content, .text-accordion-trigger {
     transition: opacity 0.75s ease-in-out, filter 0.325s ease-in-out, max-height 0.75s ease-in-out;
+  }
+
+  .text-accordion-trigger:before, .text-accordion-trigger:after {
+    margin-left: 4px;
+    position: relative;
+  }
+
+  .text-accordion-trigger:after {
+    content: "+";
+  }
+
+  .text-accordion-active .text-accordion-trigger:after {
+    content: "-";
+    top: -1px;
   }
 
   :global(.text-section-content h1, .text-section-content h2, .text-section-content h3, .text-section-content h4, .text-section-content h5, .text-section-content h6) {
